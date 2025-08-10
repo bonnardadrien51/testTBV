@@ -60,17 +60,28 @@ def extract_scores_from_url(url):
         driver.quit()
     return scores
 
+def style_sex(row):
+    if row['Sexe'] == 'Homme':
+        return ['background-color: #d4edda'] * len(row)  # vert clair
+    elif row['Sexe'] == 'Femme':
+        return ['background-color: #d1ecf1'] * len(row)  # bleu clair
+    else:
+        return [''] * len(row)
+
 def generate_html(df, filename, title):
     generation_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    styled_df = df.style.apply(style_sex, axis=1)
+    html_table = styled_df.to_html(escape=False, classes='table table-hover')
     html_string = f"""<html><head><title>{title}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css"></head>
     <body><div class="container">
     <h1>{title}</h1><p><small>Généré le {generation_time}</small></p>
-    {df.to_html(escape=False, index=False, classes='table table-hover')}
+    {html_table}
     </div></body></html>"""
     os.makedirs("docs", exist_ok=True)
     with open(f"docs/{filename}", "w", encoding="utf-8") as f:
         f.write(html_string)
+
 
 def main():
     all_scores = {}

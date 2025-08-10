@@ -1,0 +1,30 @@
+name: Update Classement
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # toutes les 30 min
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
+      - name: Run script
+        run: python main.py
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/*.html
+          git commit -m "Update classement" || echo "No changes to commit"
+          git push

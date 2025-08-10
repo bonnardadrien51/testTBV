@@ -129,12 +129,12 @@ def generate_html(df, filename, title):
     for event_name in event_columns:
         html_string += f"<th>{event_name}</th>"
 
-    html_string += """
-                        <th>Score Total</th>
-                        <th>Score Final</th>
-                        <th>Nombre d'épreuves</th>
-                        <th>Détails La Maltournée - Planoise</th>
-                    </tr>
+html_string += f"""
+    <td>{row['Score Total']}</td>
+    <td>{row['Score Final']}</td>
+    <td>{row["Nombre d'épreuves"]}</td>
+    <td>{row['Détails La Maltournée - Planoise']}</td>
+</tr>
                 </thead>
                 <tbody>
     """

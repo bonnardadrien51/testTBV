@@ -70,41 +70,99 @@ def style_sex(row):
         return [''] * len(row)
 
 def generate_html(df, filename, title):
+    # Heure Paris
     paris_tz = pytz.timezone('Europe/Paris')
-    now_paris = datetime.datetime.now(paris_tz).strftime("%Y-%m-%d %H:%M:%S")
+    generation_time = datetime.datetime.now(paris_tz).strftime("%Y-%m-%d %H:%M:%S")
 
-    css = """
-    <style>
-      table.dataframe {
-        border-collapse: collapse;
-        width: 100%;
-      }
-      table.dataframe, table.dataframe th, table.dataframe td {
-        border: 1px solid #ddd;
-      }
-      table.dataframe tr:hover {
-        background-color: #f5f5f5;
-      }
-      table.dataframe th, table.dataframe td {
-        padding: 8px;
-        text-align: left;
-      }
-    </style>
+    event_columns = ['SOLO-GardeLesPiedsSurTerre', 'SOLO-EnAvantLesCheckPoints', 'SOLO-ViseLaCibleOuBien', 'RemonteLaPenteAPatte']
+
+    html_string = f"""
+    <html>
+    <head>
+        <title>{title}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
+        <style>
+            table {{
+                width: 100%;
+                margin: 20px 0;
+                border-collapse: collapse;
+            }}
+            th, td {{
+                padding: 8px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }}
+            th {{
+                background-color: #f4f4f4;
+            }}
+            tr:nth-child(even) {{
+                background-color: #f9f9f9;
+            }}
+        </style>
+        <script>
+            // Actualiser la page toutes les 5 minutes (300000 millisecondes)
+            setTimeout(function() {{
+                window.location.reload();
+            }}, 300000);
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>{title}</h1>
+            <p><small>Généré le {generation_time} (heure de Paris)</small></p>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Participant</th>
+                        <th>Sexe</th>
+                        <th>Club</th>"""
+
+    for event_name in event_columns:
+        html_string += f"<th>{event_name}</th>"
+
+    html_string += """
+                        <th>Score Total</th>
+                        <th>Score Final</th>
+                        <th>Nombre d'épreuves</th>
+                        <th>Détails La Maltournée - Planoise</th>
+                    </tr>
+                </thead>
+                <tbody>
     """
 
-    html_string = f"""<html><head><title>{title}</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
-    {css}
-    </head>
-    <body><div class="container">
-    <h1>{title}</h1><p><small>Généré le {now_paris} (heure de Paris)</small></p>
-    {df.to_html(escape=False, index=False, classes='dataframe table table-hover')}
-    </div></body></html>"""
+    for index, row in df.iterrows():
+        row_class = "table-success" if row['Sexe'] == 'Homme' else "table-info"
+        html_string += f"""
+            <tr class='{row_class}'>
+                <td>{index + 1}</td>
+                <td>{row['Participant']}</td>
+                <td>{row['Sexe']}</td>
+                <td>{row['Club']}</td>
+        """
+        
+        for event_name in event_columns:
+            html_string += f"<td>{row.get(event_name, '0')}</td>"
+        
+        html_string += f"""
+                <td>{row['Score Total']}</td>
+                <td>{row['Score Final']}</td>
+                <td>{row['Nombre d\'épreuves']}</td>
+                <td>{row['Détails La Maltournée - Planoise']}</td>
+            </tr>
+        """
 
-    os.makedirs("docs", exist_ok=True)
-    with open(f"docs/{filename}", "w", encoding="utf-8") as f:
-        f.write(html_string)
+    html_string += """
+                </tbody>
+            </table>
+        </div>
+    </body>
+    </html>
+    """
 
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, "w", encoding="utf-8") as file:
+        file.write(html_string)
 
 def main():
     all_scores = {}

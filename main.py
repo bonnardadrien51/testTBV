@@ -1,5 +1,6 @@
 import datetime
 import os
+import pytz
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -69,13 +70,14 @@ def style_sex(row):
         return [''] * len(row)
 
 def generate_html(df, filename, title):
-    generation_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    paris_tz = pytz.timezone('Europe/Paris')
+    generation_time = datetime.datetime.now(paris_tz).strftime("%Y-%m-%d %H:%M:%S")
     styled_df = df.style.apply(style_sex, axis=1)
     html_table = styled_df.to_html(escape=False, classes='table table-hover')
     html_string = f"""<html><head><title>{title}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css"></head>
     <body><div class="container">
-    <h1>{title}</h1><p><small>Généré le {generation_time}</small></p>
+    <h1>{title}</h1><p><small>Généré le {generation_time} (heure de Paris)</small></p>
     {html_table}
     </div></body></html>"""
     os.makedirs("docs", exist_ok=True)

@@ -71,15 +71,36 @@ def style_sex(row):
 
 def generate_html(df, filename, title):
     paris_tz = pytz.timezone('Europe/Paris')
-    generation_time = datetime.datetime.now(paris_tz).strftime("%Y-%m-%d %H:%M:%S")
-    styled_df = df.style.apply(style_sex, axis=1)
-    html_table = styled_df.to_html(escape=False, classes='table table-hover')
+    now_paris = datetime.datetime.now(paris_tz).strftime("%Y-%m-%d %H:%M:%S")
+
+    css = """
+    <style>
+      table.dataframe {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      table.dataframe, table.dataframe th, table.dataframe td {
+        border: 1px solid #ddd;
+      }
+      table.dataframe tr:hover {
+        background-color: #f5f5f5;
+      }
+      table.dataframe th, table.dataframe td {
+        padding: 8px;
+        text-align: left;
+      }
+    </style>
+    """
+
     html_string = f"""<html><head><title>{title}</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css"></head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
+    {css}
+    </head>
     <body><div class="container">
-    <h1>{title}</h1><p><small>Généré le {generation_time} (heure de Paris)</small></p>
-    {html_table}
+    <h1>{title}</h1><p><small>Généré le {now_paris} (heure de Paris)</small></p>
+    {df.to_html(escape=False, index=False, classes='dataframe table table-hover')}
     </div></body></html>"""
+
     os.makedirs("docs", exist_ok=True)
     with open(f"docs/{filename}", "w", encoding="utf-8") as f:
         f.write(html_string)

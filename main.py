@@ -70,10 +70,8 @@ def style_sex(row):
         return [''] * len(row)
 
 def generate_html(df, filename, title):
-    # Heure Paris
-    paris_tz = pytz.timezone('Europe/Paris')
-    generation_time = datetime.datetime.now(paris_tz).strftime("%Y-%m-%d %H:%M:%S")
-
+    generation_time = datetime.datetime.now(pytz.timezone('Europe/Paris')).strftime("%Y-%m-%d %H:%M:%S")
+    
     event_columns = ['SOLO-GardeLesPiedsSurTerre', 'SOLO-EnAvantLesCheckPoints', 'SOLO-ViseLaCibleOuBien', 'RemonteLaPenteAPatte']
 
     html_string = f"""
@@ -86,6 +84,7 @@ def generate_html(df, filename, title):
                 width: 100%;
                 margin: 20px 0;
                 border-collapse: collapse;
+                border: 1px solid #ddd;
             }}
             th, td {{
                 padding: 8px;
@@ -98,6 +97,14 @@ def generate_html(df, filename, title):
             tr:nth-child(even) {{
                 background-color: #f9f9f9;
             }}
+            tr.table-success:hover {{
+                background-color: #c7e6c7 !important;
+                cursor: pointer;
+            }}
+            tr.table-info:hover {{
+                background-color: #9ec6e0 !important;
+                cursor: pointer;
+            }}
         </style>
         <script>
             // Actualiser la page toutes les 5 minutes (300000 millisecondes)
@@ -109,14 +116,15 @@ def generate_html(df, filename, title):
     <body>
         <div class="container">
             <h1>{title}</h1>
-            <p><small>Généré le {generation_time} (heure de Paris)</small></p>
+            <p><small>Généré le {generation_time}</small></p>
             <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Position</th>
                         <th>Participant</th>
                         <th>Sexe</th>
-                        <th>Club</th>"""
+                        <th>Club</th>
+    """
 
     for event_name in event_columns:
         html_string += f"<th>{event_name}</th>"
@@ -140,14 +148,14 @@ def generate_html(df, filename, title):
                 <td>{row['Sexe']}</td>
                 <td>{row['Club']}</td>
         """
-        
+
         for event_name in event_columns:
             html_string += f"<td>{row.get(event_name, '0')}</td>"
-        
+
         html_string += f"""
                 <td>{row['Score Total']}</td>
                 <td>{row['Score Final']}</td>
-                <td>{row['Nombre d\'épreuves']}</td>
+                <td>{row["Nombre d'épreuves"]}</td>
                 <td>{row['Détails La Maltournée - Planoise']}</td>
             </tr>
         """
@@ -160,9 +168,9 @@ def generate_html(df, filename, title):
     </html>
     """
 
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, "w", encoding="utf-8") as file:
         file.write(html_string)
+
 
 def main():
     all_scores = {}

@@ -70,8 +70,23 @@ def style_sex(row):
         return [''] * len(row)
 
 def generate_html(df, filename, title):
-    generation_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # Heure de Paris
+    paris_tz = pytz.timezone("Europe/Paris")
+    generation_time = datetime.datetime.now(paris_tz).strftime("%d/%m/%Y %H:%M:%S")
 
+    # Assurer que le dossier docs existe
+    os.makedirs("docs", exist_ok=True)
+    filepath = os.path.join("docs", filename)
+
+    # Colonnes d'épreuves
+    event_columns = [
+        'SOLO-GardeLesPiedsSurTerre',
+        'SOLO-EnAvantLesCheckPoints',
+        'SOLO-ViseLaCibleOuBien',
+        'RemonteLaPenteAPatte'
+    ]
+
+    # Début HTML
     html_string = f"""
     <html>
     <head>
@@ -95,11 +110,11 @@ def generate_html(df, filename, title):
                 background-color: #f9f9f9;
             }}
             tr:hover {{
-                background-color: #d0e9c6;  /* couleur un peu plus foncée au survol */
+                filter: brightness(95%);
             }}
         </style>
         <script>
-            // Actualiser la page toutes les 5 minutes (300000 millisecondes)
+            // Actualiser la page toutes les 5 minutes
             setTimeout(function() {{
                 window.location.reload();
             }}, 300000);
@@ -108,17 +123,17 @@ def generate_html(df, filename, title):
     <body>
         <div class="container">
             <h1>{title}</h1>
-            <p><small>Généré le {generation_time}</small></p>
+            <p><small>Généré le {generation_time} (heure de Paris)</small></p>
             <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Position</th>
                         <th>Participant</th>
                         <th>Sexe</th>
-                        <th>Club</th>"""
+                        <th>Club</th>
+    """
 
-    event_columns = ['SOLO-GardeLesPiedsSurTerre', 'SOLO-EnAvantLesCheckPoints', 'SOLO-ViseLaCibleOuBien', 'RemonteLaPenteAPatte']
-
+    # Colonnes dynamiques des épreuves
     for event_name in event_columns:
         html_string += f"<th>{event_name}</th>"
 
@@ -132,16 +147,16 @@ def generate_html(df, filename, title):
                 <tbody>
     """
 
+    # Lignes avec couleur selon sexe
     for index, row in df.iterrows():
         row_class = "table-success" if row['Sexe'] == 'Homme' else "table-info"
         html_string += f"""
-            <tr class='{row_class}'>
+            <tr class="{row_class}">
                 <td>{index + 1}</td>
                 <td>{row['Participant']}</td>
                 <td>{row['Sexe']}</td>
                 <td>{row['Club']}</td>
         """
-
         for event_name in event_columns:
             html_string += f"<td>{row.get(event_name, '0')}</td>"
 
@@ -153,6 +168,7 @@ def generate_html(df, filename, title):
             </tr>
         """
 
+    # Fin HTML
     html_string += """
                 </tbody>
             </table>
@@ -161,7 +177,8 @@ def generate_html(df, filename, title):
     </html>
     """
 
-    with open(filename, "w", encoding="utf-8") as file:
+    # Écriture du fichier
+    with open(filepath, "w", encoding="utf-8") as file:
         file.write(html_string)
 
 

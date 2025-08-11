@@ -2,7 +2,7 @@ name: Update Classement
 
 on:
   schedule:
-    - cron: "*/30 * * * *" # toutes les 30 min
+    - cron: "*/15 * * * *" # toutes les 15 min
   workflow_dispatch:
 
 jobs:

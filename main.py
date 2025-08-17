@@ -200,7 +200,7 @@ def main():
             for event_name, score_list in data['scores'].items():
                 all_scores[participant]['scores'].setdefault(event_name, []).extend(score_list)
 
-    solo_events = ['Garde les pieds sur terre', 'En avant les check points', 'Vise la cible ou bien']
+    solo_events = ['Garde les pieds sur terre', 'En avant les checkpoints', 'Vise la cible ou bien']
     combined_event = 'Remontelapente a patte'
     event_columns = solo_events + [combined_event]
 

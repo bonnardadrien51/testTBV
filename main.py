@@ -173,6 +173,13 @@ def generate_html(df, filename, title):
                 </tbody>
             </table>
         </div>
+        <div class="footer">
+                <p>Classement généré par L'établi ludique</p>
+                <div class="footer-logos">
+                    <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                    <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
+                </div>
+            </div>
     </body>
     </html>
     """

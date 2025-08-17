@@ -20,7 +20,7 @@ urls = [
 ]
 
 event_names = {
-    'PlDVta': 'GardeLesPiedsSurTerre',
+    'PlDVta': 'SOLO-GardeLesPiedsSurTerre',
     '7xX4ug': 'SOLO-EnAvantLesCheckPoints',
     '9NjwIz': 'SOLO-ViseLaCibleOuBien',
     'OdKdfL': 'LaMaltournée',

@@ -20,7 +20,7 @@ urls = [
 ]
 
 event_names = {
-    'PlDVta': 'SOLO-GardeLesPiedsSurTerre',
+    'PlDVta': 'GardeLesPiedsSurTerre',
     '7xX4ug': 'SOLO-EnAvantLesCheckPoints',
     '9NjwIz': 'SOLO-ViseLaCibleOuBien',
     'OdKdfL': 'LaMaltournée',
@@ -80,9 +80,9 @@ def generate_html(df, filename, title):
 
     # Colonnes d'épreuves
     event_columns = [
-        'SOLO-GardeLesPiedsSurTerre',
-        'SOLO-EnAvantLesCheckPoints',
-        'SOLO-ViseLaCibleOuBien',
+        'GardeLesPiedsSurTerre',
+        'EnAvantLesCheckPoints',
+        'ViseLaCibleOuBien',
         'RemonteLaPenteAPatte'
     ]
 
@@ -193,7 +193,7 @@ def main():
             for event_name, score_list in data['scores'].items():
                 all_scores[participant]['scores'].setdefault(event_name, []).extend(score_list)
 
-    solo_events = ['SOLO-GardeLesPiedsSurTerre', 'SOLO-EnAvantLesCheckPoints', 'SOLO-ViseLaCibleOuBien']
+    solo_events = ['GardeLesPiedsSurTerre', 'EnAvantLesCheckPoints', 'ViseLaCibleOuBien']
     combined_event = 'RemonteLaPenteAPatte'
     event_columns = solo_events + [combined_event]
 

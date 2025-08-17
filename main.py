@@ -21,8 +21,8 @@ urls = [
 
 event_names = {
     'PlDVta': 'Garde les pieds sur terre',
-    '7xX4ug': 'SOLO-EnAvantLesCheckPoints',
-    '9NjwIz': 'SOLO-ViseLaCibleOuBien',
+    '7xX4ug': 'En avant les checkpoints',
+    '9NjwIz': 'Vise la cible ou bien',
     'OdKdfL': 'LaMaltournée',
     '7aWvUg': 'Planoise'
 }
@@ -81,9 +81,9 @@ def generate_html(df, filename, title):
     # Colonnes d'épreuves
     event_columns = [
         'Garde les pieds sur terre',
-        'SOLO-EnAvantLesCheckPoints',
-        'SOLO-ViseLaCibleOuBien',
-        'RemonteLaPenteAPatte'
+        'En avant les checkpoints',
+        'Vise la cible ou bien',
+        'Remonte la pente a patte'
     ]
 
     # Début HTML

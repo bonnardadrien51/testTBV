@@ -1,9 +1,13 @@
 import datetime
 import os
 import pytz
-import requests
-from bs4 import BeautifulSoup
 import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # URLs et noms d'épreuves
 urls = [
@@ -23,40 +27,50 @@ event_names = {
 }
 
 def extract_scores_from_url(url):
-    response = requests.get(url)
-    response.raise_for_status()
-    soup = BeautifulSoup(response.text, "html.parser")
+    chrome_options = Options()
+    chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.binary_location = "/usr/bin/chromium"
+
+    driver = webdriver.Chrome(service=Service("/usr/bin/chromedriver"), options=chrome_options)
+    driver.get(url)
 
     scores = {}
-    tbody = soup.select_one("#results_table > tbody")
-    if not tbody:
-        print(f"⚠️ Pas de tableau trouvé sur {url}")
-        return scores
+    try:
+        wait = WebDriverWait(driver, 30)  # on attend plus longtemps
+        tbody = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "#results_table > tbody")))
+        rows = tbody.find_elements(By.TAG_NAME, "tr")
 
-    rows = tbody.find_all("tr")
-    for row in rows:
-        cols = row.find_all("td")
-        if len(cols) > 6:
-            username = cols[1].get_text(strip=True)
-            gender = cols[3].get_text(strip=True)
-            clubname = cols[2].get_text(strip=True)
+        if not rows:
+            print(f"⚠️ Pas de résultats trouvés sur {url}")
+            return scores
 
-            score_text = cols[6].decode_contents()
-            if "<b>" in score_text:
-                try:
-                    score = int(score_text.split("<b>")[1].split("</b>")[0])
-                except ValueError:
-                    score = 0
+        for row in rows:
+            cols = row.find_elements(By.TAG_NAME, "td")
+            if len(cols) > 6:
+                username = cols[1].text.strip()
+                clubname = cols[2].text.strip()
+                gender = cols[3].text.strip()
 
-                if username not in scores:
-                    scores[username] = {
-                        "gender": gender,
-                        "clubname": clubname,
-                        "scores": {}
-                    }
-                event_id = url.split("course_hid=")[1].split("&")[0]
-                event_name = event_names.get(event_id, event_id)
-                scores[username]["scores"].setdefault(event_name, []).append(score)
+                score_text = cols[6].get_attribute("innerHTML")
+                if "<b>" in score_text:
+                    try:
+                        score = int(score_text.split("<b>")[1].split("</b>")[0])
+                    except:
+                        score = 0
+
+                    if username not in scores:
+                        scores[username] = {"gender": gender, "clubname": clubname, "scores": {}}
+
+                    event_id = url.split("course_hid=")[1].split("&")[0]
+                    event_name = event_names.get(event_id, event_id)
+                    scores[username]["scores"].setdefault(event_name, []).append(score)
+
+    except Exception as e:
+        print(f"⚠️ Erreur sur {url}: {e}")
+    finally:
+        driver.quit()
 
     return scores
 
@@ -67,12 +81,7 @@ def generate_html(df, filename, title):
     os.makedirs("docs", exist_ok=True)
     filepath = os.path.join("docs", filename)
 
-    event_columns = [
-        'Garde les pieds sur terre',
-        'En avant les checkpoints',
-        'Vise la cible ou bien',
-        'Remonte la pente a patte'
-    ]
+    event_columns = list(event_names.values())
 
     html_string = f"""
     <html>
@@ -119,7 +128,7 @@ def generate_html(df, filename, title):
     """
 
     for index, row in df.iterrows():
-        row_class = "table-success" if row['Sexe'] == 'Homme' else "table-info"
+        row_class = "table-success" if row["Sexe"] == "Homme" else "table-info"
         html_string += f"""
             <tr class="{row_class}">
                 <td>{index + 1}</td>
@@ -143,12 +152,12 @@ def generate_html(df, filename, title):
             </table>
         </div>
         <div class="footer">
-                <p>Classement généré par L'établi ludique</p>
-                <div class="footer-logos">
-                    <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
-                    <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
-                </div>
+            <p>Classement généré par L'établi ludique</p>
+            <div class="footer-logos">
+                <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
             </div>
+        </div>
     </body>
     </html>
     """
@@ -162,31 +171,28 @@ def main():
         scores = extract_scores_from_url(url)
         for participant, data in scores.items():
             if participant not in all_scores:
-                all_scores[participant] = {
-                    'gender': data['gender'],
-                    'clubname': data['clubname'],
-                    'scores': {}
-                }
-            for event_name, score_list in data['scores'].items():
-                all_scores[participant]['scores'].setdefault(event_name, []).extend(score_list)
+                all_scores[participant] = {"gender": data["gender"], "clubname": data["clubname"], "scores": {}}
+            for event_name, score_list in data["scores"].items():
+                all_scores[participant]["scores"].setdefault(event_name, []).extend(score_list)
 
-    # Transformation des données pour le DataFrame
     rows = []
     for participant, data in all_scores.items():
         row = {
             "Participant": participant,
-            "Sexe": data['gender'],
-            "Club": data['clubname'],
-            "Score Total": sum(sum(scores) for scores in data['scores'].values()),
-            "Score Final": sum(sum(scores) for scores in data['scores'].values()),  # Peut être modifié si règles spéciales
-            "Nombre d'épreuves": sum(len(scores) for scores in data['scores'].values()),
-            "Détails La Maltournée - Planoise": " / ".join(
-                f"{k}: {v}" for k, v in data['scores'].items() if k in ["LaMaltournée", "Planoise"]
-            )
+            "Sexe": data["gender"],
+            "Club": data["clubname"],
+            "Score Total": sum(sum(scores) for scores in data["scores"].values()),
+            "Score Final": sum(sum(scores) for scores in data["scores"].values()),
+            "Nombre d'épreuves": sum(len(scores) for scores in data["scores"].values()),
+            "Détails La Maltournée - Planoise": " / ".join(f"{k}: {v}" for k, v in data["scores"].items() if k in ["LaMaltournée", "Planoise"])
         }
         for event_name in event_names.values():
-            row[event_name] = sum(data['scores'].get(event_name, [0]))
+            row[event_name] = sum(data["scores"].get(event_name, [0]))
         rows.append(row)
+
+    if not rows:
+        print("⚠️ Aucun résultat récupéré, classement vide.")
+        return
 
     df = pd.DataFrame(rows)
     df = df.sort_values(by="Score Final", ascending=False).reset_index(drop=True)

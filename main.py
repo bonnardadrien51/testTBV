@@ -217,37 +217,7 @@ def main():
     combined_event = 'Remonte la pente a patte'
     event_columns = solo_events + [combined_event]
 
-    final_scores = []
-    for participant, data in all_scores.items():
-        scores = data['scores']
-        formatted_scores = {}
-        for event in solo_events:
-            if event in scores:
-                best_score = max(scores[event])
-                other_scores = sorted(scores[event], reverse=True)[1:]
-                formatted_scores[event] = f"<b>{best_score}</b>" + (f" ({'; '.join(map(str, other_scores))})" if other_scores else "")
-            else:
-                formatted_scores[event] = "0"
-        maltournee_score = scores.get('LaMaltournée', [])
-        planoise_score = scores.get('Planoise', [])
-        best_score = max(maltournee_score + planoise_score) if (maltournee_score or planoise_score) else 0
-        formatted_scores[combined_event] = f"<b>{best_score}</b>"
-        maltournee_best = max(maltournee_score) if maltournee_score else 0
-        planoise_best = max(planoise_score) if planoise_score else 0
-        detail_scores = f"La Maltournée: {maltournee_best} ; Planoise: {planoise_best}"
-        total_score = sum(int(s.split('<b>')[1].split('</b>')[0]) if '<b>' in s else int(s) for s in formatted_scores.values())
-        number_of_events = sum(1 for s in formatted_scores.values() if s != "0")
-        final_score = total_score * number_of_events
-        final_scores.append({
-            'Participant': participant,
-            'Sexe': data['gender'],
-            'Club': data['clubname'],
-            **formatted_scores,
-            'Score Total': total_score,
-            'Score Final': final_score,
-            'Nombre d\'épreuves': number_of_events,
-            'Détails La Maltournée - Planoise': detail_scores
-        })
+import datetime
 
     df = pd.DataFrame(final_scores).sort_values(by="Score Final", ascending=False).reset_index(drop=True)
     generate_html(df, "classement_general.html", "Classement Général")

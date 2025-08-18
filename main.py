@@ -121,7 +121,7 @@ def generate_html(df, filename, title):
             gap: 20px;
         }}
         .footer-logos img {{
-            height: 120px;   /* taille fixe en hauteur */
+            height: 120px;
             auto: width;
             opacity: 0.9;
         }}
@@ -202,7 +202,6 @@ def generate_html(df, filename, title):
         file.write(html_string)
 
 
-
 def main():
     all_scores = {}
     for url in urls:
@@ -215,14 +214,4 @@ def main():
 
     solo_events = ['Garde les pieds sur terre', 'En avant les checkpoints', 'Vise la cible ou bien']
     combined_event = 'Remonte la pente a patte'
-    event_columns = solo_events + [combined_event]
-
-import datetime
-
-    df = pd.DataFrame(final_scores).sort_values(by="Score Final", ascending=False).reset_index(drop=True)
-    generate_html(df, "classement_general.html", "Classement Général")
-    generate_html(df[df['Sexe'] == 'Homme'], "classement_hommes.html", "Classement Hommes")
-    generate_html(df[df['Sexe'] == 'Femme'], "classement_femmes.html", "Classement Femmes")
-
-if __name__ == "__main__":
-    main()
+    event_columns = solo_events + [combi]()

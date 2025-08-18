@@ -132,7 +132,7 @@ def generate_html(df, filename, title):
         </script>
     </head>
     <body>
-        <div class="container">
+        <div>
             <h1>{title}</h1>
             <p><small>Généré le {generation_time} (heure de Paris)</small></p>
             <table class="table table-hover">

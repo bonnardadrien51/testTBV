@@ -1,13 +1,14 @@
 import datetime
 import os
 import pytz
-import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import pandas as pd
+from webdriver_manager.chrome import ChromeDriverManager
 
 # URLs et noms d'épreuves
 urls = [
@@ -31,74 +32,105 @@ def extract_scores_from_url(url):
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.binary_location = "/usr/bin/chromium"
-
-    driver = webdriver.Chrome(service=Service("/usr/bin/chromedriver"), options=chrome_options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     driver.get(url)
 
     scores = {}
     try:
-        wait = WebDriverWait(driver, 30)  # on attend plus longtemps
+        wait = WebDriverWait(driver, 20)
         tbody = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "#results_table > tbody")))
-        rows = tbody.find_elements(By.TAG_NAME, "tr")
-
-        if not rows:
-            print(f"⚠️ Pas de résultats trouvés sur {url}")
-            return scores
+        rows = tbody.find_elements(By.TAG_NAME, 'tr')
 
         for row in rows:
-            cols = row.find_elements(By.TAG_NAME, "td")
+            cols = row.find_elements(By.TAG_NAME, 'td')
             if len(cols) > 6:
-                username = cols[1].text.strip()
-                clubname = cols[2].text.strip()
-                gender = cols[3].text.strip()
-
-                score_text = cols[6].get_attribute("innerHTML")
-                if "<b>" in score_text:
-                    try:
-                        score = int(score_text.split("<b>")[1].split("</b>")[0])
-                    except:
-                        score = 0
-
+                username = cols[1].text
+                gender = cols[3].text
+                clubname = cols[2].text
+                score_text = cols[6].get_attribute('innerHTML')
+                if '<b>' in score_text:
+                    score = int(score_text.split('<b>')[1].split('</b>')[0])
                     if username not in scores:
-                        scores[username] = {"gender": gender, "clubname": clubname, "scores": {}}
-
-                    event_id = url.split("course_hid=")[1].split("&")[0]
+                        scores[username] = {'gender': gender, 'clubname': clubname, 'scores': {}}
+                    event_id = url.split('course_hid=')[1].split('&')[0]
                     event_name = event_names.get(event_id, event_id)
-                    scores[username]["scores"].setdefault(event_name, []).append(score)
-
+                    scores[username]['scores'].setdefault(event_name, []).append(score)
     except Exception as e:
-        print(f"⚠️ Erreur sur {url}: {e}")
+        print(f"Erreur sur {url}: {e}")
     finally:
         driver.quit()
-
     return scores
 
+def style_sex(row):
+    if row['Sexe'] == 'Homme':
+        return ['background-color: #d4edda'] * len(row)  # vert clair
+    elif row['Sexe'] == 'Femme':
+        return ['background-color: #d1ecf1'] * len(row)  # bleu clair
+    else:
+        return [''] * len(row)
+
 def generate_html(df, filename, title):
+    # Heure de Paris
     paris_tz = pytz.timezone("Europe/Paris")
     generation_time = datetime.datetime.now(paris_tz).strftime("%d/%m/%Y %H:%M:%S")
 
+    # Assurer que le dossier docs existe
     os.makedirs("docs", exist_ok=True)
     filepath = os.path.join("docs", filename)
 
-    event_columns = list(event_names.values())
+    # Colonnes d'épreuves
+    event_columns = [
+        'Garde les pieds sur terre',
+        'En avant les checkpoints',
+        'Vise la cible ou bien',
+        'Remonte la pente a patte'
+    ]
 
+    # Début HTML
     html_string = f"""
     <html>
     <head>
         <title>{title}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
         <style>
-            table {{ width: 100%; margin: 20px 0; border-collapse: collapse; }}
-            th, td {{ padding: 8px; text-align: left; border: 1px solid #ddd; }}
-            th {{ background-color: #f4f4f4; }}
-            tr:nth-child(even) {{ background-color: #f9f9f9; }}
-            tr:hover {{ filter: brightness(95%); }}
-            .footer-logos {{ margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 20px; }}
-            .footer-logos img {{ height: 120px; auto: width; opacity: 0.9; }}
+            table {{
+                width: 100%;
+                margin: 20px 0;
+                border-collapse: collapse;
+            }}
+            th, td {{
+                padding: 8px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }}
+            th {{
+                background-color: #f4f4f4;
+            }}
+            tr:nth-child(even) {{
+                background-color: #f9f9f9;
+            }}
+            tr:hover {{
+                filter: brightness(95%);
+            }}
+            
+        .footer-logos {{
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }}
+        .footer-logos img {{
+            height: 120px;   /* taille fixe en hauteur */
+            auto: width;
+            opacity: 0.9;
+        }}
         </style>
         <script>
-            setTimeout(function() {{ window.location.reload(); }}, 300000);
+            // Actualiser la page toutes les 5 minutes
+            setTimeout(function() {{
+                window.location.reload();
+            }}, 300000);
         </script>
     </head>
     <body>
@@ -114,6 +146,7 @@ def generate_html(df, filename, title):
                         <th>Club</th>
     """
 
+    # Colonnes dynamiques des épreuves
     for event_name in event_columns:
         html_string += f"<th>{event_name}</th>"
 
@@ -127,8 +160,9 @@ def generate_html(df, filename, title):
                 <tbody>
     """
 
+    # Lignes avec couleur selon sexe
     for index, row in df.iterrows():
-        row_class = "table-success" if row["Sexe"] == "Homme" else "table-info"
+        row_class = "table-success" if row['Sexe'] == 'Homme' else "table-info"
         html_string += f"""
             <tr class="{row_class}">
                 <td>{index + 1}</td>
@@ -147,23 +181,27 @@ def generate_html(df, filename, title):
             </tr>
         """
 
+    # Fin HTML
     html_string += """
                 </tbody>
             </table>
         </div>
         <div class="footer">
-            <p>Classement généré par L'établi ludique</p>
-            <div class="footer-logos">
-                <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
-                <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
+                <p>Classement généré par L'établi ludique</p>
+                <div class="footer-logos">
+                    <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                    <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
+                </div>
             </div>
-        </div>
     </body>
     </html>
     """
 
+    # Écriture du fichier
     with open(filepath, "w", encoding="utf-8") as file:
         file.write(html_string)
+
+
 
 def main():
     all_scores = {}
@@ -171,33 +209,20 @@ def main():
         scores = extract_scores_from_url(url)
         for participant, data in scores.items():
             if participant not in all_scores:
-                all_scores[participant] = {"gender": data["gender"], "clubname": data["clubname"], "scores": {}}
-            for event_name, score_list in data["scores"].items():
-                all_scores[participant]["scores"].setdefault(event_name, []).extend(score_list)
+                all_scores[participant] = {'gender': data['gender'], 'clubname': data['clubname'], 'scores': {}}
+            for event_name, score_list in data['scores'].items():
+                all_scores[participant]['scores'].setdefault(event_name, []).extend(score_list)
 
-    rows = []
-    for participant, data in all_scores.items():
-        row = {
-            "Participant": participant,
-            "Sexe": data["gender"],
-            "Club": data["clubname"],
-            "Score Total": sum(sum(scores) for scores in data["scores"].values()),
-            "Score Final": sum(sum(scores) for scores in data["scores"].values()),
-            "Nombre d'épreuves": sum(len(scores) for scores in data["scores"].values()),
-            "Détails La Maltournée - Planoise": " / ".join(f"{k}: {v}" for k, v in data["scores"].items() if k in ["LaMaltournée", "Planoise"])
-        }
-        for event_name in event_names.values():
-            row[event_name] = sum(data["scores"].get(event_name, [0]))
-        rows.append(row)
+    solo_events = ['Garde les pieds sur terre', 'En avant les checkpoints', 'Vise la cible ou bien']
+    combined_event = 'Remonte la pente a patte'
+    event_columns = solo_events + [combined_event]
 
-    if not rows:
-        print("⚠️ Aucun résultat récupéré, classement vide.")
-        return
+import datetime
 
-    df = pd.DataFrame(rows)
-    df = df.sort_values(by="Score Final", ascending=False).reset_index(drop=True)
-
-    generate_html(df, "classement.html", "Classement Général")
+    df = pd.DataFrame(final_scores).sort_values(by="Score Final", ascending=False).reset_index(drop=True)
+    generate_html(df, "classement_general.html", "Classement Général")
+    generate_html(df[df['Sexe'] == 'Homme'], "classement_hommes.html", "Classement Hommes")
+    generate_html(df[df['Sexe'] == 'Femme'], "classement_femmes.html", "Classement Femmes")
 
 if __name__ == "__main__":
     main()

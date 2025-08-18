@@ -1,15 +1,22 @@
-name: Update Classement
+name: Update and Deploy Classement
 
 on:
   schedule:
     - cron: "*/15 * * * *" # toutes les 15 minutes
-  workflow_dispatch:
+  workflow_dispatch:       # déclenchement manuel
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -20,32 +27,25 @@ jobs:
         run: |
           pip install -r requirements.txt
           pip install jinja2 pytz selenium
-
-      - name: Install Chromium and Chromedriver
-        run: |
-          sudo apt update
-          sudo apt install -y chromium-browser chromium-chromedriver
-          sudo ln -sf /usr/bin/chromium-browser /usr/bin/google-chrome
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
 
       - name: Run script
         run: python main.py
 
-      - name: Commit results
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/*.html
-          git commit -m "Update classement" || echo "No changes to commit"
-          git pull --rebase origin main
-          git push origin main
+      - name: Upload artifact (HTML files)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs   # on envoie le dossier docs/ pour Pages
 
   deploy:
-    runs-on: ubuntu-latest
     needs: build
-    steps:
-      - uses: actions/checkout@v3
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
+    steps:
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}

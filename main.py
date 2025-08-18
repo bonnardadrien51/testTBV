@@ -8,7 +8,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
-from webdriver_manager.chrome import ChromeDriverManager
 
 # URLs et noms d'épreuves
 urls = [
@@ -32,7 +31,9 @@ def extract_scores_from_url(url):
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    chrome_options.binary_location = "/usr/bin/chromium"  # <--- important pour GitHub Actions
+
+    driver = webdriver.Chrome(service=Service("/usr/bin/chromedriver"), options=chrome_options)
     driver.get(url)
 
     scores = {}
@@ -62,15 +63,12 @@ def extract_scores_from_url(url):
     return scores
 
 def generate_html(df, filename, title):
-    # Heure de Paris
     paris_tz = pytz.timezone("Europe/Paris")
     generation_time = datetime.datetime.now(paris_tz).strftime("%d/%m/%Y %H:%M:%S")
 
-    # Assurer que le dossier docs existe
     os.makedirs("docs", exist_ok=True)
     filepath = os.path.join("docs", filename)
 
-    # Colonnes d'épreuves (affichage)
     event_columns = [
         'Garde les pieds sur terre',
         'En avant les checkpoints',
@@ -78,56 +76,22 @@ def generate_html(df, filename, title):
         'Remonte la pente a patte'
     ]
 
-    # Début HTML
     html_string = f"""
     <html>
     <head>
         <title>{title}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
         <style>
-            table {{
-                width: 100%;
-                margin: 20px 0;
-                border-collapse: collapse;
-            }}
-            th, td {{
-                padding: 8px;
-                text-align: left;
-                border: 1px solid #ddd;
-            }}
-            th {{
-                background-color: #f4f4f4;
-            }}
-            tr:nth-child(even) {{
-                background-color: #f9f9f9;
-            }}
-            tr:hover {{
-                filter: brightness(95%);
-            }}
-            .footer {{
-                margin-top: 24px;
-                text-align: center;
-                color: #555;
-                font-size: 0.95em;
-            }}
-            .footer-logos {{
-                margin-top: 10px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 20px;
-            }}
-            .footer-logos img {{
-                max-height: 70px;
-                max-width: 200px;
-                opacity: 0.95;
-            }}
+            table {{ width: 100%; margin: 20px 0; border-collapse: collapse; }}
+            th, td {{ padding: 8px; text-align: left; border: 1px solid #ddd; }}
+            th {{ background-color: #f4f4f4; }}
+            tr:nth-child(even) {{ background-color: #f9f9f9; }}
+            tr:hover {{ filter: brightness(95%); }}
+            .footer-logos {{ margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 20px; }}
+            .footer-logos img {{ height: 120px; auto: width; opacity: 0.9; }}
         </style>
         <script>
-            // Actualiser la page toutes les 5 minutes
-            setTimeout(function() {{
-                window.location.reload();
-            }}, 300000);
+            setTimeout(function() {{ window.location.reload(); }}, 300000);
         </script>
     </head>
     <body>
@@ -143,7 +107,6 @@ def generate_html(df, filename, title):
                         <th>Club</th>
     """
 
-    # Colonnes dynamiques des épreuves
     for event_name in event_columns:
         html_string += f"<th>{event_name}</th>"
 
@@ -157,7 +120,6 @@ def generate_html(df, filename, title):
                 <tbody>
     """
 
-    # Lignes avec couleur selon sexe (Bootstrap : success=vert, info=bleu)
     for index, row in df.iterrows():
         row_class = "table-success" if row['Sexe'] == 'Homme' else "table-info"
         html_string += f"""
@@ -178,23 +140,21 @@ def generate_html(df, filename, title):
             </tr>
         """
 
-    # Fin HTML
     html_string += """
                 </tbody>
             </table>
         </div>
         <div class="footer">
-            <p>Classement généré par L'Établi Ludique et Besançon Vol Libre</p>
-            <div class="footer-logos">
-                <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
-                <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
+                <p>Classement généré par L'établi ludique</p>
+                <div class="footer-logos">
+                    <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                    <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
+                </div>
             </div>
-        </div>
     </body>
     </html>
     """
 
-    # Écriture du fichier
     with open(filepath, "w", encoding="utf-8") as file:
         file.write(html_string)
 
@@ -208,73 +168,26 @@ def main():
             for event_name, score_list in data['scores'].items():
                 all_scores[participant]['scores'].setdefault(event_name, []).extend(score_list)
 
-    solo_events = ['Garde les pieds sur terre', 'En avant les checkpoints', 'Vise la cible ou bien']
-    combined_event = 'Remonte la pente a patte'
-
-    final_scores = []
+    # Transformation des données pour le DataFrame
+    rows = []
     for participant, data in all_scores.items():
-        scores = data['scores']
-        formatted_scores = {}
+        row = {
+            "Participant": participant,
+            "Sexe": data['gender'],
+            "Club": data['clubname'],
+            "Score Total": sum(sum(scores) for scores in data['scores'].values()),
+            "Score Final": sum(sum(scores) for scores in data['scores'].values()),  # Ici on peut appliquer d'autres règles si nécessaire
+            "Nombre d'épreuves": sum(len(scores) for scores in data['scores'].values()),
+            "Détails La Maltournée - Planoise": " / ".join(f"{k}: {v}" for k, v in data['scores'].items() if k in ["LaMaltournée", "Planoise"])
+        }
+        for event_name in event_names.values():
+            row[event_name] = sum(data['scores'].get(event_name, [0]))
+        rows.append(row)
 
-        # SOLO (chaque épreuve compte séparément)
-        for event in solo_events:
-            if event in scores:
-                best_score = max(scores[event])
-                other_scores = sorted(scores[event], reverse=True)[1:]
-                formatted_scores[event] = f"<b>{best_score}</b>" + (
-                    f" ({'; '.join(map(str, other_scores))})" if other_scores else ""
-                )
-            else:
-                formatted_scores[event] = "0"
+    df = pd.DataFrame(rows)
+    df = df.sort_values(by="Score Final", ascending=False).reset_index(drop=True)
 
-        # Maltournée + Planoise regroupés (on affiche le meilleur des deux)
-        maltournee_score = scores.get('LaMaltournée', [])
-        planoise_score = scores.get('Planoise', [])
-        maltournee_best = max(maltournee_score) if maltournee_score else 0
-        planoise_best = max(planoise_score) if planoise_score else 0
-        best_combined = max(maltournee_best, planoise_best)
-        formatted_scores[combined_event] = f"<b>{best_combined}</b>"
-
-        detail_scores = f"La Maltournée: {maltournee_best} ; Planoise: {planoise_best}"
-
-        # Score total (somme des meilleurs de chaque colonne affichée)
-        total_score = sum(
-            int(s.split('<b>')[1].split('</b>')[0]) if '<b>' in s else int(s)
-            for s in formatted_scores.values()
-        )
-
-        # Nombre d'épreuves distinctes :
-        # - chaque SOLO compte si > 0
-        # - (Maltournée OU Planoise) compte pour 1 au total
-        number_of_events = 0
-        for event in solo_events:
-            if event in scores and max(scores[event]) > 0:
-                number_of_events += 1
-        if maltournee_best > 0 or planoise_best > 0:
-            number_of_events += 1
-
-        # Score final
-        final_score = total_score * number_of_events
-
-        # Enregistrement de la ligne
-        final_scores.append({
-            'Participant': participant,
-            'Sexe': data['gender'],
-            'Club': data['clubname'],
-            **formatted_scores,
-            'Score Total': total_score,
-            'Score Final': final_score,
-            'Nombre d\'épreuves': number_of_events,
-            'Détails La Maltournée - Planoise': detail_scores
-        })
-
-    # DataFrame trié
-    df = pd.DataFrame(final_scores).sort_values(by="Score Final", ascending=False).reset_index(drop=True)
-
-    # Génération HTML
-    generate_html(df, "classement_general.html", "Classement Général")
-    generate_html(df[df['Sexe'] == 'Homme'], "classement_hommes.html", "Classement Hommes")
-    generate_html(df[df['Sexe'] == 'Femme'], "classement_femmes.html", "Classement Femmes")
+    generate_html(df, "classement.html", "Classement Général")
 
 if __name__ == "__main__":
     main()

@@ -7,7 +7,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import pandas as pd
 
 # URLs et noms d'épreuves
 urls = [
@@ -31,9 +30,9 @@ def extract_scores_from_url(url):
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.binary_location = "/usr/bin/chromium"  # <--- important pour GitHub Actions
 
-    driver = webdriver.Chrome(service=Service("/usr/bin/chromedriver"), options=chrome_options)
+    # Selenium détecte automatiquement ChromeDriver et Chrome
+    driver = webdriver.Chrome(options=chrome_options)
     driver.get(url)
 
     scores = {}
@@ -65,16 +64,8 @@ def extract_scores_from_url(url):
 def generate_html(df, filename, title):
     paris_tz = pytz.timezone("Europe/Paris")
     generation_time = datetime.datetime.now(paris_tz).strftime("%d/%m/%Y %H:%M:%S")
-
     os.makedirs("docs", exist_ok=True)
     filepath = os.path.join("docs", filename)
-
-    event_columns = [
-        'Garde les pieds sur terre',
-        'En avant les checkpoints',
-        'Vise la cible ou bien',
-        'Remonte la pente a patte'
-    ]
 
     html_string = f"""
     <html>
@@ -82,16 +73,42 @@ def generate_html(df, filename, title):
         <title>{title}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
         <style>
-            table {{ width: 100%; margin: 20px 0; border-collapse: collapse; }}
-            th, td {{ padding: 8px; text-align: left; border: 1px solid #ddd; }}
-            th {{ background-color: #f4f4f4; }}
-            tr:nth-child(even) {{ background-color: #f9f9f9; }}
-            tr:hover {{ filter: brightness(95%); }}
-            .footer-logos {{ margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 20px; }}
-            .footer-logos img {{ height: 120px; auto: width; opacity: 0.9; }}
+            table {{
+                width: 100%;
+                margin: 20px 0;
+                border-collapse: collapse;
+            }}
+            th, td {{
+                padding: 8px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }}
+            th {{
+                background-color: #f4f4f4;
+            }}
+            tr:nth-child(even) {{
+                background-color: #f9f9f9;
+            }}
+            tr:hover {{
+                filter: brightness(95%);
+            }}
+            .footer-logos {{
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+            }}
+            .footer-logos img {{
+                height: 120px;
+                auto: width;
+                opacity: 0.9;
+            }}
         </style>
         <script>
-            setTimeout(function() {{ window.location.reload(); }}, 300000);
+            setTimeout(function() {{
+                window.location.reload();
+            }}, 300000);
         </script>
     </head>
     <body>
@@ -105,12 +122,10 @@ def generate_html(df, filename, title):
                         <th>Participant</th>
                         <th>Sexe</th>
                         <th>Club</th>
-    """
-
-    for event_name in event_columns:
-        html_string += f"<th>{event_name}</th>"
-
-    html_string += """
+                        <th>Garde les pieds sur terre</th>
+                        <th>En avant les checkpoints</th>
+                        <th>Vise la cible ou bien</th>
+                        <th>Remonte la pente a patte</th>
                         <th>Score Total</th>
                         <th>Score Final</th>
                         <th>Nombre d'épreuves</th>
@@ -119,7 +134,6 @@ def generate_html(df, filename, title):
                 </thead>
                 <tbody>
     """
-
     for index, row in df.iterrows():
         row_class = "table-success" if row['Sexe'] == 'Homme' else "table-info"
         html_string += f"""
@@ -128,37 +142,36 @@ def generate_html(df, filename, title):
                 <td>{row['Participant']}</td>
                 <td>{row['Sexe']}</td>
                 <td>{row['Club']}</td>
-        """
-        for event_name in event_columns:
-            html_string += f"<td>{row.get(event_name, '0')}</td>"
-
-        html_string += f"""
+                <td>{row.get('Garde les pieds sur terre', 0)}</td>
+                <td>{row.get('En avant les checkpoints', 0)}</td>
+                <td>{row.get('Vise la cible ou bien', 0)}</td>
+                <td>{row.get('Remonte la pente a patte', 0)}</td>
                 <td>{row['Score Total']}</td>
                 <td>{row['Score Final']}</td>
                 <td>{row["Nombre d'épreuves"]}</td>
                 <td>{row['Détails La Maltournée - Planoise']}</td>
             </tr>
         """
-
     html_string += """
                 </tbody>
             </table>
         </div>
         <div class="footer">
-                <p>Classement généré par L'établi ludique</p>
-                <div class="footer-logos">
-                    <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
-                    <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
-                </div>
+            <p>Classement généré par L'établi ludique</p>
+            <div class="footer-logos">
+                <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
             </div>
+        </div>
     </body>
     </html>
     """
-
     with open(filepath, "w", encoding="utf-8") as file:
         file.write(html_string)
 
 def main():
+    import pandas as pd
+
     all_scores = {}
     for url in urls:
         scores = extract_scores_from_url(url)
@@ -168,26 +181,25 @@ def main():
             for event_name, score_list in data['scores'].items():
                 all_scores[participant]['scores'].setdefault(event_name, []).extend(score_list)
 
-    # Transformation des données pour le DataFrame
-    rows = []
+    # Préparer le DataFrame final
+    df_rows = []
     for participant, data in all_scores.items():
         row = {
             "Participant": participant,
             "Sexe": data['gender'],
             "Club": data['clubname'],
-            "Score Total": sum(sum(scores) for scores in data['scores'].values()),
-            "Score Final": sum(sum(scores) for scores in data['scores'].values()),  # Ici on peut appliquer d'autres règles si nécessaire
-            "Nombre d'épreuves": sum(len(scores) for scores in data['scores'].values()),
-            "Détails La Maltournée - Planoise": " / ".join(f"{k}: {v}" for k, v in data['scores'].items() if k in ["LaMaltournée", "Planoise"])
+            "Score Total": sum(sum(v) for v in data['scores'].values()),
+            "Score Final": sum(sum(v) for v in data['scores'].values()),  # Ici tu peux appliquer ta formule
+            "Nombre d'épreuves": len(data['scores']),
+            "Détails La Maltournée - Planoise": data['scores'].get('LaMaltournée', []) + data['scores'].get('Planoise', [])
         }
-        for event_name in event_names.values():
-            row[event_name] = sum(data['scores'].get(event_name, [0]))
-        rows.append(row)
+        for event in ['Garde les pieds sur terre', 'En avant les checkpoints', 'Vise la cible ou bien', 'Remonte la pente a patte']:
+            row[event] = sum(data['scores'].get(event, [0]))
+        df_rows.append(row)
 
-    df = pd.DataFrame(rows)
+    df = pd.DataFrame(df_rows)
     df = df.sort_values(by="Score Final", ascending=False).reset_index(drop=True)
-
-    generate_html(df, "classement.html", "Classement Général")
+    generate_html(df, "classement.html", "Classement Tout Besançon Vole")
 
 if __name__ == "__main__":
     main()

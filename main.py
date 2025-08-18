@@ -121,7 +121,7 @@ def generate_html(df, filename, title):
             gap: 20px;
         }}
         .footer-logos img {{
-            height: 60px;   /* taille fixe en hauteur */
+            height: 120px;   /* taille fixe en hauteur */
             auto: width;
             opacity: 0.9;
         }}

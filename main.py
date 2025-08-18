@@ -270,3 +270,7 @@ def main():
     generate_html(df, "classement_general.html", "Classement Général")
     generate_html(df[df['Sexe'] == 'Homme'], "classement_hommes.html", "Classement Hommes")
     generate_html(df[df['Sexe'] == 'Femme'], "classement_femmes.html", "Classement Femmes")
+
+if __name__ == "__main__":
+    main()
+

@@ -88,6 +88,10 @@ def generate_html(df, filename, title):
         <title>{title}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
         <style>
+            .container {
+                padding-left: 10px;  
+                padding-right: 10px;  
+            }
             table {{
                 width: 100%;
                 margin: 20px 0;

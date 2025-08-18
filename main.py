@@ -208,14 +208,15 @@ def main():
     final_scores = []
     for participant, data in all_scores.items():
         row = {
-            'Participant': participant,
-            'Sexe': 'Homme' if data['gender'] in ['M', 'Homme'] else 'Femme',
-            'Club': data['clubname'],
-            'Score Total': sum(max(scores) if scores else 0 for scores in data['scores'].values()),
-            'Score Final': sum(max(scores) if scores else 0 for scores in data['scores'].values()),
-            'Nombre d'épreuves': sum(1 for scores in data['scores'].values() if scores),
-            'Détails La Maltournée - Planoise': ""
-        }
+                'Participant': participant,
+                'Sexe': 'Homme' if data['gender'] in ['M', 'Homme'] else 'Femme',
+                'Club': data['clubname'],
+                'Score Total': sum(max(scores) if scores else 0 for scores in data['scores'].values()),
+                'Score Final': sum(max(scores) if scores else 0 for scores in data['scores'].values()),
+                'Nombre d\'épreuves': sum(1 for scores in data['scores'].values() if scores),
+                'Détails La Maltournée - Planoise': ""
+            }
+
         for event_name in event_columns:
             row[event_name] = max(data['scores'].get(event_name, [0])) if data['scores'].get(event_name) else 0
         final_scores.append(row)

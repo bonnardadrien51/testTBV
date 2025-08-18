@@ -112,18 +112,18 @@ def generate_html(df, filename, title):
                 filter: brightness(95%);
             }}
             
-        .footer-logos {{
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-        }}
-        .footer-logos img {{
-            height: 120px;
-            auto: width;
-            opacity: 0.9;
-        }}
+            .footer-logos {{
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+            }}
+            .footer-logos img {{
+                height: 120px;
+                auto: width;
+                opacity: 0.9;
+            }}
         </style>
         <script>
             setTimeout(function() {{
@@ -167,7 +167,17 @@ def generate_html(df, filename, title):
                 <td>{row['Club']}</td>
         """
         for event_name in event_columns:
-            html_string += f"<td>{row.get(event_name, 0)}</td>"
+            scores_list = row.get(event_name, [])
+            if isinstance(scores_list, list):
+                if scores_list:
+                    best_score = max(scores_list)
+                    other_scores = [str(s) for s in scores_list if s != best_score]
+                    other_scores_str = f" ({', '.join(other_scores)})" if other_scores else ""
+                    html_string += f"<td><b>{best_score}</b>{other_scores_str}</td>"
+                else:
+                    html_string += "<td>0</td>"
+            else:
+                html_string += f"<td>{scores_list}</td>"
 
         html_string += f"""
                 <td>{row['Score Total']}</td>
@@ -182,70 +192,15 @@ def generate_html(df, filename, title):
             </table>
         </div>
         <div class="footer">
-                <p>Classement généré par L'établi ludique</p>
-                <div class="footer-logos">
-                    <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
-                    <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
-                </div>
+            <p>Classement généré par L'établi ludique</p>
+            <div class="footer-logos">
+                <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
             </div>
+        </div>
     </body>
     </html>
     """
 
     with open(filepath, "w", encoding="utf-8") as file:
         file.write(html_string)
-
-def main():
-    all_scores = {}
-    for url in urls:
-        scores = extract_scores_from_url(url)
-        for participant, data in scores.items():
-            if participant not in all_scores:
-                all_scores[participant] = {'gender': data['gender'], 'clubname': data['clubname'], 'scores': {}}
-            for event_name, score_list in data['scores'].items():
-                all_scores[participant]['scores'].setdefault(event_name, []).extend(score_list)
-
-    final_scores = []
-
-    for participant, data in all_scores.items():
-        row = {
-            'Participant': participant,
-            'Sexe': data['gender'],
-            'Club': data['clubname'],
-        }
-
-        total_score = 0
-        num_events = 0
-
-        # Solo events
-        for event in ['Garde les pieds sur terre', 'En avant les checkpoints', 'Vise la cible ou bien']:
-            score = max(data['scores'].get(event, [0]))
-            row[event] = score
-            if score > 0:
-                total_score += score
-                num_events += 1
-
-        # Combined event: La Maltournée / Planoise
-        mal_score = max(data['scores'].get('LaMaltournée', [0]))
-        pl_score = max(data['scores'].get('Planoise', [0]))
-        combined_score = max(mal_score, pl_score)
-        row['Remonte la pente a patte'] = combined_score
-
-        if mal_score > 0 or pl_score > 0:
-            num_events += 1
-
-        row['Nombre d\'épreuves'] = num_events
-        row['Score Total'] = total_score + combined_score
-        row['Score Final'] = row['Score Total'] * num_events
-        row['Détails La Maltournée - Planoise'] = f"LaMaltournée: {mal_score} Planoise: {pl_score}"
-
-        final_scores.append(row)
-
-    df = pd.DataFrame(final_scores).sort_values(by="Score Final", ascending=False).reset_index(drop=True)
-
-    generate_html(df, "classement_general.html", "Classement Général")
-    generate_html(df[df['Sexe'] == 'Homme'], "classement_hommes.html", "Classement Hommes")
-    generate_html(df[df['Sexe'] == 'Femme'], "classement_femmes.html", "Classement Femmes")
-
-if __name__ == "__main__":
-    main()

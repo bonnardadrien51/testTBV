@@ -205,51 +205,51 @@ def generate_html(df, filename, title):
     with open(filepath, "w", encoding="utf-8") as file:
         file.write(html_string)
 
-    def main():
-    all_scores = {}
-    for url in urls:
-        scores = extract_scores_from_url(url)
-        for participant, data in scores.items():
-            if participant not in all_scores:
-                all_scores[participant] = {'gender': data['gender'], 'clubname': data['clubname'], 'scores': {}}
-            for event_name, score_list in data['scores'].items():
-                all_scores[participant]['scores'].setdefault(event_name, []).extend(score_list)
+def main():
+all_scores = {}
+for url in urls:
+    scores = extract_scores_from_url(url)
+    for participant, data in scores.items():
+        if participant not in all_scores:
+            all_scores[participant] = {'gender': data['gender'], 'clubname': data['clubname'], 'scores': {}}
+        for event_name, score_list in data['scores'].items():
+            all_scores[participant]['scores'].setdefault(event_name, []).extend(score_list)
 
-    final_scores = []
+final_scores = []
 
-    for participant, data in all_scores.items():
-        row = {
-            'Participant': participant,
-            'Sexe': data['gender'],
-            'Club': data['clubname'],
-        }
+for participant, data in all_scores.items():
+    row = {
+        'Participant': participant,
+        'Sexe': data['gender'],
+        'Club': data['clubname'],
+    }
 
-        total_score = 0
-        num_events = 0
+    total_score = 0
+    num_events = 0
 
-        # Solo events
-        for event in ['Garde les pieds sur terre', 'En avant les checkpoints', 'Vise la cible ou bien']:
-            scores = data['scores'].get(event, [0])
-            if scores:
-                max_score = max(scores)
-                others = [s for s in scores if s != max_score]
-                if others:
-                    row[event] = f"<b>{max_score}</b> ({', '.join(map(str, others))})"
-                else:
-                    row[event] = f"<b>{max_score}</b>"
-                total_score += max_score
-                num_events += 1
+    # Solo events
+    for event in ['Garde les pieds sur terre', 'En avant les checkpoints', 'Vise la cible ou bien']:
+        scores = data['scores'].get(event, [0])
+        if scores:
+            max_score = max(scores)
+            others = [s for s in scores if s != max_score]
+            if others:
+                row[event] = f"<b>{max_score}</b> ({', '.join(map(str, others))})"
             else:
-                row[event] = 0
+                row[event] = f"<b>{max_score}</b>"
+            total_score += max_score
+            num_events += 1
+        else:
+            row[event] = 0
 
-        # Combined event: La Maltournée / Planoise
-        mal_scores = data['scores'].get('LaMaltournée', [0])
-        pl_scores = data['scores'].get('Planoise', [0])
-        combined_scores = mal_scores + pl_scores
-        if combined_scores:
-            max_combined = max(combined_scores)
-            others_combined = [s for s in combined_scores if s != max_combined]
-            if others_combined:
+    # Combined event: La Maltournée / Planoise
+    mal_scores = data['scores'].get('LaMaltournée', [0])
+    pl_scores = data['scores'].get('Planoise', [0])
+    combined_scores = mal_scores + pl_scores
+    if combined_scores:
+        max_combined = max(combined_scores)
+        others_combined = [s for s in combined_scores if s != max_combined]
+        if others_combined:
                 row['Remonte la pente a patte'] = f"<b>{max_combined}</b> ({', '.join(map(str, others_combined))})"
             else:
                 row['Remonte la pente a patte'] = f"<b>{max_combined}</b>"

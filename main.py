@@ -232,13 +232,14 @@ def main():
             scores = data['scores'].get(event, [0])
             if scores:
                 max_score = max(scores)
+                if max_score > 0:
+                    num_events += 1  # on compte seulement si score > 0
                 others = [s for s in scores if s != max_score]
                 if others:
                     row[event] = f"<b>{max_score}</b> ({', '.join(map(str, others))})"
                 else:
                     row[event] = f"<b>{max_score}</b>"
                 total_score += max_score
-                num_events += 1
             else:
                 row[event] = 0
 
@@ -248,13 +249,14 @@ def main():
         combined_scores = mal_scores + pl_scores
         if combined_scores:
             max_combined = max(combined_scores)
+            if max_combined > 0:
+                num_events += 1  # idem ici
             others_combined = [s for s in combined_scores if s != max_combined]
             if others_combined:
                 row['Remonte la pente a patte'] = f"<b>{max_combined}</b> ({', '.join(map(str, others_combined))})"
             else:
                 row['Remonte la pente a patte'] = f"<b>{max_combined}</b>"
             total_score += max_combined
-            num_events += 1
         else:
             row['Remonte la pente a patte'] = 0
 
@@ -267,6 +269,7 @@ def main():
 
     df = pd.DataFrame(final_scores).sort_values(by="Score Final", ascending=False).reset_index(drop=True)
 
+    # Génération des fichiers HTML
     generate_html(df, "classement_general.html", "Classement Général")
     generate_html(df[df['Sexe'] == 'Homme'], "classement_hommes.html", "Classement Hommes")
     generate_html(df[df['Sexe'] == 'Femme'], "classement_femmes.html", "Classement Femmes")

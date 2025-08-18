@@ -112,6 +112,19 @@ def generate_html(df, filename, title):
             tr:hover {{
                 filter: brightness(95%);
             }}
+            
+        .footer-logos {{
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }}
+        .footer-logos img {{
+            max-height: 40px;
+            max-width: 120px;
+            opacity: 0.9;
+        }}
         </style>
         <script>
             // Actualiser la page toutes les 5 minutes

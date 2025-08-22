@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Prochains Départs – Velotte, Port Douvot & Malcombe</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+    header {
+      background: #007bff;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5em;
+    }
+    #clock {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    main {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .top-sections {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    section {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 15px;
+    }
+    section h2 {
+      text-align: center;
+      margin-top: 0;
+      font-size: 1.3em;
+    }
+    .departure {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 6px;
+    }
+    .line {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+      color: #fff;
+      margin-right: 15px;
+    }
+    .info h3 {
+      margin: 0;
+      font-size: 1em;
+    }
+    .info p {
+      margin: 3px 0 0;
+      color: #555;
+    }
+    .tram-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .column h3 {
+      text-align: center;
+      margin: 0 0 10px;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Prochains Départs</h1>
+    <div id="clock">--:--:--</div>
+  </header>
+
+  <main>
+    <div class="top-sections">
+      <!-- Section Bus Velotte -->
+      <section>
+        <h2>Velotte → Tilleroyes (Ligne 9)</h2>
+        <div id="busVelotte">Chargement...</div>
+      </section>
+
+      <!-- Section Port Douvot -->
+      <section>
+        <h2>Port Douvot (Ligne 21)</h2>
+        <div id="busPortdouvot">Chargement...</div>
+      </section>
+    </div>
+
+    <!-- Section Tram Malcombe -->
+    <section>
+      <h2>Tram Malcombe</h2>
+      <div class="tram-columns">
+        <div class="column">
+          <h3>Vers Hauts-du-Chazal</h3>
+          <div id="tramChazal">Chargement...</div>
+        </div>
+        <div class="column">
+          <h3>Vers Chalezeule</h3>
+          <div id="tramChalezeule">Chargement...</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_KEY = "ad2c3051dd9fffa2f9b903bf9998d227";
+
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById("clock").textContent = `${h}:${m}:${s}`;
+    }
+
+    async function fetchBusStop(stopName, containerId) {
+      const url = `https://api.ginko.voyage/TR/getTempsLieu.do?apiKey=${API_KEY}&nom=${stopName}&nb=5`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const list = data.objets.listeTemps;
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+
+        list.slice(0, 2).forEach(item => {
+          const div = document.createElement("div");
+          div.className = "departure";
+
+          const line = document.createElement("div");
+          line.className = "line";
+          line.style.background = "#" + item.couleurFond;
+          line.style.color = "#" + item.couleurTexte;
+          line.textContent = item.numLignePublic;
+
+          const info = document.createElement("div");
+          info.className = "info";
+          info.innerHTML = `
+            <h3>${item.destination}</h3>
+            <p>Départ : ${item.temps}</p>
+          `;
+
+          div.appendChild(line);
+          div.appendChild(info);
+          container.appendChild(div);
+        });
+      } catch (e) {
+        document.getElementById(containerId).innerHTML = "<p>Erreur de chargement.</p>";
+        console.error(e);
+      }
+    }
+
+    async function fetchTrams() {
+      const url = `https://api.ginko.voyage/TR/getTempsLieu.do?apiKey=${API_KEY}&nom=malcombe&nb=5`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const list = data.objets.listeTemps;
+        const chazal = document.getElementById("tramChazal");
+        const chalez = document.getElementById("tramChalezeule");
+
+        chazal.innerHTML = "";
+        chalez.innerHTML = "";
+
+        list.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "departure";
+
+          const line = document.createElement("div");
+          line.className = "line";
+          line.style.background = "#" + item.couleurFond;
+          line.style.color = "#" + item.couleurTexte;
+          line.textContent = item.numLignePublic;
+
+          const info = document.createElement("div");
+          info.className = "info";
+          info.innerHTML = `
+            <h3>Vers ${item.destination}</h3>
+            <p>Départ : ${item.temps}</p>
+          `;
+
+          div.appendChild(line);
+          div.appendChild(info);
+
+          const dest = item.destination.toLowerCase();
+          if (dest.includes("chazal")) {
+            chazal.appendChild(div);
+          } else if (dest.includes("chalezeule")) {
+            chalez.appendChild(div);
+          }
+        });
+      } catch (e) {
+        document.getElementById("tramChazal").innerHTML = "<p>Erreur de chargement.</p>";
+        document.getElementById("tramChalezeule").innerHTML = "<p>Erreur de chargement.</p>";
+        console.error(e);
+      }
+    }
+
+    function refreshAll() {
+      updateClock();
+      fetchBusStop("velotte", "busVelotte");
+      fetchBusStop("portdouvot", "busPortdouvot");
+      fetchTrams();
+    }
+
+    refreshAll();
+    setInterval(refreshAll, 30000); // rafraîchit toutes les 30s
+    setInterval(updateClock, 1000); // met l'heure à jour chaque seconde
+  </script>
+</body>
+</html>

@@ -44,22 +44,54 @@ def extract_scores_from_url(url):
         for row in rows:
             cols = row.find_elements(By.TAG_NAME, 'td')
             if len(cols) > 6:
-                username = cols[1].text
-                gender = cols[3].text
-                clubname = cols[2].text
-                score_text = cols[6].get_attribute('innerHTML')
+                username = cols[1].text.strip()
+                gender = cols[3].text.strip()
+                clubname = cols[2].text.strip()
+                score_text = cols[6].get_attribute('innerHTML').strip()
+
                 if '<b>' in score_text:
-                    score = int(score_text.split('<b>')[1].split('</b>')[0])
+                    # Score principal
+                    main_score = int(score_text.split('<b>')[1].split('</b>')[0])
+
+                    # Pénalité éventuelle (ex: "0 (-2)")
+                    penalite = 0
+                    if '(' in score_text and ')' in score_text:
+                        try:
+                            penalite_str = score_text.split('(')[1].split(')')[0]
+                            penalite = int(penalite_str)
+                        except:
+                            penalite = 0
+
                     if username not in scores:
-                        scores[username] = {'gender': gender, 'clubname': clubname, 'scores': {}}
+                        scores[username] = {
+                            'gender': gender,
+                            'clubname': clubname,
+                            'scores': {}
+                        }
+
                     event_id = url.split('course_hid=')[1].split('&')[0]
                     event_name = event_names.get(event_id, event_id)
-                    scores[username]['scores'].setdefault(event_name, []).append(score)
+
+                    scores[username]['scores'].setdefault(event_name, []).append({
+                        "score": main_score,
+                        "penalite": penalite
+                    })
+
     except Exception as e:
         print(f"Erreur sur {url}: {e}")
     finally:
         driver.quit()
     return scores
+
+
+def style_sex(row):
+    if row['Sexe'] == 'Homme':
+        return ['background-color: #d4edda'] * len(row)
+    elif row['Sexe'] == 'Femme':
+        return ['background-color: #d1ecf1'] * len(row)
+    else:
+        return [''] * len(row)
+
 
 def generate_html(df, filename, title):
     paris_tz = pytz.timezone("Europe/Paris")
@@ -186,6 +218,19 @@ def generate_html(df, filename, title):
     with open(filepath, "w", encoding="utf-8") as file:
         file.write(html_string)
 
+
+def calcul_valeur(score_dict):
+    """Convertit un score {score, penalite} en valeur numérique"""
+    score = score_dict["score"]
+    penalite = score_dict["penalite"]
+    if score > 0:
+        return score
+    elif score == 0 and penalite < 0:
+        return 100 + penalite
+    else:
+        return 0
+
+
 def main():
     all_scores = {}
     for url in urls:
@@ -212,11 +257,13 @@ def main():
         for event in ['Garde les pieds sur terre', 'En avant les checkpoints', 'Vise la cible ou bien']:
             scores = data['scores'].get(event, [])
             if scores:
-                max_score = max(scores)
-                if max_score > 0:
+                valeurs = [calcul_valeur(s) for s in scores]
+                best_score = max(valeurs)
+                if best_score > 0:
                     num_events += 1
-                total_score += max_score
-                row[event] = f"<b>{max_score}</b>" if len(scores) == 1 else f"<b>{max_score}</b> ({', '.join(map(str, [s for s in scores if s != max_score]))})"
+                autres = [str(v) for v in valeurs if v != best_score]
+                row[event] = f"<b>{best_score}</b>" + (f" ({', '.join(autres)})" if autres else "")
+                total_score += best_score
             else:
                 row[event] = 0
 
@@ -224,30 +271,21 @@ def main():
         mal_scores = data['scores'].get('LaMaltournée', [])
         pl_scores = data['scores'].get('Planoise', [])
         combined_scores = mal_scores + pl_scores
-
-        if not combined_scores:
-            value = 0
+        if combined_scores:
+            valeurs = [calcul_valeur(s) for s in combined_scores]
+            best_score = max(valeurs)
+            if best_score > 0:
+                num_events += 1
+            autres = [str(v) for v in valeurs if v != best_score]
+            row['Remonte la pente a patte'] = f"<b>{best_score}</b>" + (f" ({', '.join(autres)})" if autres else "")
+            total_score += best_score
         else:
-            positives = [s for s in combined_scores if s > 0]
-            zeros = [s for s in combined_scores if s == 0]
-            negatives = [s for s in combined_scores if s < 0]
-
-            if positives:
-                value = max(positives)
-            elif zeros:
-                value = 100 + sum(negatives)
-            else:
-                value = 0
-
-        row['Remonte la pente a patte'] = value
-        total_score += value
-        if value > 0:
-            num_events += 1
+            row['Remonte la pente a patte'] = 0
 
         row['Nombre d\'épreuves'] = num_events
         row['Score Total'] = total_score
         row['Score Final'] = total_score * num_events
-        row['Détails La Maltournée - Planoise'] = f"LaMaltournée: {mal_scores if mal_scores else 0} | Planoise: {pl_scores if pl_scores else 0}"
+        row['Détails La Maltournée - Planoise'] = f"LaMaltournée: { [calcul_valeur(s) for s in mal_scores] } Planoise: { [calcul_valeur(s) for s in pl_scores] }"
 
         final_scores.append(row)
 
@@ -257,6 +295,7 @@ def main():
     generate_html(df, "classement_general.html", "Classement Général")
     generate_html(df[df['Sexe'] == 'Homme'], "classement_hommes.html", "Classement Hommes")
     generate_html(df[df['Sexe'] == 'Femme'], "classement_femmes.html", "Classement Femmes")
+
 
 if __name__ == "__main__":
     main()

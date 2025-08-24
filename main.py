@@ -61,14 +61,6 @@ def extract_scores_from_url(url):
         driver.quit()
     return scores
 
-def style_sex(row):
-    if row['Sexe'] == 'Homme':
-        return ['background-color: #d4edda'] * len(row)  # vert clair
-    elif row['Sexe'] == 'Femme':
-        return ['background-color: #d1ecf1'] * len(row)  # bleu clair
-    else:
-        return [''] * len(row)
-
 def generate_html(df, filename, title):
     paris_tz = pytz.timezone("Europe/Paris")
     generation_time = datetime.datetime.now(paris_tz).strftime("%d/%m/%Y %H:%M:%S")
@@ -89,8 +81,8 @@ def generate_html(df, filename, title):
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
         <style>
             .container {{
-                padding-left: 10px;   /* réduit la marge gauche */
-                padding-right: 10px;  /* réduit la marge droite */
+                padding-left: 10px;
+                padding-right: 10px;
             }}
             table {{
                 width: 100%;
@@ -111,7 +103,6 @@ def generate_html(df, filename, title):
             tr:hover {{
                 filter: brightness(95%);
             }}
-            
             .footer-logos {{
                 margin-top: 20px;
                 display: flex;
@@ -167,17 +158,7 @@ def generate_html(df, filename, title):
                 <td>{row['Club']}</td>
         """
         for event_name in event_columns:
-            scores_list = row.get(event_name, [])
-            if isinstance(scores_list, list):
-                if scores_list:
-                    best_score = max(scores_list)
-                    other_scores = [str(s) for s in scores_list if s != best_score]
-                    other_scores_str = f" ({', '.join(other_scores)})" if other_scores else ""
-                    html_string += f"<td><b>{best_score}</b>{other_scores_str}</td>"
-                else:
-                    html_string += "<td>0</td>"
-            else:
-                html_string += f"<td>{scores_list}</td>"
+            html_string += f"<td>{row.get(event_name, 0)}</td>"
 
         html_string += f"""
                 <td>{row['Score Total']}</td>
@@ -229,41 +210,44 @@ def main():
 
         # Solo events
         for event in ['Garde les pieds sur terre', 'En avant les checkpoints', 'Vise la cible ou bien']:
-            scores = data['scores'].get(event, [0])
+            scores = data['scores'].get(event, [])
             if scores:
                 max_score = max(scores)
                 if max_score > 0:
-                    num_events += 1  # on compte seulement si score > 0
-                others = [s for s in scores if s != max_score]
-                if others:
-                    row[event] = f"<b>{max_score}</b> ({', '.join(map(str, others))})"
-                else:
-                    row[event] = f"<b>{max_score}</b>"
+                    num_events += 1
                 total_score += max_score
+                row[event] = f"<b>{max_score}</b>" if len(scores) == 1 else f"<b>{max_score}</b> ({', '.join(map(str, [s for s in scores if s != max_score]))})"
             else:
                 row[event] = 0
 
         # Combined event: La Maltournée / Planoise
-        mal_scores = data['scores'].get('LaMaltournée', [0])
-        pl_scores = data['scores'].get('Planoise', [0])
+        mal_scores = data['scores'].get('LaMaltournée', [])
+        pl_scores = data['scores'].get('Planoise', [])
         combined_scores = mal_scores + pl_scores
-        if combined_scores:
-            max_combined = max(combined_scores)
-            if max_combined > 0:
-                num_events += 1  # idem ici
-            others_combined = [s for s in combined_scores if s != max_combined]
-            if others_combined:
-                row['Remonte la pente a patte'] = f"<b>{max_combined}</b> ({', '.join(map(str, others_combined))})"
-            else:
-                row['Remonte la pente a patte'] = f"<b>{max_combined}</b>"
-            total_score += max_combined
+
+        if not combined_scores:
+            value = 0
         else:
-            row['Remonte la pente a patte'] = 0
+            positives = [s for s in combined_scores if s > 0]
+            zeros = [s for s in combined_scores if s == 0]
+            negatives = [s for s in combined_scores if s < 0]
+
+            if positives:
+                value = max(positives)
+            elif zeros:
+                value = 100 + sum(negatives)
+            else:
+                value = 0
+
+        row['Remonte la pente a patte'] = value
+        total_score += value
+        if value > 0:
+            num_events += 1
 
         row['Nombre d\'épreuves'] = num_events
         row['Score Total'] = total_score
         row['Score Final'] = total_score * num_events
-        row['Détails La Maltournée - Planoise'] = f"LaMaltournée: {max(mal_scores)} Planoise: {max(pl_scores)}"
+        row['Détails La Maltournée - Planoise'] = f"LaMaltournée: {mal_scores if mal_scores else 0} | Planoise: {pl_scores if pl_scores else 0}"
 
         final_scores.append(row)
 
@@ -276,4 +260,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

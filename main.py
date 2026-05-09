@@ -12,11 +12,11 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 # URLs et noms d'épreuves
 urls = [
-    'https://www.iorienteering.com/dashboard/results?course_hid=PlDVta&lang=fr',
-    'https://www.iorienteering.com/dashboard/results?course_hid=7xX4ug&lang=fr',
-    'https://www.iorienteering.com/dashboard/results?course_hid=9NjwIz&lang=fr',
-    'https://www.iorienteering.com/dashboard/results?course_hid=OdKdfL&lang=fr',
-    'https://www.iorienteering.com/dashboard/results?course_hid=7aWvUg&lang=fr'
+    'https://www.iorienteering.com/dashboard/results/51894',
+    'https://www.iorienteering.com/dashboard/results/61985',
+    'https://www.iorienteering.com/dashboard/results/48831',
+    'https://www.iorienteering.com/dashboard/results/61984',
+    'https://www.iorienteering.com/dashboard/results/49685'
 ]
 
 event_names = {

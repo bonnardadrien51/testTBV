@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Nos partenaires financiers</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      margin: 20px 0;
+      text-align: center;
+      color: #1a1a1a;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      padding: 20px 40px;
+      max-width: 1600px;
+    }
+    .grid img {
+      max-width: 260px;
+      max-height: 160px;
+      object-fit: contain;
+    }
+    .empty {
+      color: #888;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Nos partenaires financiers</h1>
+  <div class="grid" id="logos">
+    <p class="empty">Chargement des logos…</p>
+  </div>
+
+  <script>
+    // --- Configuration : à adapter si le repo/branche change ---
+    const GH_USER = "bonnardadrien51";
+    const GH_REPO = "testTBV";
+    const GH_BRANCH = "main";
+    const FOLDER = "partenaires-financiers";
+    // Rafraîchit la page automatiquement toutes les 10 minutes
+    // pour prendre en compte les nouveaux logos ajoutés sur GitHub.
+    const REFRESH_MS = 10 * 60 * 1000;
+
+    const IMG_EXT = [".png", ".jpg", ".jpeg", ".svg", ".webp", ".gif"];
+
+    async function loadLogos() {
+      const container = document.getElementById("logos");
+      try {
+        const res = await fetch(
+          `https://data.jsdelivr.com/v1/packages/gh/${GH_USER}/${GH_REPO}@${GH_BRANCH}`
+        );
+        if (!res.ok) throw new Error("Erreur API jsDelivr");
+        const data = await res.json();
+
+        // Trouve le dossier demandé à la racine
+        const root = data.files || [];
+        const folderNode = root.find(
+          (f) => f.type === "directory" && f.name === FOLDER
+        );
+
+        if (!folderNode || !folderNode.files) {
+          container.innerHTML = `<p class="empty">Aucun logo trouvé dans le dossier "${FOLDER}".</p>`;
+          return;
+        }
+
+        const images = folderNode.files.filter((f) =>
+          IMG_EXT.some((ext) => f.name.toLowerCase().endsWith(ext))
+        );
+
+        if (images.length === 0) {
+          container.innerHTML = `<p class="empty">Aucun logo trouvé dans le dossier "${FOLDER}".</p>`;
+          return;
+        }
+
+        container.innerHTML = "";
+        images.forEach((img) => {
+          const el = document.createElement("img");
+          el.src = `https://cdn.jsdelivr.net/gh/${GH_USER}/${GH_REPO}@${GH_BRANCH}/${FOLDER}/${img.name}`;
+          el.alt = img.name.replace(/\.[^.]+$/, "");
+          container.appendChild(el);
+        });
+      } catch (err) {
+        container.innerHTML = `<p class="empty">Erreur de chargement des logos.</p>`;
+        console.error(err);
+      }
+    }
+
+    loadLogos();
+    setInterval(() => window.location.reload(), REFRESH_MS);
+  </script>
+</body>
+</html>

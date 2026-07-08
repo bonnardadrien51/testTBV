@@ -6,6 +6,9 @@
   <!-- Import de la police Tan Headline -->
   <link href="https://fonts.googleapis.com/css2?family=Tan+Headline:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       display: grid;
@@ -13,6 +16,7 @@
       grid-template-rows: 1fr 1fr;
       height: 100vh;
       font-family: Arial, sans-serif;
+      overflow: hidden;
     }
     .station {
       display: flex;
@@ -20,16 +24,25 @@
       justify-content: flex-start;
       align-items: center;
       background: white;
+      padding: 4px 4px 0 4px;
+      overflow: hidden;
     }
-    .station h2 {
-      margin: 5px 0;
-      font-size: 1.2em;
+    .station h1 {
+      margin: 4px 0;
+      font-size: 1.4em;
+      line-height: 1.15;
       text-align: center;
-      font-family: 'Tan Headline', sans-serif; /* Police Tan Headline */
+      font-family: 'Tan Headline', sans-serif;
+      font-weight: 700;
+      color: #1a1a1a;
+      width: 100%;
+      white-space: nowrap;
+      overflow: visible;
     }
     iframe {
       width: 100%;
-      height: calc(100% - 30px); /* laisse de la place pour le titre */
+      flex: 1 1 auto;
+      min-height: 0;
       border: none;
     }
     .logos {
@@ -38,12 +51,16 @@
       justify-content: center;
       align-items: center;
       background: white;
+      padding: 10px;
+      overflow: hidden;
     }
     .logos img {
+      width: 100%;
       max-width: 80%;
-      max-height: 40%;
-      margin: 10px;
+      flex: 1 1 0;
+      min-height: 0;
       object-fit: contain;
+      margin: 6px 0;
     }
   </style>
 </head>
@@ -53,19 +70,16 @@
     <h1>Besançon Planoise NE</h1>
     <iframe src="https://www.spotair.mobi/widget/wind/ffvl/2591?unit=kmh&name=false"></iframe>
   </div>
-
   <!-- Case 2 : Besançon Planoise SO -->
   <div class="station">
     <h1>Besançon Planoise SO</h1>
     <iframe src="https://www.spotair.mobi/widget/wind/ffvl/2195?unit=kmh&name=false"></iframe>
   </div>
-
   <!-- Case 3 : Besançon Arguel N -->
   <div class="station">
     <h1>Besançon Arguel N</h1>
     <iframe src="https://www.spotair.mobi/widget/wind/ffvl/5043?unit=kmh&name=false"></iframe>
   </div>
-
   <!-- Case 4 : Logos -->
   <div class="logos">
     <img src="https://besancon-vol-libre.fr/wp-content/uploads/2023/01/logoBVL-2-e1673386260565.png" alt="Logo BVL">

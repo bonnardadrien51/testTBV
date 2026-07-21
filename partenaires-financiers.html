@@ -46,51 +46,29 @@
   </div>
 
   <script>
-    // --- Configuration : à adapter si le repo/branche change ---
-    const GH_USER = "bonnardadrien51";
-    const GH_REPO = "testTBV";
-    const GH_BRANCH = "main";
+    // Dossier contenant les logos et le manifest.json généré par la GitHub Action
     const FOLDER = "partenaires-financiers";
-    // Rafraîchit la page automatiquement toutes les 10 minutes
-    // pour prendre en compte les nouveaux logos ajoutés sur GitHub.
-    const REFRESH_MS = 10 * 60 * 1000;
-
-    const IMG_EXT = [".png", ".jpg", ".jpeg", ".svg", ".webp", ".gif"];
+    // Recharge la page automatiquement une fois par jour
+    const REFRESH_MS = 24 * 60 * 60 * 1000;
 
     async function loadLogos() {
       const container = document.getElementById("logos");
       try {
-        const res = await fetch(
-          `https://data.jsdelivr.com/v1/packages/gh/${GH_USER}/${GH_REPO}@${GH_BRANCH}`
-        );
-        if (!res.ok) throw new Error("Erreur API jsDelivr");
-        const data = await res.json();
+        // Cache-buster pour être sûr de récupérer la dernière version du manifest
+        const res = await fetch(`${FOLDER}/manifest.json?t=${Date.now()}`);
+        if (!res.ok) throw new Error("manifest.json introuvable");
+        const files = await res.json();
 
-        // Trouve le dossier demandé à la racine
-        const root = data.files || [];
-        const folderNode = root.find(
-          (f) => f.type === "directory" && f.name === FOLDER
-        );
-
-        if (!folderNode || !folderNode.files) {
-          container.innerHTML = `<p class="empty">Aucun logo trouvé dans le dossier "${FOLDER}".</p>`;
-          return;
-        }
-
-        const images = folderNode.files.filter((f) =>
-          IMG_EXT.some((ext) => f.name.toLowerCase().endsWith(ext))
-        );
-
-        if (images.length === 0) {
+        if (!files || files.length === 0) {
           container.innerHTML = `<p class="empty">Aucun logo trouvé dans le dossier "${FOLDER}".</p>`;
           return;
         }
 
         container.innerHTML = "";
-        images.forEach((img) => {
+        files.forEach((name) => {
           const el = document.createElement("img");
-          el.src = `https://cdn.jsdelivr.net/gh/${GH_USER}/${GH_REPO}@${GH_BRANCH}/${FOLDER}/${img.name}`;
-          el.alt = img.name.replace(/\.[^.]+$/, "");
+          el.src = `${FOLDER}/${name}`;
+          el.alt = name.replace(/\.[^.]+$/, "");
           container.appendChild(el);
         });
       } catch (err) {

@@ -1,0 +1,47 @@
+name: Update logos manifest
+
+on:
+  push:
+    paths:
+      - 'partenaires/**'
+      - 'partenaires-financiers/**'
+  schedule:
+    - cron: '0 4 * * *'   # tous les jours à 4h UTC (~6h en France)
+  workflow_dispatch:        # permet de le lancer manuellement depuis l'onglet Actions
+
+permissions:
+  contents: write
+
+jobs:
+  update-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du repo
+        uses: actions/checkout@v4
+
+      - name: Générer les manifestes de logos
+        run: |
+          for dir in partenaires partenaires-financiers; do
+            mkdir -p "$dir"
+            files=$(find "$dir" -maxdepth 1 -type f \
+              \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \
+                 -o -iname '*.svg' -o -iname '*.webp' -o -iname '*.gif' \) \
+              -exec basename {} \; | sort)
+            if [ -z "$files" ]; then
+              echo "[]" > "$dir/manifest.json"
+            else
+              printf '%s\n' "$files" | jq -R . | jq -s . > "$dir/manifest.json"
+            fi
+          done
+
+      - name: Committer les changements si nécessaire
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add partenaires/manifest.json partenaires-financiers/manifest.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Mise à jour automatique des manifestes de logos"
+            git push
+          else
+            echo "Rien à committer."
+          fi

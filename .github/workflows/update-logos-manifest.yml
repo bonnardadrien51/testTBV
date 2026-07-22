@@ -3,8 +3,8 @@ name: Update logos manifest
 on:
   push:
     paths:
-      - 'partenaires/**'
-      - 'partenaires-financiers/**'
+      - 'docs/partenaires/**'
+      - 'docs/partenaires-financiers/**'
   schedule:
     - cron: '0 4 * * *'   # tous les jours à 4h UTC (~6h en France)
   workflow_dispatch:        # permet de le lancer manuellement depuis l'onglet Actions

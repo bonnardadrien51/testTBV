@@ -10,24 +10,31 @@ from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 from webdriver_manager.chrome import ChromeDriverManager
 
-# URLs et noms d'épreuves
-urls = [
-    'https://www.iorienteering.com/dashboard/results/51894',
-    'https://www.iorienteering.com/dashboard/results/61985',
-    'https://www.iorienteering.com/dashboard/results/48831',
-    'https://www.iorienteering.com/dashboard/results/61984',
-    'https://www.iorienteering.com/dashboard/results/49685'
+# Épreuves du classement (comptent dans le Score Total / Score Final)
+COURSES = [
+    {'url': 'https://www.iorienteering.com/dashboard/results/51894', 'hid': 'PlDVta', 'name': 'Garde les pieds sur terre'},
+    {'url': 'https://www.iorienteering.com/dashboard/results/61985', 'hid': '7xX4ug', 'name': 'En avant les checkpoints'},
+    {'url': 'https://www.iorienteering.com/dashboard/results/48831', 'hid': '9NjwIz', 'name': 'Vise la cible ou bien'},
+    {'url': 'https://www.iorienteering.com/dashboard/results/61984', 'hid': 'OdKdfL', 'name': 'LaMaltournée'},
+    {'url': 'https://www.iorienteering.com/dashboard/results/49685', 'hid': '7aWvUg', 'name': 'Planoise'},
 ]
 
-event_names = {
-    'PlDVta': 'Garde les pieds sur terre',
-    '7xX4ug': 'En avant les checkpoints',
-    '9NjwIz': 'Vise la cible ou bien',
-    'OdKdfL': 'LaMaltournée',
-    '7aWvUg': 'Planoise'
+# Épreuve bonus (hors classement) : ajoute des points au Score Final sans compter
+# dans le nombre d'épreuves ni être multipliée.
+BONUS_COURSE = {
+    'url': 'https://www.iorienteering.com/dashboard/results?course_hid=k8eyTz&lang=fr',
+    'hid': 'k8eyTz',
+    'name': 'Déguisement',
 }
 
-def extract_scores_from_url(url):
+
+def extract_scores_from_url(url, event_id, event_name):
+    """Récupère les scores d'une épreuve iOrienteering.
+
+    event_id / event_name sont fournis explicitement (plutôt que déduits de
+    l'URL) car les URLs de type /dashboard/results/<id> ne contiennent pas le
+    paramètre course_hid et faisaient planter l'extraction précédente.
+    """
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
@@ -69,16 +76,13 @@ def extract_scores_from_url(url):
                             'scores': {}
                         }
 
-                    event_id = url.split('course_hid=')[1].split('&')[0]
-                    event_name = event_names.get(event_id, event_id)
-
                     scores[username]['scores'].setdefault(event_name, []).append({
                         "score": main_score,
                         "penalite": penalite
                     })
 
     except Exception as e:
-        print(f"Erreur sur {url}: {e}")
+        print(f"Erreur sur {url} ({event_id}): {e}")
     finally:
         driver.quit()
     return scores
@@ -172,6 +176,7 @@ def generate_html(df, filename, title):
 
     html_string += """
                         <th>Score Total</th>
+                        <th>Bonus Déguisement</th>
                         <th>Score Final</th>
                         <th>Nombre d'épreuves</th>
                         <th>Détails La Maltournée - Planoise</th>
@@ -194,6 +199,7 @@ def generate_html(df, filename, title):
 
         html_string += f"""
                 <td>{row['Score Total']}</td>
+                <td>{row['Bonus Déguisement']}</td>
                 <td>{row['Score Final']}</td>
                 <td>{row["Nombre d'épreuves"]}</td>
                 <td>{row['Détails La Maltournée - Planoise']}</td>
@@ -233,13 +239,24 @@ def calcul_valeur(score_dict):
 
 def main():
     all_scores = {}
-    for url in urls:
-        scores = extract_scores_from_url(url)
+
+    # Épreuves du classement
+    for course in COURSES:
+        scores = extract_scores_from_url(course['url'], course['hid'], course['name'])
         for participant, data in scores.items():
             if participant not in all_scores:
                 all_scores[participant] = {'gender': data['gender'], 'clubname': data['clubname'], 'scores': {}}
             for event_name, score_list in data['scores'].items():
                 all_scores[participant]['scores'].setdefault(event_name, []).extend(score_list)
+
+    # Épreuve bonus déguisement (ne compte pas dans le nombre d'épreuves,
+    # simplement ajoutée au Score Final)
+    bonus_scores = extract_scores_from_url(BONUS_COURSE['url'], BONUS_COURSE['hid'], BONUS_COURSE['name'])
+    for participant, data in bonus_scores.items():
+        if participant not in all_scores:
+            all_scores[participant] = {'gender': data['gender'], 'clubname': data['clubname'], 'scores': {}}
+        for event_name, score_list in data['scores'].items():
+            all_scores[participant]['scores'].setdefault(event_name, []).extend(score_list)
 
     final_scores = []
 
@@ -284,8 +301,18 @@ def main():
 
         row['Nombre d\'épreuves'] = num_events
         row['Score Total'] = total_score
-        row['Score Final'] = total_score * num_events
         row['Détails La Maltournée - Planoise'] = f"LaMaltournée: { [calcul_valeur(s) for s in mal_scores] } Planoise: { [calcul_valeur(s) for s in pl_scores] }"
+
+        # Bonus déguisement : simple addition au score final, hors classement
+        # des épreuves (ne compte pas dans "Nombre d'épreuves" et n'est pas
+        # multiplié).
+        deguisement_scores = data['scores'].get('Déguisement', [])
+        bonus = 0
+        if deguisement_scores:
+            bonus = max(calcul_valeur(s) for s in deguisement_scores)
+        row['Bonus Déguisement'] = bonus
+
+        row['Score Final'] = total_score * num_events + bonus
 
         final_scores.append(row)
 

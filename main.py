@@ -29,6 +29,11 @@ BONUS_COURSE = {
     'name': 'Déguisement',
 }
 
+# Page de test : liste des pilotes (nom, club, sexe) sans notion de score
+PILOTS_TEST_COURSE = {
+    'url': 'https://www.iorienteering.com/dashboard/results/62018',
+}
+
 
 def extract_scores_from_url(url, event_id, event_name, debug_path=None):
     """Récupère les scores d'une épreuve iOrienteering.
@@ -127,13 +132,14 @@ def is_femme(sexe):
 
 def normalize_sexe(sexe):
     """Affiche toujours Homme/Femme, quel que soit le libellé renvoyé par
-    iOrienteering (Male/Female, H/F, etc.)."""
+    iOrienteering (Male/Female, H/F, etc.). Tout le reste (Other, vide...)
+    devient 'Non défini'."""
     if is_homme(sexe):
         return 'Homme'
     elif is_femme(sexe):
         return 'Femme'
     else:
-        return sexe
+        return 'Non défini'
 
 
 def style_sex(row):
@@ -383,6 +389,140 @@ def generate_event_html(rows, filename, title):
         file.write(html_string)
 
 
+def extract_participants_from_url(url):
+    """Récupère juste la liste des participants (nom, club, sexe) d'une page
+    iOrienteering, sans exiger qu'ils aient un score enregistré. Utile pour
+    une page qui liste les pilotes inscrits plutôt qu'un classement."""
+    chrome_options = Options()
+    chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver.get(url)
+
+    participants = []
+    try:
+        wait = WebDriverWait(driver, 20)
+        tbody = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "#results_table > tbody")))
+        rows = tbody.find_elements(By.TAG_NAME, 'tr')
+
+        for row in rows:
+            cols = row.find_elements(By.TAG_NAME, 'td')
+            if len(cols) > 3:
+                username = cols[1].text.strip()
+                clubname = cols[2].text.strip()
+                gender = cols[3].text.strip()
+                if username:
+                    participants.append({
+                        'Participant': username,
+                        'Club': clubname,
+                        'Sexe': normalize_sexe(gender),
+                    })
+    except Exception as e:
+        print(f"Erreur sur {url}: {e}")
+    finally:
+        driver.quit()
+    return participants
+
+
+def generate_pilots_html(participants, filename, title):
+    paris_tz = pytz.timezone("Europe/Paris")
+    generation_time = datetime.datetime.now(paris_tz).strftime("%d/%m/%Y %H:%M:%S")
+    os.makedirs("docs", exist_ok=True)
+    filepath = os.path.join("docs", filename)
+
+    html_string = f"""
+    <html>
+    <head>
+        <title>{title}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
+        <style>
+            .container {{
+                padding-left: 10px;
+                padding-right: 10px;
+            }}
+            table {{
+                width: 100%;
+                margin: 20px 0;
+                border-collapse: collapse;
+            }}
+            th, td {{
+                padding: 8px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }}
+            th {{
+                background-color: #f4f4f4;
+            }}
+            tr:nth-child(even) {{
+                background-color: #f9f9f9;
+            }}
+            tr:hover {{
+                filter: brightness(95%);
+            }}
+            .footer-logos {{
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+            }}
+            .footer-logos img {{
+                height: 120px;
+                auto: width;
+                opacity: 0.9;
+            }}
+        </style>
+        <script>
+            setTimeout(function() {{
+                window.location.reload();
+            }}, 300000);
+        </script>
+    </head>
+    <body>
+        <div>
+            <h1>{title}</h1>
+            <p><small>Généré le {generation_time} (heure de Paris)</small></p>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Participant</th>
+                        <th>Club</th>
+                        <th>Sexe</th>
+                    </tr>
+                </thead>
+                <tbody>
+    """
+
+    for p in participants:
+        row_class = "table-success" if is_homme(p['Sexe']) else ("table-info" if is_femme(p['Sexe']) else "")
+        html_string += f"""
+            <tr class="{row_class}">
+                <td>{p['Participant']}</td>
+                <td>{p['Club']}</td>
+                <td>{p['Sexe']}</td>
+            </tr>
+        """
+
+    html_string += """
+                </tbody>
+            </table>
+        </div>
+        <div class="footer">
+            <p>Classement généré par L'établi ludique</p>
+            <div class="footer-logos">
+                <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    with open(filepath, "w", encoding="utf-8") as file:
+        file.write(html_string)
+
+
 def calcul_valeur(score_dict):
     """Convertit un score {score, penalite} en valeur numérique"""
     score = score_dict["score"]
@@ -504,6 +644,11 @@ def main():
             })
         rows.sort(key=lambda r: r['Score'], reverse=True)
         generate_event_html(rows, f"classement_epreuve_{slugify(event_name)}.html", f"Classement — {event_name}")
+
+    # Page de test : liste des pilotes (nom, club, sexe)
+    pilotes = extract_participants_from_url(PILOTS_TEST_COURSE['url'])
+    pilotes.sort(key=lambda p: p['Participant'])
+    generate_pilots_html(pilotes, "liste_pilotes_test.html", "Liste des pilotes (test)")
 
 
 if __name__ == "__main__":

@@ -88,10 +88,22 @@ def extract_scores_from_url(url, event_id, event_name):
     return scores
 
 
+GENDER_HOMME = {'homme', 'male', 'h', 'm'}
+GENDER_FEMME = {'femme', 'female', 'f'}
+
+
+def is_homme(sexe):
+    return str(sexe).strip().lower() in GENDER_HOMME
+
+
+def is_femme(sexe):
+    return str(sexe).strip().lower() in GENDER_FEMME
+
+
 def style_sex(row):
-    if row['Sexe'] == 'Homme':
+    if is_homme(row['Sexe']):
         return ['background-color: #d4edda'] * len(row)
-    elif row['Sexe'] == 'Femme':
+    elif is_femme(row['Sexe']):
         return ['background-color: #d1ecf1'] * len(row)
     else:
         return [''] * len(row)
@@ -186,7 +198,7 @@ def generate_html(df, filename, title):
     """
 
     for index, row in df.iterrows():
-        row_class = "table-success" if row['Sexe'] == 'Homme' else "table-info"
+        row_class = "table-success" if is_homme(row['Sexe']) else "table-info"
         html_string += f"""
             <tr class="{row_class}">
                 <td>{index + 1}</td>
@@ -320,8 +332,8 @@ def main():
 
     # Génération des fichiers HTML
     generate_html(df, "classement_general.html", "Classement Général")
-    generate_html(df[df['Sexe'] == 'Homme'], "classement_hommes.html", "Classement Hommes")
-    generate_html(df[df['Sexe'] == 'Femme'], "classement_femmes.html", "Classement Femmes")
+    generate_html(df[df['Sexe'].apply(is_homme)], "classement_hommes.html", "Classement Hommes")
+    generate_html(df[df['Sexe'].apply(is_femme)], "classement_femmes.html", "Classement Femmes")
 
 
 if __name__ == "__main__":

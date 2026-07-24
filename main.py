@@ -1,5 +1,7 @@
 import datetime
 import os
+import re
+import unicodedata
 import pytz
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -98,6 +100,17 @@ def is_homme(sexe):
 
 def is_femme(sexe):
     return str(sexe).strip().lower() in GENDER_FEMME
+
+
+def normalize_sexe(sexe):
+    """Affiche toujours Homme/Femme, quel que soit le libellé renvoyé par
+    iOrienteering (Male/Female, H/F, etc.)."""
+    if is_homme(sexe):
+        return 'Homme'
+    elif is_femme(sexe):
+        return 'Femme'
+    else:
+        return sexe
 
 
 def style_sex(row):
@@ -237,7 +250,117 @@ def generate_html(df, filename, title):
         file.write(html_string)
 
 
-def calcul_valeur(score_dict):
+def slugify(text):
+    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii')
+    text = re.sub(r'[^a-zA-Z0-9]+', '_', text).strip('_').lower()
+    return text
+
+
+def generate_event_html(rows, filename, title):
+    paris_tz = pytz.timezone("Europe/Paris")
+    generation_time = datetime.datetime.now(paris_tz).strftime("%d/%m/%Y %H:%M:%S")
+    os.makedirs("docs", exist_ok=True)
+    filepath = os.path.join("docs", filename)
+
+    html_string = f"""
+    <html>
+    <head>
+        <title>{title}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
+        <style>
+            .container {{
+                padding-left: 10px;
+                padding-right: 10px;
+            }}
+            table {{
+                width: 100%;
+                margin: 20px 0;
+                border-collapse: collapse;
+            }}
+            th, td {{
+                padding: 8px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }}
+            th {{
+                background-color: #f4f4f4;
+            }}
+            tr:nth-child(even) {{
+                background-color: #f9f9f9;
+            }}
+            tr:hover {{
+                filter: brightness(95%);
+            }}
+            .footer-logos {{
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+            }}
+            .footer-logos img {{
+                height: 120px;
+                auto: width;
+                opacity: 0.9;
+            }}
+        </style>
+        <script>
+            setTimeout(function() {{
+                window.location.reload();
+            }}, 300000);
+        </script>
+    </head>
+    <body>
+        <div>
+            <h1>{title}</h1>
+            <p><small>Généré le {generation_time} (heure de Paris)</small></p>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Participant</th>
+                        <th>Sexe</th>
+                        <th>Club</th>
+                        <th>Score</th>
+                        <th>Autres tentatives</th>
+                    </tr>
+                </thead>
+                <tbody>
+    """
+
+    for index, row in enumerate(rows):
+        row_class = "table-success" if is_homme(row['Sexe']) else "table-info"
+        html_string += f"""
+            <tr class="{row_class}">
+                <td>{index + 1}</td>
+                <td>{row['Participant']}</td>
+                <td>{row['Sexe']}</td>
+                <td>{row['Club']}</td>
+                <td><b>{row['Score']}</b></td>
+                <td>{row['Autres']}</td>
+            </tr>
+        """
+
+    html_string += """
+                </tbody>
+            </table>
+        </div>
+        <div class="footer">
+            <p>Classement généré par L'établi ludique</p>
+            <div class="footer-logos">
+                <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    with open(filepath, "w", encoding="utf-8") as file:
+        file.write(html_string)
+
+
+
     """Convertit un score {score, penalite} en valeur numérique"""
     score = score_dict["score"]
     penalite = score_dict["penalite"]
@@ -275,7 +398,7 @@ def main():
     for participant, data in all_scores.items():
         row = {
             'Participant': participant,
-            'Sexe': data['gender'],
+            'Sexe': normalize_sexe(data['gender']),
             'Club': data['clubname'],
         }
 
@@ -334,6 +457,27 @@ def main():
     generate_html(df, "classement_general.html", "Classement Général")
     generate_html(df[df['Sexe'].apply(is_homme)], "classement_hommes.html", "Classement Hommes")
     generate_html(df[df['Sexe'].apply(is_femme)], "classement_femmes.html", "Classement Femmes")
+
+    # Une page de classement par épreuve individuelle (en plus du classement général)
+    for course in COURSES + [BONUS_COURSE]:
+        event_name = course['name']
+        rows = []
+        for participant, data in all_scores.items():
+            scores = data['scores'].get(event_name, [])
+            if not scores:
+                continue
+            valeurs = [calcul_valeur(s) for s in scores]
+            best_score = max(valeurs)
+            autres = [str(v) for v in valeurs if v != best_score]
+            rows.append({
+                'Participant': participant,
+                'Sexe': normalize_sexe(data['gender']),
+                'Club': data['clubname'],
+                'Score': best_score,
+                'Autres': ', '.join(autres),
+            })
+        rows.sort(key=lambda r: r['Score'], reverse=True)
+        generate_event_html(rows, f"classement_epreuve_{slugify(event_name)}.html", f"Classement — {event_name}")
 
 
 if __name__ == "__main__":

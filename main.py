@@ -360,7 +360,7 @@ def generate_event_html(rows, filename, title):
         file.write(html_string)
 
 
-
+def calcul_valeur(score_dict):
     """Convertit un score {score, penalite} en valeur numérique"""
     score = score_dict["score"]
     penalite = score_dict["penalite"]

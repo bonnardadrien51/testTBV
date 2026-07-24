@@ -523,6 +523,182 @@ def generate_pilots_html(participants, filename, title):
         file.write(html_string)
 
 
+def generate_simple_html(df, filename, title):
+    """Classement simplifié (Nom, Club, Sexe, Score Total, Nombre d'épreuves)
+    avec un design plus sobre et moderne que le tableau détaillé."""
+    paris_tz = pytz.timezone("Europe/Paris")
+    generation_time = datetime.datetime.now(paris_tz).strftime("%d/%m/%Y %H:%M:%S")
+    os.makedirs("docs", exist_ok=True)
+    filepath = os.path.join("docs", filename)
+
+    medals = {1: "🥇", 2: "🥈", 3: "🥉"}
+
+    html_string = f"""
+    <html>
+    <head>
+        <title>{title}</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+        <style>
+            * {{
+                box-sizing: border-box;
+            }}
+            body {{
+                margin: 0;
+                font-family: 'Poppins', sans-serif;
+                background: linear-gradient(135deg, #1f2933 0%, #2d3b45 100%);
+                min-height: 100vh;
+                padding: 40px 16px;
+                color: #1f2933;
+            }}
+            .wrapper {{
+                max-width: 820px;
+                margin: 0 auto;
+            }}
+            .header {{
+                text-align: center;
+                margin-bottom: 28px;
+                color: #f5f7fa;
+            }}
+            .header h1 {{
+                margin: 0 0 6px 0;
+                font-weight: 700;
+                font-size: 2rem;
+                letter-spacing: 0.5px;
+            }}
+            .header p {{
+                margin: 0;
+                font-size: 0.85rem;
+                opacity: 0.7;
+            }}
+            .card {{
+                background: #ffffff;
+                border-radius: 18px;
+                overflow: hidden;
+                box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+            }}
+            table {{
+                width: 100%;
+                border-collapse: collapse;
+            }}
+            thead th {{
+                background: #10151a;
+                color: #f5f7fa;
+                text-transform: uppercase;
+                font-size: 0.72rem;
+                letter-spacing: 1px;
+                font-weight: 600;
+                padding: 16px 18px;
+                text-align: left;
+            }}
+            tbody td {{
+                padding: 14px 18px;
+                font-size: 0.95rem;
+                border-bottom: 1px solid #eef1f4;
+            }}
+            tbody tr:last-child td {{
+                border-bottom: none;
+            }}
+            tbody tr:hover {{
+                background: #f6f8fa;
+            }}
+            .rank {{
+                font-weight: 700;
+                width: 60px;
+            }}
+            .pos-1 {{ background: linear-gradient(90deg, #fff8e1, #ffffff); }}
+            .pos-2 {{ background: linear-gradient(90deg, #f3f4f6, #ffffff); }}
+            .pos-3 {{ background: linear-gradient(90deg, #fdece0, #ffffff); }}
+            .badge {{
+                display: inline-block;
+                padding: 3px 10px;
+                border-radius: 999px;
+                font-size: 0.72rem;
+                font-weight: 600;
+            }}
+            .badge-homme {{ background: #e3f2ed; color: #1e7a5f; }}
+            .badge-femme {{ background: #eaf1fb; color: #245c9c; }}
+            .badge-autre {{ background: #f1f1f1; color: #666; }}
+            .score {{
+                font-weight: 700;
+                font-size: 1rem;
+            }}
+            .nb-epreuves {{
+                color: #6b7280;
+                font-size: 0.85rem;
+            }}
+            .footer {{
+                text-align: center;
+                margin-top: 22px;
+                color: #cbd2d9;
+                font-size: 0.75rem;
+            }}
+        </style>
+        <script>
+            setTimeout(function() {{
+                window.location.reload();
+            }}, 300000);
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="header">
+                <h1>{title}</h1>
+                <p>Généré le {generation_time} (heure de Paris)</p>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nom Prénom</th>
+                            <th>Club</th>
+                            <th>Sexe</th>
+                            <th>Score Total</th>
+                            <th>Épreuves</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    """
+
+    for index, row in df.iterrows():
+        position = index + 1
+        pos_class = f"pos-{position}" if position in medals else ""
+        medal = medals.get(position, "")
+        if is_homme(row['Sexe']):
+            badge_class, badge_label = "badge-homme", "Homme"
+        elif is_femme(row['Sexe']):
+            badge_class, badge_label = "badge-femme", "Femme"
+        else:
+            badge_class, badge_label = "badge-autre", "Non défini"
+
+        html_string += f"""
+                        <tr class="{pos_class}">
+                            <td class="rank">{medal or position}</td>
+                            <td>{row['Participant']}</td>
+                            <td>{row['Club']}</td>
+                            <td><span class="badge {badge_class}">{badge_label}</span></td>
+                            <td class="score">{row['Score Total']}</td>
+                            <td class="nb-epreuves">{row["Nombre d'épreuves"]}</td>
+                        </tr>
+        """
+
+    html_string += """
+                    </tbody>
+                </table>
+            </div>
+            <p class="footer">Classement généré par L'établi ludique</p>
+        </div>
+    </body>
+    </html>
+    """
+
+    with open(filepath, "w", encoding="utf-8") as file:
+        file.write(html_string)
+
+
 def calcul_valeur(score_dict):
     """Convertit un score {score, penalite} en valeur numérique"""
     score = score_dict["score"]
@@ -623,6 +799,7 @@ def main():
     generate_html(df, "classement_general.html", "Classement Général")
     generate_html(df[df['Sexe'].apply(is_homme)], "classement_hommes.html", "Classement Hommes")
     generate_html(df[df['Sexe'].apply(is_femme)], "classement_femmes.html", "Classement Femmes")
+    generate_simple_html(df, "classement_simple.html", "Classement Général")
 
     # Une page de classement par épreuve individuelle (en plus du classement général)
     for course in COURSES + [BONUS_COURSE]:

@@ -635,6 +635,21 @@ def generate_simple_html(df, filename, title):
                 color: #cbd2d9;
                 font-size: 0.75rem;
             }}
+            .footer-logos {{
+                margin-top: 18px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 24px;
+                background: rgba(255, 255, 255, 0.92);
+                border-radius: 14px;
+                padding: 14px 24px;
+            }}
+            .footer-logos img {{
+                height: 60px;
+                width: auto;
+                opacity: 0.95;
+            }}
         </style>
         <script>
             setTimeout(function() {{
@@ -690,6 +705,10 @@ def generate_simple_html(df, filename, title):
                 </table>
             </div>
             <p class="footer">Classement généré par L'établi ludique</p>
+            <div class="footer-logos">
+                <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
+            </div>
         </div>
     </body>
     </html>

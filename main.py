@@ -24,18 +24,22 @@ COURSES = [
 # Épreuve bonus (hors classement) : ajoute des points au Score Final sans compter
 # dans le nombre d'épreuves ni être multipliée.
 BONUS_COURSE = {
-    'url': 'https://www.iorienteering.com/dashboard/results?course_hid=k8eyTz&lang=fr',
+    'url': 'https://www.iorienteering.com/dashboard/results/81603',
     'hid': 'k8eyTz',
     'name': 'Déguisement',
 }
 
 
-def extract_scores_from_url(url, event_id, event_name):
+def extract_scores_from_url(url, event_id, event_name, debug_path=None):
     """Récupère les scores d'une épreuve iOrienteering.
 
     event_id / event_name sont fournis explicitement (plutôt que déduits de
     l'URL) car les URLs de type /dashboard/results/<id> ne contiennent pas le
     paramètre course_hid et faisaient planter l'extraction précédente.
+
+    Si debug_path est fourni, un fichier texte est écrit avec le détail brut
+    des lignes trouvées dans le tableau de résultats, pour diagnostiquer les
+    cas où le format de page diffère (ex: nombre de colonnes différent).
     """
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
@@ -45,13 +49,24 @@ def extract_scores_from_url(url, event_id, event_name):
     driver.get(url)
 
     scores = {}
+    debug_lines = [] if debug_path else None
     try:
         wait = WebDriverWait(driver, 20)
         tbody = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "#results_table > tbody")))
         rows = tbody.find_elements(By.TAG_NAME, 'tr')
 
-        for row in rows:
+        if debug_lines is not None:
+            debug_lines.append(f"URL: {url}")
+            debug_lines.append(f"Nombre de lignes trouvées dans #results_table > tbody : {len(rows)}")
+
+        for i, row in enumerate(rows):
             cols = row.find_elements(By.TAG_NAME, 'td')
+
+            if debug_lines is not None:
+                debug_lines.append(f"--- Ligne {i} : {len(cols)} colonnes ---")
+                for j, col in enumerate(cols):
+                    debug_lines.append(f"  col[{j}] = {col.get_attribute('innerHTML').strip()!r}")
+
             if len(cols) > 6:
                 username = cols[1].text.strip()
                 gender = cols[3].text.strip()
@@ -85,8 +100,16 @@ def extract_scores_from_url(url, event_id, event_name):
 
     except Exception as e:
         print(f"Erreur sur {url} ({event_id}): {e}")
+        if debug_lines is not None:
+            debug_lines.append(f"EXCEPTION: {e}")
     finally:
         driver.quit()
+
+    if debug_path:
+        os.makedirs(os.path.dirname(debug_path), exist_ok=True)
+        with open(debug_path, "w", encoding="utf-8") as f:
+            f.write("\n".join(debug_lines) if debug_lines else "(aucune ligne de debug)")
+
     return scores
 
 
@@ -386,7 +409,10 @@ def main():
 
     # Épreuve bonus déguisement (ne compte pas dans le nombre d'épreuves,
     # simplement ajoutée au Score Final)
-    bonus_scores = extract_scores_from_url(BONUS_COURSE['url'], BONUS_COURSE['hid'], BONUS_COURSE['name'])
+    bonus_scores = extract_scores_from_url(
+        BONUS_COURSE['url'], BONUS_COURSE['hid'], BONUS_COURSE['name'],
+        debug_path="docs/debug_deguisement.txt"
+    )
     for participant, data in bonus_scores.items():
         if participant not in all_scores:
             all_scores[participant] = {'gender': data['gender'], 'clubname': data['clubname'], 'scores': {}}

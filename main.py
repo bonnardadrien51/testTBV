@@ -1337,7 +1337,7 @@ def main():
 
         final_scores.append(row)
 
-    df = pd.DataFrame(final_scores).sort_values(by="Score Total", ascending=False).reset_index(drop=True)
+    df = pd.DataFrame(final_scores).sort_values(by="Score Final", ascending=False).reset_index(drop=True)
 
     # Génération des fichiers HTML
     generate_html(df, "classement_general.html", "Classement Général")

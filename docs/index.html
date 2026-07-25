@@ -1,6 +1,143 @@
-<html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tout Besançon Vole</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1f2933 0%, #2d3b45 100%);
+      min-height: 100vh;
+      padding: 40px 16px;
+      color: #1f2933;
+    }
+    .wrapper { max-width: 900px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 32px; color: #f5f7fa; }
+    .header h1 { margin: 0 0 6px 0; font-weight: 700; font-size: 2rem; }
+    .header p { margin: 0; font-size: 0.85rem; opacity: 0.7; }
+    .section { margin-bottom: 28px; }
+    .section h2 {
+      color: #f5f7fa;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin: 0 0 12px 4px;
+      opacity: 0.85;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 16px 18px;
+      text-decoration: none;
+      color: #1f2933;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+    }
+    .btn .emoji { font-size: 1.3rem; }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #cbd2d9;
+      font-size: 0.75rem;
+    }
+    .footer-logos {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 14px;
+      padding: 14px 24px;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .footer-logos img { height: 60px; width: auto; opacity: 0.95; }
+    .footer-logos img.logo-etabli { height: 100px; }
+    @media (max-width: 650px) {
+      body { padding: 24px 10px; }
+      .header h1 { font-size: 1.5rem; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      .footer-logos { flex-direction: column; gap: 10px; }
+      .footer-logos img.logo-etabli { height: 70px; }
+      .footer-logos img { height: 42px; }
+    }
+  </style>
+</head>
 <body>
-<h1>Test GitHub Pages</h1>
-<p>Si vous voyez ce texte, GitHub Pages fonctionne.</p>
+  <div class="wrapper">
+    <div class="header">
+      <h1>🎈 Tout Besançon Vole</h1>
+      <p>Toutes les pages du classement en un coup d'œil</p>
+    </div>
+
+    <div class="section">
+      <h2>Classement général</h2>
+      <div class="grid">
+        <a class="btn" href="classement_simple.html"><span class="emoji">✨</span> Classement (design simple)</a>
+        <a class="btn" href="pilotes_grille.html"><span class="emoji">🟦</span> Grille des pilotes</a>
+        <a class="btn" href="classement_general.html"><span class="emoji">📋</span> Classement détaillé</a>
+        <a class="btn" href="classement_hommes.html"><span class="emoji">🚹</span> Classement Hommes</a>
+        <a class="btn" href="classement_femmes.html"><span class="emoji">🚺</span> Classement Femmes</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Classement par épreuve</h2>
+      <div class="grid">
+        <a class="btn" href="classement_epreuve_garde_les_pieds_sur_terre.html"><span class="emoji">🪂</span> Garde les pieds sur terre</a>
+        <a class="btn" href="classement_epreuve_en_avant_les_checkpoints.html"><span class="emoji">📍</span> En avant les checkpoints</a>
+        <a class="btn" href="classement_epreuve_vise_la_cible_ou_bien.html"><span class="emoji">🎯</span> Vise la cible ou bien</a>
+        <a class="btn" href="classement_epreuve_lamaltournee.html"><span class="emoji">🌀</span> LaMaltournée</a>
+        <a class="btn" href="classement_epreuve_planoise.html"><span class="emoji">🏞️</span> Planoise</a>
+        <a class="btn" href="classement_epreuve_deguisement.html"><span class="emoji">🎭</span> Déguisement (bonus)</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Pages en test</h2>
+      <div class="grid">
+        <a class="btn" href="classement_evolution_test.html"><span class="emoji">📈</span> Évolution du classement</a>
+        <a class="btn" href="liste_pilotes_test.html"><span class="emoji">🧾</span> Liste des pilotes (test)</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Autres pages</h2>
+      <div class="grid">
+        <a class="btn" href="partenaires.html"><span class="emoji">🤝</span> Nos partenaires</a>
+        <a class="btn" href="partenaires-financiers.html"><span class="emoji">💶</span> Partenaires financiers</a>
+        <a class="btn" href="bus.html"><span class="emoji">🚌</span> Prochains départs (bus)</a>
+        <a class="btn" href="SpotairTitre.html"><span class="emoji">🪧</span> SpotAiR</a>
+      </div>
+    </div>
+
+    <p class="footer">L'établi ludique — Besançon Vol Libre</p>
+    <div class="footer-logos">
+      <img class="logo-etabli" src="logo_etabli.png" alt="Logo L'Établi Ludique">
+      <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
+    </div>
+  </div>
 </body>
 </html>

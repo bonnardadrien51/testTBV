@@ -1319,7 +1319,6 @@ def main():
             row['Remonte la pente a patte'] = 0
 
         row['Nombre d\'épreuves'] = num_events
-        row['Score Total'] = total_score
         row['Détails La Maltournée - Planoise'] = f"LaMaltournée: { [calcul_valeur(s) for s in mal_scores] } Planoise: { [calcul_valeur(s) for s in pl_scores] }"
 
         # Bonus déguisement : simple addition au score final, hors classement
@@ -1330,6 +1329,9 @@ def main():
         if deguisement_scores:
             bonus = max(calcul_valeur(s) for s in deguisement_scores)
         row['Bonus Déguisement'] = bonus
+
+        # Score Total affiché = score des épreuves + bonus déguisement
+        row['Score Total'] = total_score + bonus
 
         row['Score Final'] = total_score * num_events + bonus
 

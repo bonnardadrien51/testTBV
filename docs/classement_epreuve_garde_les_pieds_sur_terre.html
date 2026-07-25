@@ -2,42 +2,132 @@
     <html>
     <head>
         <title>Classement — Garde les pieds sur terre</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
         <style>
-            .container {
-                padding-left: 10px;
-                padding-right: 10px;
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                font-family: 'Poppins', sans-serif;
+                background: linear-gradient(135deg, #1f2933 0%, #2d3b45 100%);
+                min-height: 100vh;
+                padding: 40px 16px;
+                color: #1f2933;
+            }
+            .wrapper {
+                max-width: 860px;
+                margin: 0 auto;
+            }
+            .header {
+                text-align: center;
+                margin-bottom: 28px;
+                color: #f5f7fa;
+            }
+            .header h1 {
+                margin: 0 0 6px 0;
+                font-weight: 700;
+                font-size: 1.8rem;
+                letter-spacing: 0.5px;
+            }
+            .header p {
+                margin: 0;
+                font-size: 0.85rem;
+                opacity: 0.7;
+            }
+            .card {
+                background: #ffffff;
+                border-radius: 18px;
+                overflow: hidden;
+                box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+            }
+            .table-scroll {
+                overflow-x: auto;
             }
             table {
                 width: 100%;
-                margin: 20px 0;
                 border-collapse: collapse;
             }
-            th, td {
-                padding: 8px;
+            thead th {
+                background: #10151a;
+                color: #f5f7fa;
+                text-transform: uppercase;
+                font-size: 0.72rem;
+                letter-spacing: 1px;
+                font-weight: 600;
+                padding: 16px 18px;
                 text-align: left;
-                border: 1px solid #ddd;
             }
-            th {
-                background-color: #f4f4f4;
+            tbody td {
+                padding: 14px 18px;
+                font-size: 0.95rem;
+                border-bottom: 1px solid #eef1f4;
             }
-            tr:nth-child(even) {
-                background-color: #f9f9f9;
+            tbody tr:last-child td {
+                border-bottom: none;
             }
-            tr:hover {
-                filter: brightness(95%);
+            tbody tr:hover {
+                background: #f6f8fa;
+            }
+            .rank {
+                font-weight: 700;
+                width: 60px;
+            }
+            .pos-1 { background: linear-gradient(90deg, #fff8e1, #ffffff); }
+            .pos-2 { background: linear-gradient(90deg, #f3f4f6, #ffffff); }
+            .pos-3 { background: linear-gradient(90deg, #fdece0, #ffffff); }
+            .badge {
+                display: inline-block;
+                padding: 3px 10px;
+                border-radius: 999px;
+                font-size: 0.72rem;
+                font-weight: 600;
+            }
+            .badge-homme { background: #e3f2ed; color: #1e7a5f; }
+            .badge-femme { background: #eaf1fb; color: #245c9c; }
+            .badge-autre { background: #f1f1f1; color: #666; }
+            .score {
+                font-weight: 700;
+                font-size: 1rem;
+            }
+            .autres {
+                color: #9aa5b1;
+                font-size: 0.8rem;
+            }
+            .footer {
+                text-align: center;
+                margin-top: 22px;
+                color: #cbd2d9;
+                font-size: 0.75rem;
             }
             .footer-logos {
-                margin-top: 20px;
+                margin-top: 18px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                gap: 20px;
+                gap: 24px;
+                background: rgba(255, 255, 255, 0.92);
+                border-radius: 14px;
+                padding: 14px 24px;
             }
             .footer-logos img {
-                height: 120px;
-                auto: width;
-                opacity: 0.9;
+                height: 60px;
+                width: auto;
+                opacity: 0.95;
+            }
+            .footer-logos img.logo-etabli {
+                height: 100px;
+            }
+            @media (max-width: 650px) {
+                body { padding: 24px 10px; }
+                .header h1 { font-size: 1.4rem; }
+                thead th, tbody td { padding: 10px 10px; font-size: 0.78rem; white-space: nowrap; }
+                .footer-logos { flex-direction: column; gap: 10px; padding: 12px 18px; }
+                .footer-logos img.logo-etabli { height: 70px; }
+                .footer-logos img { height: 42px; }
             }
         </style>
         <script>
@@ -47,236 +137,240 @@
         </script>
     </head>
     <body>
-        <div>
-            <h1>Classement — Garde les pieds sur terre</h1>
-            <p><small>Généré le 25/07/2026 17:50:32 (heure de Paris)</small></p>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Position</th>
-                        <th>Participant</th>
-                        <th>Sexe</th>
-                        <th>Club</th>
-                        <th>Score</th>
-                        <th>Autres tentatives</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <div class="wrapper">
+            <div class="header">
+                <h1>Classement — Garde les pieds sur terre</h1>
+                <p>Généré le 25/07/2026 19:07:51 (heure de Paris)</p>
+            </div>
+            <div class="card">
+                <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Participant</th>
+                            <th>Club</th>
+                            <th>Sexe</th>
+                            <th>Score</th>
+                            <th>Autres tentatives</th>
+                        </tr>
+                    </thead>
+                    <tbody>
     
-            <tr class="table-success">
-                <td>1</td>
-                <td>Guillaume Blanc</td>
-                <td>Homme</td>
-                <td>les rousses Pole air</td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="pos-1">
+                            <td class="rank">🥇</td>
+                            <td>Guillaume Blanc</td>
+                            <td>les rousses Pole air</td>
+                            <td><span class="badge badge-homme">Homme</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>2</td>
-                <td>Noé Liabeuf</td>
-                <td>Non défini</td>
-                <td>ivryair</td>
-                <td><b>100</b></td>
-                <td>90</td>
-            </tr>
+                        <tr class="pos-2">
+                            <td class="rank">🥈</td>
+                            <td>Noé Liabeuf</td>
+                            <td>ivryair</td>
+                            <td><span class="badge badge-autre">Non défini</span></td>
+                            <td class="score">100</td>
+                            <td class="autres">90</td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>3</td>
-                <td>Nathan Peyroux</td>
-                <td>Non défini</td>
-                <td>les aigles tonnerrois</td>
-                <td><b>100</b></td>
-                <td>50</td>
-            </tr>
+                        <tr class="pos-3">
+                            <td class="rank">🥉</td>
+                            <td>Nathan Peyroux</td>
+                            <td>les aigles tonnerrois</td>
+                            <td><span class="badge badge-autre">Non défini</span></td>
+                            <td class="score">100</td>
+                            <td class="autres">50</td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>4</td>
-                <td>Etienne chaboz</td>
-                <td>Non défini</td>
-                <td></td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">4</td>
+                            <td>Etienne chaboz</td>
+                            <td></td>
+                            <td><span class="badge badge-autre">Non défini</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>5</td>
-                <td>Armand Franquet</td>
-                <td>Non défini</td>
-                <td></td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">5</td>
+                            <td>Armand Franquet</td>
+                            <td></td>
+                            <td><span class="badge badge-autre">Non défini</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>6</td>
-                <td>Cyril Tallaron</td>
-                <td>Non défini</td>
-                <td>Tassin parapente</td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">6</td>
+                            <td>Cyril Tallaron</td>
+                            <td>Tassin parapente</td>
+                            <td><span class="badge badge-autre">Non défini</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>7</td>
-                <td>orianne pommey</td>
-                <td>Femme</td>
-                <td></td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">7</td>
+                            <td>orianne pommey</td>
+                            <td></td>
+                            <td><span class="badge badge-femme">Femme</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-success">
-                <td>8</td>
-                <td>Clément Eustache</td>
-                <td>Homme</td>
-                <td>Besançon Vol Libre</td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">8</td>
+                            <td>Clément Eustache</td>
+                            <td>Besançon Vol Libre</td>
+                            <td><span class="badge badge-homme">Homme</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>9</td>
-                <td>Pumbaaah Flo Sak</td>
-                <td>Non défini</td>
-                <td></td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">9</td>
+                            <td>Pumbaaah Flo Sak</td>
+                            <td></td>
+                            <td><span class="badge badge-autre">Non défini</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>10</td>
-                <td>Anonymous</td>
-                <td>Non défini</td>
-                <td></td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">10</td>
+                            <td>Anonymous</td>
+                            <td></td>
+                            <td><span class="badge badge-autre">Non défini</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-success">
-                <td>11</td>
-                <td>Charly Adam</td>
-                <td>Homme</td>
-                <td>Besançon Vol Libre</td>
-                <td><b>100</b></td>
-                <td>60</td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">11</td>
+                            <td>Charly Adam</td>
+                            <td>Besançon Vol Libre</td>
+                            <td><span class="badge badge-homme">Homme</span></td>
+                            <td class="score">100</td>
+                            <td class="autres">60</td>
+                        </tr>
         
-            <tr class="table-success">
-                <td>12</td>
-                <td>Maël MARTINS</td>
-                <td>Homme</td>
-                <td>Lyon Parapente</td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">12</td>
+                            <td>Maël MARTINS</td>
+                            <td>Lyon Parapente</td>
+                            <td><span class="badge badge-homme">Homme</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>13</td>
-                <td>Benjamin CHARRY</td>
-                <td>Non défini</td>
-                <td>Vol Libre Lédonien</td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">13</td>
+                            <td>Benjamin CHARRY</td>
+                            <td>Vol Libre Lédonien</td>
+                            <td><span class="badge badge-autre">Non défini</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>14</td>
-                <td>Lucie poder</td>
-                <td>Femme</td>
-                <td>les aigles tonnerrois</td>
-                <td><b>100</b></td>
-                <td>90, 60</td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">14</td>
+                            <td>Lucie poder</td>
+                            <td>les aigles tonnerrois</td>
+                            <td><span class="badge badge-femme">Femme</span></td>
+                            <td class="score">100</td>
+                            <td class="autres">90, 60</td>
+                        </tr>
         
-            <tr class="table-success">
-                <td>15</td>
-                <td>Nassim AOUN</td>
-                <td>Homme</td>
-                <td>Besançon Vol Libre</td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">15</td>
+                            <td>Nassim AOUN</td>
+                            <td>Besançon Vol Libre</td>
+                            <td><span class="badge badge-homme">Homme</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-success">
-                <td>16</td>
-                <td>Elie Liabeuf</td>
-                <td>Homme</td>
-                <td></td>
-                <td><b>100</b></td>
-                <td>70</td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">16</td>
+                            <td>Elie Liabeuf</td>
+                            <td></td>
+                            <td><span class="badge badge-homme">Homme</span></td>
+                            <td class="score">100</td>
+                            <td class="autres">70</td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>17</td>
-                <td>Valfrey pierre</td>
-                <td>Non défini</td>
-                <td>Poupet vol libre</td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">17</td>
+                            <td>Valfrey pierre</td>
+                            <td>Poupet vol libre</td>
+                            <td><span class="badge badge-autre">Non défini</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-success">
-                <td>18</td>
-                <td>Léo Roggy</td>
-                <td>Homme</td>
-                <td>Besançon Vol Libre</td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">18</td>
+                            <td>Léo Roggy</td>
+                            <td>Besançon Vol Libre</td>
+                            <td><span class="badge badge-homme">Homme</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>19</td>
-                <td>Virginie LAURENT</td>
-                <td>Femme</td>
-                <td>Les Counailles/ La Bressaude Vol Libre</td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">19</td>
+                            <td>Virginie LAURENT</td>
+                            <td>Les Counailles/ La Bressaude Vol Libre</td>
+                            <td><span class="badge badge-femme">Femme</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-success">
-                <td>20</td>
-                <td>Manu Mesnier</td>
-                <td>Homme</td>
-                <td>Les Ailes de la Cendrée</td>
-                <td><b>100</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">20</td>
+                            <td>Manu Mesnier</td>
+                            <td>Les Ailes de la Cendrée</td>
+                            <td><span class="badge badge-homme">Homme</span></td>
+                            <td class="score">100</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>21</td>
-                <td>Marie-Louise Fourquier</td>
-                <td>Femme</td>
-                <td>Trans Jura Vol Libre</td>
-                <td><b>60</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">21</td>
+                            <td>Marie-Louise Fourquier</td>
+                            <td>Trans Jura Vol Libre</td>
+                            <td><span class="badge badge-femme">Femme</span></td>
+                            <td class="score">60</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>22</td>
-                <td>Céline Renaud</td>
-                <td>Femme</td>
-                <td>les ailes de la cendrée</td>
-                <td><b>40</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">22</td>
+                            <td>Céline Renaud</td>
+                            <td>les ailes de la cendrée</td>
+                            <td><span class="badge badge-femme">Femme</span></td>
+                            <td class="score">40</td>
+                            <td class="autres"></td>
+                        </tr>
         
-            <tr class="table-info">
-                <td>23</td>
-                <td>Claude Varlet</td>
-                <td>Non défini</td>
-                <td>BVL</td>
-                <td><b>0</b></td>
-                <td></td>
-            </tr>
+                        <tr class="">
+                            <td class="rank">23</td>
+                            <td>Claude Varlet</td>
+                            <td>BVL</td>
+                            <td><span class="badge badge-autre">Non défini</span></td>
+                            <td class="score">0</td>
+                            <td class="autres"></td>
+                        </tr>
         
-                </tbody>
-            </table>
-        </div>
-        <div class="footer">
-            <p>Classement généré par L'établi ludique</p>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <p class="footer">Classement généré par L'établi ludique</p>
             <div class="footer-logos">
-                <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                <img class="logo-etabli" src="logo_etabli.png" alt="Logo L'Établi Ludique">
                 <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
             </div>
         </div>

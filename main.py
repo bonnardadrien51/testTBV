@@ -653,6 +653,43 @@ def generate_simple_html(df, filename, title):
             .footer-logos img.logo-etabli {{
                 height: 100px;
             }}
+            .table-scroll {{
+                overflow-x: auto;
+            }}
+            @media (max-width: 650px) {{
+                body {{
+                    padding: 24px 10px;
+                }}
+                .header h1 {{
+                    font-size: 1.5rem;
+                }}
+                .header p {{
+                    font-size: 0.75rem;
+                }}
+                .card {{
+                    border-radius: 12px;
+                }}
+                thead th, tbody td {{
+                    padding: 10px 10px;
+                    font-size: 0.78rem;
+                    white-space: nowrap;
+                }}
+                .badge {{
+                    font-size: 0.65rem;
+                    padding: 2px 8px;
+                }}
+                .footer-logos {{
+                    flex-direction: column;
+                    gap: 10px;
+                    padding: 12px 18px;
+                }}
+                .footer-logos img.logo-etabli {{
+                    height: 70px;
+                }}
+                .footer-logos img {{
+                    height: 42px;
+                }}
+            }}
         </style>
         <script>
             setTimeout(function() {{
@@ -667,6 +704,7 @@ def generate_simple_html(df, filename, title):
                 <p>Généré le {generation_time} (heure de Paris)</p>
             </div>
             <div class="card">
+                <div class="table-scroll">
                 <table>
                     <thead>
                         <tr>
@@ -706,6 +744,7 @@ def generate_simple_html(df, filename, title):
     html_string += """
                     </tbody>
                 </table>
+                </div>
             </div>
             <p class="footer">Classement généré par L'établi ludique</p>
             <div class="footer-logos">
@@ -770,7 +809,7 @@ def generate_pilots_grid_html(df, filename, title):
             }}
             .grid {{
                 display: grid;
-                grid-template-columns: repeat(8, 1fr);
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                 gap: 12px;
                 max-width: 1500px;
                 margin: 0 auto;
@@ -856,6 +895,37 @@ def generate_pilots_grid_html(df, filename, title):
             }}
             .footer-logos img.logo-etabli {{
                 height: 80px;
+            }}
+            @media (max-width: 700px) {{
+                body {{
+                    padding: 16px 12px;
+                }}
+                .header h1 {{
+                    font-size: 1.25rem;
+                }}
+                .grid {{
+                    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                    gap: 8px;
+                }}
+                .pilot-name {{
+                    font-size: 0.72rem;
+                }}
+                .pilot-club, .pilot-nb {{
+                    font-size: 0.6rem;
+                }}
+                .pilot-score {{
+                    font-size: 0.85rem;
+                }}
+                .footer-logos {{
+                    flex-direction: column;
+                    gap: 8px;
+                }}
+                .footer-logos img.logo-etabli {{
+                    height: 60px;
+                }}
+                .footer-logos img {{
+                    height: 36px;
+                }}
             }}
         </style>
         <script>

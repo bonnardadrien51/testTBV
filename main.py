@@ -650,6 +650,9 @@ def generate_simple_html(df, filename, title):
                 width: auto;
                 opacity: 0.95;
             }}
+            .footer-logos img.logo-etabli {{
+                height: 100px;
+            }}
         </style>
         <script>
             setTimeout(function() {{
@@ -706,9 +709,197 @@ def generate_simple_html(df, filename, title):
             </div>
             <p class="footer">Classement généré par L'établi ludique</p>
             <div class="footer-logos">
-                <img src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                <img class="logo-etabli" src="logo_etabli.png" alt="Logo L'Établi Ludique">
                 <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
             </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    with open(filepath, "w", encoding="utf-8") as file:
+        file.write(html_string)
+
+
+def generate_pilots_grid_html(df, filename, title):
+    """Page grille compacte (cartes carrées) pensée pour afficher une
+    quarantaine de pilotes sans avoir à défiler sur un écran de PC classique,
+    avec leur classement (position, score total, nombre d'épreuves)."""
+    paris_tz = pytz.timezone("Europe/Paris")
+    generation_time = datetime.datetime.now(paris_tz).strftime("%d/%m/%Y %H:%M:%S")
+    os.makedirs("docs", exist_ok=True)
+    filepath = os.path.join("docs", filename)
+
+    medals = {1: "🥇", 2: "🥈", 3: "🥉"}
+
+    html_string = f"""
+    <html>
+    <head>
+        <title>{title}</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+        <style>
+            * {{
+                box-sizing: border-box;
+            }}
+            body {{
+                margin: 0;
+                font-family: 'Poppins', sans-serif;
+                background: linear-gradient(135deg, #1f2933 0%, #2d3b45 100%);
+                min-height: 100vh;
+                padding: 24px 32px;
+                color: #1f2933;
+            }}
+            .header {{
+                text-align: center;
+                margin-bottom: 20px;
+                color: #f5f7fa;
+            }}
+            .header h1 {{
+                margin: 0 0 4px 0;
+                font-weight: 700;
+                font-size: 1.6rem;
+                letter-spacing: 0.5px;
+            }}
+            .header p {{
+                margin: 0;
+                font-size: 0.78rem;
+                opacity: 0.7;
+            }}
+            .grid {{
+                display: grid;
+                grid-template-columns: repeat(8, 1fr);
+                gap: 12px;
+                max-width: 1500px;
+                margin: 0 auto;
+            }}
+            .pilot-card {{
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 10px 8px;
+                text-align: center;
+                box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+                aspect-ratio: 1 / 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                position: relative;
+            }}
+            .pilot-card.pos-1 {{ background: linear-gradient(160deg, #fff8e1, #ffffff); }}
+            .pilot-card.pos-2 {{ background: linear-gradient(160deg, #f3f4f6, #ffffff); }}
+            .pilot-card.pos-3 {{ background: linear-gradient(160deg, #fdece0, #ffffff); }}
+            .pilot-rank {{
+                position: absolute;
+                top: 6px;
+                left: 8px;
+                font-size: 0.68rem;
+                font-weight: 700;
+                color: #9aa5b1;
+            }}
+            .pilot-name {{
+                font-weight: 600;
+                font-size: 0.8rem;
+                line-height: 1.15;
+                margin-top: 8px;
+            }}
+            .pilot-club {{
+                font-size: 0.68rem;
+                color: #6b7280;
+                line-height: 1.15;
+            }}
+            .pilot-score {{
+                font-weight: 700;
+                font-size: 0.95rem;
+                color: #10151a;
+            }}
+            .pilot-nb {{
+                font-size: 0.65rem;
+                color: #9aa5b1;
+            }}
+            .badge {{
+                display: inline-block;
+                padding: 1px 8px;
+                border-radius: 999px;
+                font-size: 0.6rem;
+                font-weight: 600;
+            }}
+            .badge-homme {{ background: #e3f2ed; color: #1e7a5f; }}
+            .badge-femme {{ background: #eaf1fb; color: #245c9c; }}
+            .badge-autre {{ background: #f1f1f1; color: #666; }}
+            .footer {{
+                text-align: center;
+                margin-top: 22px;
+                color: #cbd2d9;
+                font-size: 0.75rem;
+            }}
+            .footer-logos {{
+                margin-top: 16px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 24px;
+                background: rgba(255, 255, 255, 0.92);
+                border-radius: 14px;
+                padding: 12px 24px;
+                max-width: 320px;
+                margin-left: auto;
+                margin-right: auto;
+            }}
+            .footer-logos img {{
+                height: 50px;
+                width: auto;
+                opacity: 0.95;
+            }}
+            .footer-logos img.logo-etabli {{
+                height: 80px;
+            }}
+        </style>
+        <script>
+            setTimeout(function() {{
+                window.location.reload();
+            }}, 300000);
+        </script>
+    </head>
+    <body>
+        <div class="header">
+            <h1>{title}</h1>
+            <p>Généré le {generation_time} (heure de Paris)</p>
+        </div>
+        <div class="grid">
+    """
+
+    for index, row in df.iterrows():
+        position = index + 1
+        pos_class = f"pos-{position}" if position in medals else ""
+        medal = medals.get(position, "")
+        if is_homme(row['Sexe']):
+            badge_class, badge_label = "badge-homme", "H"
+        elif is_femme(row['Sexe']):
+            badge_class, badge_label = "badge-femme", "F"
+        else:
+            badge_class, badge_label = "badge-autre", "?"
+
+        html_string += f"""
+            <div class="pilot-card {pos_class}">
+                <div class="pilot-rank">{medal or ('#' + str(position))}</div>
+                <div class="pilot-name">{row['Participant']}</div>
+                <div class="pilot-club">{row['Club']}</div>
+                <span class="badge {badge_class}">{badge_label}</span>
+                <div class="pilot-score">{row['Score Total']} pts</div>
+                <div class="pilot-nb">{row["Nombre d'épreuves"]} épreuve(s)</div>
+            </div>
+        """
+
+    html_string += """
+        </div>
+        <p class="footer">Classement généré par L'établi ludique</p>
+        <div class="footer-logos">
+            <img class="logo-etabli" src="logo_etabli.png" alt="Logo L'Établi Ludique">
+            <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
         </div>
     </body>
     </html>
@@ -819,6 +1010,7 @@ def main():
     generate_html(df[df['Sexe'].apply(is_homme)], "classement_hommes.html", "Classement Hommes")
     generate_html(df[df['Sexe'].apply(is_femme)], "classement_femmes.html", "Classement Femmes")
     generate_simple_html(df, "classement_simple.html", "Classement Général")
+    generate_pilots_grid_html(df, "pilotes_grille.html", "Classement — Pilotes")
 
     # Une page de classement par épreuve individuelle (en plus du classement général)
     for course in COURSES + [BONUS_COURSE]:

@@ -118,6 +118,43 @@
             .footer-logos img.logo-etabli {
                 height: 100px;
             }
+            .table-scroll {
+                overflow-x: auto;
+            }
+            @media (max-width: 650px) {
+                body {
+                    padding: 24px 10px;
+                }
+                .header h1 {
+                    font-size: 1.5rem;
+                }
+                .header p {
+                    font-size: 0.75rem;
+                }
+                .card {
+                    border-radius: 12px;
+                }
+                thead th, tbody td {
+                    padding: 10px 10px;
+                    font-size: 0.78rem;
+                    white-space: nowrap;
+                }
+                .badge {
+                    font-size: 0.65rem;
+                    padding: 2px 8px;
+                }
+                .footer-logos {
+                    flex-direction: column;
+                    gap: 10px;
+                    padding: 12px 18px;
+                }
+                .footer-logos img.logo-etabli {
+                    height: 70px;
+                }
+                .footer-logos img {
+                    height: 42px;
+                }
+            }
         </style>
         <script>
             setTimeout(function() {
@@ -129,9 +166,10 @@
         <div class="wrapper">
             <div class="header">
                 <h1>Classement Général</h1>
-                <p>Généré le 25/07/2026 10:26:52 (heure de Paris)</p>
+                <p>Généré le 25/07/2026 12:11:50 (heure de Paris)</p>
             </div>
             <div class="card">
+                <div class="table-scroll">
                 <table>
                     <thead>
                         <tr>
@@ -408,6 +446,7 @@
         
                     </tbody>
                 </table>
+                </div>
             </div>
             <p class="footer">Classement généré par L'établi ludique</p>
             <div class="footer-logos">

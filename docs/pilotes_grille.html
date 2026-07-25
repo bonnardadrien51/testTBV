@@ -36,7 +36,7 @@
             }
             .grid {
                 display: grid;
-                grid-template-columns: repeat(8, 1fr);
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                 gap: 12px;
                 max-width: 1500px;
                 margin: 0 auto;
@@ -123,6 +123,37 @@
             .footer-logos img.logo-etabli {
                 height: 80px;
             }
+            @media (max-width: 700px) {
+                body {
+                    padding: 16px 12px;
+                }
+                .header h1 {
+                    font-size: 1.25rem;
+                }
+                .grid {
+                    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                    gap: 8px;
+                }
+                .pilot-name {
+                    font-size: 0.72rem;
+                }
+                .pilot-club, .pilot-nb {
+                    font-size: 0.6rem;
+                }
+                .pilot-score {
+                    font-size: 0.85rem;
+                }
+                .footer-logos {
+                    flex-direction: column;
+                    gap: 8px;
+                }
+                .footer-logos img.logo-etabli {
+                    height: 60px;
+                }
+                .footer-logos img {
+                    height: 36px;
+                }
+            }
         </style>
         <script>
             setTimeout(function() {
@@ -133,7 +164,7 @@
     <body>
         <div class="header">
             <h1>Classement — Pilotes</h1>
-            <p>Généré le 25/07/2026 10:26:52 (heure de Paris)</p>
+            <p>Généré le 25/07/2026 12:11:50 (heure de Paris)</p>
         </div>
         <div class="grid">
     

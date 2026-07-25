@@ -1088,9 +1088,13 @@ def generate_pilots_grid_html(df, filename, title):
 PREVIOUS_POSITIONS_PATH = "docs/previous_positions_test.json"
 
 
-def load_previous_positions(path):
-    """Charge les positions du run précédent (participant -> position),
-    utilisées pour calculer l'évolution du classement."""
+EVOLUTION_STATE_PATH = "docs/evolution_state_test.json"
+
+
+def load_evolution_state(path):
+    """Charge l'état d'évolution (participant -> {baseline_position, arrow,
+    magnitude}) : la position de référence est celle du dernier changement
+    significatif, pas forcément celle du run précédent."""
     if os.path.exists(path):
         try:
             with open(path, encoding="utf-8") as f:
@@ -1100,18 +1104,66 @@ def load_previous_positions(path):
     return {}
 
 
-def save_positions(path, df):
-    """Sauvegarde les positions actuelles pour comparaison au prochain run."""
-    positions = {row['Participant']: index + 1 for index, row in df.iterrows()}
+def compute_evolution(df, state):
+    """Calcule l'évolution de chaque participant par rapport à la dernière
+    évolution significative connue, et renvoie (evolution_par_participant,
+    nouvel_état à sauvegarder). Si la position n'a pas bougé depuis le
+    dernier changement significatif, l'évolution affichée reste celle du
+    dernier changement (pas de retour à '=' tant que rien de nouveau ne
+    s'est produit)."""
+    evolution = {}
+    new_state = {}
+
+    for index, row in df.iterrows():
+        participant = row['Participant']
+        current_position = index + 1
+        prev = state.get(participant)
+
+        if prev is None:
+            # Premier passage : affiché "NOUVEAU" une seule fois, puis se
+            # comporte comme un participant stable à partir de maintenant.
+            evolution[participant] = {"type": "new", "magnitude": 0}
+            new_state[participant] = {
+                "baseline_position": current_position,
+                "arrow": "same",
+                "magnitude": 0,
+            }
+            continue
+
+        baseline_position = prev.get("baseline_position", current_position)
+
+        if current_position == baseline_position:
+            # Rien de nouveau depuis le dernier changement significatif :
+            # on conserve l'évolution précédemment affichée telle quelle.
+            arrow = prev.get("arrow", "same")
+            magnitude = prev.get("magnitude", 0)
+        elif current_position < baseline_position:
+            arrow = "up"
+            magnitude = baseline_position - current_position
+        else:
+            arrow = "down"
+            magnitude = current_position - baseline_position
+
+        evolution[participant] = {"type": arrow, "magnitude": magnitude}
+        new_state[participant] = {
+            "baseline_position": current_position,
+            "arrow": arrow,
+            "magnitude": magnitude,
+        }
+
+    return evolution, new_state
+
+
+def save_evolution_state(path, state):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(positions, f, ensure_ascii=False, indent=2)
+        json.dump(state, f, ensure_ascii=False, indent=2)
 
 
-def generate_evolution_html(df, filename, title, previous_positions):
-    """Page de test : classement condensé avec une flèche indiquant
-    l'évolution de position par rapport au run précédent (vert = progression,
-    rouge = recul, tiret gris = stable ou nouvel arrivant)."""
+def generate_evolution_html(df, filename, title, evolution):
+    """Page de test : classement condensé avec une flèche indiquant la
+    dernière évolution significative connue (pas seulement le run
+    précédent)."""
     paris_tz = pytz.timezone("Europe/Paris")
     generation_time = datetime.datetime.now(paris_tz).strftime("%d/%m/%Y %H:%M:%S")
     os.makedirs("docs", exist_ok=True)
@@ -1304,15 +1356,13 @@ def generate_evolution_html(df, filename, title, previous_positions):
         else:
             badge_class, badge_label = "badge-autre", "Non défini"
 
-        old_position = previous_positions.get(row['Participant'])
-        if old_position is None:
+        evo = evolution.get(row['Participant'], {"type": "same", "magnitude": 0})
+        if evo["type"] == "new":
             evo_html = '<span class="evo-new">NOUVEAU</span>'
-        elif old_position > position:
-            gain = old_position - position
-            evo_html = f'<span class="evo evo-up">▲ {gain}</span>'
-        elif old_position < position:
-            perte = position - old_position
-            evo_html = f'<span class="evo evo-down">▼ {perte}</span>'
+        elif evo["type"] == "up":
+            evo_html = f'<span class="evo evo-up">▲ {evo["magnitude"]}</span>'
+        elif evo["type"] == "down":
+            evo_html = f'<span class="evo evo-down">▼ {evo["magnitude"]}</span>'
         else:
             evo_html = '<span class="evo evo-same">▬</span>'
 
@@ -1451,10 +1501,11 @@ def main():
     generate_simple_html(df, "classement_simple.html", "Classement Général")
     generate_pilots_grid_html(df, "pilotes_grille.html", "Classement — Pilotes")
 
-    # Page de test : évolution du classement (flèches vs run précédent)
-    previous_positions = load_previous_positions(PREVIOUS_POSITIONS_PATH)
-    generate_evolution_html(df, "classement_evolution_test.html", "Classement — Évolution (test)", previous_positions)
-    save_positions(PREVIOUS_POSITIONS_PATH, df)
+    # Page de test : évolution du classement (dernier changement significatif connu)
+    evolution_state = load_evolution_state(EVOLUTION_STATE_PATH)
+    evolution, new_evolution_state = compute_evolution(df, evolution_state)
+    generate_evolution_html(df, "classement_evolution_test.html", "Classement — Évolution (test)", evolution)
+    save_evolution_state(EVOLUTION_STATE_PATH, new_evolution_state)
 
     # Une page de classement par épreuve individuelle (en plus du classement général)
     for course in COURSES + [BONUS_COURSE]:

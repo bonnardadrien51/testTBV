@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Nos partenaires — Écran</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: white;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    h1 {
+      flex: 0 0 auto;
+      margin: 0;
+      padding: 24px 0 16px 0;
+      text-align: center;
+      color: #1a1a1a;
+      font-size: 2.4rem;
+    }
+    .grid {
+      flex: 1 1 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-auto-rows: 1fr;
+      gap: 24px;
+      padding: 10px 50px 50px 50px;
+      align-items: center;
+      justify-items: center;
+      overflow: hidden;
+    }
+    .grid img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .empty {
+      color: #888;
+      font-size: 1.3em;
+      text-align: center;
+      grid-column: 1 / -1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Nos partenaires</h1>
+  <div class="grid" id="logos">
+    <p class="empty">Chargement des logos…</p>
+  </div>
+
+  <script>
+    // Dossier contenant les logos et le manifest.json généré par la GitHub Action
+    const FOLDER = "partenaires";
+    // Recharge la page automatiquement une fois par jour (récupère les nouveaux logos)
+    const REFRESH_MS = 24 * 60 * 60 * 1000;
+
+    async function loadLogos() {
+      const container = document.getElementById("logos");
+      try {
+        const res = await fetch(`${FOLDER}/manifest.json?t=${Date.now()}`);
+        if (!res.ok) throw new Error("manifest.json introuvable");
+        const files = await res.json();
+
+        if (!files || files.length === 0) {
+          container.innerHTML = `<p class="empty">Aucun logo trouvé dans le dossier "${FOLDER}".</p>`;
+          return;
+        }
+
+        container.innerHTML = "";
+        files.forEach((name) => {
+          const el = document.createElement("img");
+          el.src = `${FOLDER}/${name}`;
+          el.alt = name.replace(/\.[^.]+$/, "");
+          container.appendChild(el);
+        });
+      } catch (err) {
+        container.innerHTML = `<p class="empty">Erreur de chargement des logos.</p>`;
+        console.error(err);
+      }
+    }
+
+    loadLogos();
+    setInterval(() => window.location.reload(), REFRESH_MS);
+  </script>
+</body>
+</html>

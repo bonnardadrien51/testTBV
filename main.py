@@ -713,7 +713,7 @@ def generate_simple_html(df, filename, title):
                             <th>Nom Prénom</th>
                             <th>Club</th>
                             <th>Sexe</th>
-                            <th>Score Total</th>
+                            <th>Score Final</th>
                             <th>Épreuves</th>
                         </tr>
                     </thead>
@@ -737,7 +737,7 @@ def generate_simple_html(df, filename, title):
                             <td>{row['Participant']}</td>
                             <td>{row['Club']}</td>
                             <td><span class="badge {badge_class}">{badge_label}</span></td>
-                            <td class="score">{row['Score Total']}</td>
+                            <td class="score">{row['Score Final']}</td>
                             <td class="nb-epreuves">{row["Nombre d'épreuves"]}</td>
                         </tr>
         """
@@ -960,7 +960,7 @@ def generate_pilots_grid_html(df, filename, title):
                 <div class="pilot-name">{row['Participant']}</div>
                 <div class="pilot-club">{row['Club']}</div>
                 <span class="badge {badge_class}">{badge_label}</span>
-                <div class="pilot-score">{row['Score Total']} pts</div>
+                <div class="pilot-score">{row['Score Final']} pts</div>
                 <div class="pilot-nb">{row["Nombre d'épreuves"]} épreuve(s)</div>
             </div>
         """
@@ -1182,7 +1182,7 @@ def generate_evolution_html(df, filename, title, previous_positions):
                             <th>Nom Prénom</th>
                             <th>Club</th>
                             <th>Sexe</th>
-                            <th>Score Total</th>
+                            <th>Score Final</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1218,7 +1218,7 @@ def generate_evolution_html(df, filename, title, previous_positions):
                             <td>{row['Participant']}</td>
                             <td>{row['Club']}</td>
                             <td><span class="badge {badge_class}">{badge_label}</span></td>
-                            <td class="score">{row['Score Total']}</td>
+                            <td class="score">{row['Score Final']}</td>
                         </tr>
         """
 

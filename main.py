@@ -1,4 +1,5 @@
 import datetime
+import json
 import os
 import re
 import unicodedata
@@ -979,6 +980,267 @@ def generate_pilots_grid_html(df, filename, title):
         file.write(html_string)
 
 
+PREVIOUS_POSITIONS_PATH = "docs/previous_positions_test.json"
+
+
+def load_previous_positions(path):
+    """Charge les positions du run précédent (participant -> position),
+    utilisées pour calculer l'évolution du classement."""
+    if os.path.exists(path):
+        try:
+            with open(path, encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+
+def save_positions(path, df):
+    """Sauvegarde les positions actuelles pour comparaison au prochain run."""
+    positions = {row['Participant']: index + 1 for index, row in df.iterrows()}
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(positions, f, ensure_ascii=False, indent=2)
+
+
+def generate_evolution_html(df, filename, title, previous_positions):
+    """Page de test : classement condensé avec une flèche indiquant
+    l'évolution de position par rapport au run précédent (vert = progression,
+    rouge = recul, tiret gris = stable ou nouvel arrivant)."""
+    paris_tz = pytz.timezone("Europe/Paris")
+    generation_time = datetime.datetime.now(paris_tz).strftime("%d/%m/%Y %H:%M:%S")
+    os.makedirs("docs", exist_ok=True)
+    filepath = os.path.join("docs", filename)
+
+    medals = {1: "🥇", 2: "🥈", 3: "🥉"}
+
+    html_string = f"""
+    <html>
+    <head>
+        <title>{title}</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+        <style>
+            * {{
+                box-sizing: border-box;
+            }}
+            body {{
+                margin: 0;
+                font-family: 'Poppins', sans-serif;
+                background: linear-gradient(135deg, #1f2933 0%, #2d3b45 100%);
+                min-height: 100vh;
+                padding: 40px 16px;
+                color: #1f2933;
+            }}
+            .wrapper {{
+                max-width: 860px;
+                margin: 0 auto;
+            }}
+            .header {{
+                text-align: center;
+                margin-bottom: 28px;
+                color: #f5f7fa;
+            }}
+            .header h1 {{
+                margin: 0 0 6px 0;
+                font-weight: 700;
+                font-size: 2rem;
+                letter-spacing: 0.5px;
+            }}
+            .header p {{
+                margin: 0;
+                font-size: 0.85rem;
+                opacity: 0.7;
+            }}
+            .card {{
+                background: #ffffff;
+                border-radius: 18px;
+                overflow: hidden;
+                box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+            }}
+            .table-scroll {{
+                overflow-x: auto;
+            }}
+            table {{
+                width: 100%;
+                border-collapse: collapse;
+            }}
+            thead th {{
+                background: #10151a;
+                color: #f5f7fa;
+                text-transform: uppercase;
+                font-size: 0.72rem;
+                letter-spacing: 1px;
+                font-weight: 600;
+                padding: 16px 18px;
+                text-align: left;
+            }}
+            tbody td {{
+                padding: 14px 18px;
+                font-size: 0.95rem;
+                border-bottom: 1px solid #eef1f4;
+            }}
+            tbody tr:last-child td {{
+                border-bottom: none;
+            }}
+            tbody tr:hover {{
+                background: #f6f8fa;
+            }}
+            .rank {{
+                font-weight: 700;
+                width: 60px;
+            }}
+            .pos-1 {{ background: linear-gradient(90deg, #fff8e1, #ffffff); }}
+            .pos-2 {{ background: linear-gradient(90deg, #f3f4f6, #ffffff); }}
+            .pos-3 {{ background: linear-gradient(90deg, #fdece0, #ffffff); }}
+            .badge {{
+                display: inline-block;
+                padding: 3px 10px;
+                border-radius: 999px;
+                font-size: 0.72rem;
+                font-weight: 600;
+            }}
+            .badge-homme {{ background: #e3f2ed; color: #1e7a5f; }}
+            .badge-femme {{ background: #eaf1fb; color: #245c9c; }}
+            .badge-autre {{ background: #f1f1f1; color: #666; }}
+            .score {{
+                font-weight: 700;
+                font-size: 1rem;
+            }}
+            .evo {{
+                font-weight: 700;
+                font-size: 0.85rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+            }}
+            .evo-up {{ color: #1e9e5a; }}
+            .evo-down {{ color: #d64545; }}
+            .evo-same {{ color: #9aa5b1; }}
+            .evo-new {{
+                color: #245c9c;
+                font-size: 0.68rem;
+                font-weight: 600;
+                background: #eaf1fb;
+                padding: 2px 8px;
+                border-radius: 999px;
+            }}
+            .footer {{
+                text-align: center;
+                margin-top: 22px;
+                color: #cbd2d9;
+                font-size: 0.75rem;
+            }}
+            .footer-logos {{
+                margin-top: 18px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 24px;
+                background: rgba(255, 255, 255, 0.92);
+                border-radius: 14px;
+                padding: 14px 24px;
+            }}
+            .footer-logos img {{
+                height: 60px;
+                width: auto;
+                opacity: 0.95;
+            }}
+            .footer-logos img.logo-etabli {{
+                height: 100px;
+            }}
+            @media (max-width: 650px) {{
+                body {{ padding: 24px 10px; }}
+                .header h1 {{ font-size: 1.5rem; }}
+                thead th, tbody td {{ padding: 10px 10px; font-size: 0.78rem; white-space: nowrap; }}
+                .footer-logos {{ flex-direction: column; gap: 10px; padding: 12px 18px; }}
+                .footer-logos img.logo-etabli {{ height: 70px; }}
+                .footer-logos img {{ height: 42px; }}
+            }}
+        </style>
+        <script>
+            setTimeout(function() {{
+                window.location.reload();
+            }}, 300000);
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="header">
+                <h1>{title}</h1>
+                <p>Généré le {generation_time} (heure de Paris)</p>
+            </div>
+            <div class="card">
+                <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th></th>
+                            <th>Nom Prénom</th>
+                            <th>Club</th>
+                            <th>Sexe</th>
+                            <th>Score Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    """
+
+    for index, row in df.iterrows():
+        position = index + 1
+        pos_class = f"pos-{position}" if position in medals else ""
+        medal = medals.get(position, "")
+        if is_homme(row['Sexe']):
+            badge_class, badge_label = "badge-homme", "Homme"
+        elif is_femme(row['Sexe']):
+            badge_class, badge_label = "badge-femme", "Femme"
+        else:
+            badge_class, badge_label = "badge-autre", "Non défini"
+
+        old_position = previous_positions.get(row['Participant'])
+        if old_position is None:
+            evo_html = '<span class="evo-new">NOUVEAU</span>'
+        elif old_position > position:
+            gain = old_position - position
+            evo_html = f'<span class="evo evo-up">▲ {gain}</span>'
+        elif old_position < position:
+            perte = position - old_position
+            evo_html = f'<span class="evo evo-down">▼ {perte}</span>'
+        else:
+            evo_html = '<span class="evo evo-same">▬</span>'
+
+        html_string += f"""
+                        <tr class="{pos_class}">
+                            <td class="rank">{medal or position}</td>
+                            <td>{evo_html}</td>
+                            <td>{row['Participant']}</td>
+                            <td>{row['Club']}</td>
+                            <td><span class="badge {badge_class}">{badge_label}</span></td>
+                            <td class="score">{row['Score Total']}</td>
+                        </tr>
+        """
+
+    html_string += """
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <p class="footer">Classement généré par L'établi ludique — Test évolution</p>
+            <div class="footer-logos">
+                <img class="logo-etabli" src="logo_etabli.png" alt="Logo L'Établi Ludique">
+                <img src="logo_bvl.png" alt="Logo Besançon Vol Libre">
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    with open(filepath, "w", encoding="utf-8") as file:
+        file.write(html_string)
+
+
 def calcul_valeur(score_dict):
     """Convertit un score {score, penalite} en valeur numérique"""
     score = score_dict["score"]
@@ -1081,6 +1343,11 @@ def main():
     generate_html(df[df['Sexe'].apply(is_femme)], "classement_femmes.html", "Classement Femmes")
     generate_simple_html(df, "classement_simple.html", "Classement Général")
     generate_pilots_grid_html(df, "pilotes_grille.html", "Classement — Pilotes")
+
+    # Page de test : évolution du classement (flèches vs run précédent)
+    previous_positions = load_previous_positions(PREVIOUS_POSITIONS_PATH)
+    generate_evolution_html(df, "classement_evolution_test.html", "Classement — Évolution (test)", previous_positions)
+    save_positions(PREVIOUS_POSITIONS_PATH, df)
 
     # Une page de classement par épreuve individuelle (en plus du classement général)
     for course in COURSES + [BONUS_COURSE]:

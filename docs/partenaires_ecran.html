@@ -74,7 +74,7 @@
         container.innerHTML = "";
         files.forEach((name) => {
           const el = document.createElement("img");
-          el.src = `${FOLDER}/${name}`;
+          el.src = `${FOLDER}/${encodeURIComponent(name)}`;
           el.alt = name.replace(/\.[^.]+$/, "");
           container.appendChild(el);
         });

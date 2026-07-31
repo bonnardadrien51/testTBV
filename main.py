@@ -1492,7 +1492,19 @@ def main():
 
         final_scores.append(row)
 
-    df = pd.DataFrame(final_scores).sort_values(by="Score Final", ascending=False).reset_index(drop=True)
+    if final_scores:
+        df = pd.DataFrame(final_scores).sort_values(by="Score Final", ascending=False).reset_index(drop=True)
+    else:
+        # Aucun résultat nulle part pour l'instant (ex: avant le début d'un
+        # événement) : on génère quand même des pages vides plutôt que de
+        # planter.
+        df = pd.DataFrame(columns=[
+            'Participant', 'Sexe', 'Club',
+            'Garde les pieds sur terre', 'En avant les checkpoints',
+            'Vise la cible ou bien', 'Remonte la pente a patte',
+            "Nombre d'épreuves", 'Score Total',
+            'Détails La Maltournée - Planoise', 'Bonus Déguisement', 'Score Final',
+        ])
 
     # Génération des fichiers HTML
     generate_html(df, "classement_general.html", "Classement Général")

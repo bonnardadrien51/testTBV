@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tout Besançon Vole 2026 — Planning Bénévoles (Organisation)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+    background: #f7f7f8;
+    color: #1a1a1a;
+}
+header {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 22px 20px;
+    text-align: center;
+}
+header h1 {
+    margin: 0 0 4px 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+header .badge-mode {
+    display: inline-block;
+    margin-top: 8px;
+    background: #e63946;
+    color: #fff;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+nav.postes-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 16px 12px;
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+nav.postes-nav a {
+    text-decoration: none;
+    color: #1a1a1a;
+    background: #f1f1f1;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: background 0.15s, color 0.15s;
+}
+nav.postes-nav a:hover {
+    background: #e63946;
+    color: #fff;
+}
+main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px 16px 60px 16px;
+}
+.poste-section {
+    margin-bottom: 34px;
+    scroll-margin-top: 70px;
+}
+.poste-section h2 {
+    color: #e63946;
+    font-size: 1.25rem;
+    font-weight: 700;
+    border-bottom: 3px solid #e63946;
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+}
+.day-block {
+    margin-bottom: 18px;
+}
+.day-block h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 8px 0;
+}
+.slot-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+}
+.slot-time {
+    flex: 0 0 130px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #1a1a1a;
+}
+.slot-people {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    flex: 1 1 auto;
+}
+.person-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: #e63946;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgba(230,57,70,0.35);
+    cursor: pointer;
+    transition: color 0.15s, text-decoration-color 0.15s;
+}
+.person-btn:hover {
+    color: #b5222d;
+    text-decoration-color: #b5222d;
+}
+.phone-inline {
+    font-size: 0.78rem;
+    color: #555;
+    text-decoration: none;
+    background: #f1f1f1;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+.phone-inline:hover {
+    background: #e5e5e5;
+}
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.badge-libre {
+    background: #fdecec;
+    color: #e63946;
+}
+.badge-places {
+    background: #1a1a1a;
+    color: #fff;
+}
+/* Modale */
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.overlay.open {
+    display: flex;
+}
+.modal {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 24px;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+}
+.modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #888;
+}
+.modal-close:hover {
+    color: #e63946;
+}
+.modal h2 {
+    margin: 0 0 4px 0;
+    color: #1a1a1a;
+    font-size: 1.3rem;
+}
+.modal .modal-phone {
+    display: inline-block;
+    margin-bottom: 14px;
+    color: #e63946;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.modal .modal-phone:hover {
+    text-decoration: underline;
+}
+.modal .modal-day {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #e63946;
+    margin: 16px 0 8px 0;
+}
+.modal .modal-slot {
+    background: #f7f7f8;
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    font-size: 0.88rem;
+}
+.modal .modal-slot .t {
+    font-weight: 700;
+}
+.modal .modal-slot .p {
+    color: #555;
+}
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+    font-size: 0.75rem;
+}
+@media (max-width: 600px) {
+    .slot-time { flex: 0 0 100%; margin-bottom: 4px; }
+    header h1 { font-size: 1.25rem; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tout Besançon Vole 2026</h1>
+  <div>Planning des bénévoles</div>
+  <span class="badge-mode">Organisation</span>
+</header>
+<nav class="postes-nav"><a href="#pot-d'accueil">Pot d'accueil</a><a href="#installation-des-epreuves">Installation des épreuves</a><a href="#buvette-port-douvot">Buvette (Port Douvot)</a><a href="#navettes">Navettes</a><a href="#garde-les-pieds-sur-terre">Garde les pieds sur terre</a><a href="#vise-la-cible-ou-bien">Vise la cible ou bien</a><a href="#animation-realite-virtuelle">Animation réalité virtuelle</a><a href="#atelier-boomerang">Atelier Boomerang</a><a href="#gestion-inscription-biplaces">Gestion inscription biplaces</a></nav>
+<main><section class="poste-section" id="pot-d'accueil"><h2>Pot d'accueil</h2><div class="day-block"><h3>Samedi 22 août</h3><div class="slot-row"><div class="slot-time">09h00 - 10h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Hélène Mano')">Hélène Mano</button><a class="phone-inline" href="tel:+33788766887">📞 +33 7 88 76 68 87</a><button class="person-btn" onclick="openPerson('Claudine Vouillot')">Claudine Vouillot</button><a class="phone-inline" href="tel:+33689367642">📞 +33 6 89 36 76 42</a></div></div></div><div class="day-block"><h3>Dimanche 23 août</h3><div class="slot-row"><div class="slot-time">09h00 - 10h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Hélène Mano')">Hélène Mano</button><a class="phone-inline" href="tel:+33788766887">📞 +33 7 88 76 68 87</a><button class="person-btn" onclick="openPerson('Claudine Vouillot')">Claudine Vouillot</button><a class="phone-inline" href="tel:+33689367642">📞 +33 6 89 36 76 42</a></div></div></div></section><section class="poste-section" id="installation-des-epreuves"><h2>Installation des épreuves</h2><div class="day-block"><h3>Vendredi 21 août</h3><div class="slot-row"><div class="slot-time">À définir</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Clément Eynac')">Clément Eynac</button><a class="phone-inline" href="tel:+33632956288">📞 +33 6 32 95 62 88</a><button class="person-btn" onclick="openPerson('Baptiste Gouraud')">Baptiste Gouraud</button><a class="phone-inline" href="tel:30443253">📞 30443253</a></div></div></div><div class="day-block"><h3>Samedi 22 août</h3><div class="slot-row"><div class="slot-time">08h00 - 10h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Alain Plumet')">Alain Plumet</button><a class="phone-inline" href="tel:+33645581953">📞 +33 6 45 58 19 53</a><button class="person-btn" onclick="openPerson('Fabrice Perrin')">Fabrice Perrin</button><a class="phone-inline" href="tel:+33686975000">📞 +33 6 86 97 50 00</a></div></div></div><div class="day-block"><h3>Dimanche 23 août</h3><div class="slot-row"><div class="slot-time">08h00 - 10h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Alain Plumet')">Alain Plumet</button><a class="phone-inline" href="tel:+33645581953">📞 +33 6 45 58 19 53</a><button class="person-btn" onclick="openPerson('Jean-Michel Clerget')">Jean-Michel Clerget</button><a class="phone-inline" href="tel:+33666118836">📞 +33 6 66 11 88 36</a></div></div></div></section><section class="poste-section" id="buvette-port-douvot"><h2>Buvette (Port Douvot)</h2><div class="day-block"><h3>Samedi 22 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Hélène Mano')">Hélène Mano</button><a class="phone-inline" href="tel:+33788766887">📞 +33 7 88 76 68 87</a><button class="person-btn" onclick="openPerson('Claudine Vouillot')">Claudine Vouillot</button><a class="phone-inline" href="tel:+33689367642">📞 +33 6 89 36 76 42</a></div></div><div class="slot-row"><div class="slot-time">12h00 - 14h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Camille Aptel')">Camille Aptel</button><a class="phone-inline" href="tel:+33651036603">📞 +33 6 51 03 66 03</a><button class="person-btn" onclick="openPerson('Guy Voegtlin')">Guy Voegtlin</button><a class="phone-inline" href="tel:+33624322600">📞 +33 6 24 32 26 00</a></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Fabrice Perrin')">Fabrice Perrin</button><a class="phone-inline" href="tel:+33686975000">📞 +33 6 86 97 50 00</a><button class="person-btn" onclick="openPerson('Fabienne Poyard')">Fabienne Poyard</button><a class="phone-inline" href="tel:+33634325089">📞 +33 6 34 32 50 89</a></div></div><div class="slot-row"><div class="slot-time">16h00 - 18h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Fabienne Poyard')">Fabienne Poyard</button><a class="phone-inline" href="tel:+33634325089">📞 +33 6 34 32 50 89</a><button class="person-btn" onclick="openPerson('Fabrice Perrin')">Fabrice Perrin</button><a class="phone-inline" href="tel:+33686975000">📞 +33 6 86 97 50 00</a></div></div><div class="slot-row"><div class="slot-time">18h00 - 20h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Laëtitia Pringault')">Laëtitia Pringault</button><a class="phone-inline" href="tel:+33678104251">📞 +33 6 78 10 42 51</a><button class="person-btn" onclick="openPerson('Antoine Racine')">Antoine Racine</button><a class="phone-inline" href="tel:+33647954178">📞 +33 6 47 95 41 78</a></div></div><div class="slot-row"><div class="slot-time">20h00 - 22h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Laëtitia Pringault')">Laëtitia Pringault</button><a class="phone-inline" href="tel:+33678104251">📞 +33 6 78 10 42 51</a><button class="person-btn" onclick="openPerson('Marylène Goetz')">Marylène Goetz</button><a class="phone-inline" href="tel:+33667014948">📞 +33 6 67 01 49 48</a></div></div></div><div class="day-block"><h3>Dimanche 23 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Hélène Mano')">Hélène Mano</button><a class="phone-inline" href="tel:+33788766887">📞 +33 7 88 76 68 87</a><button class="person-btn" onclick="openPerson('Claudine Vouillot')">Claudine Vouillot</button><a class="phone-inline" href="tel:+33689367642">📞 +33 6 89 36 76 42</a></div></div><div class="slot-row"><div class="slot-time">12h00 - 14h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Emmanuel Chauvin')">Emmanuel Chauvin</button><a class="phone-inline" href="tel:+33673265404">📞 +33 6 73 26 54 04</a></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Eryk Heytens')">Eryk Heytens</button><a class="phone-inline" href="tel:+33686859195">📞 +33 6 86 85 91 95</a><button class="person-btn" onclick="openPerson('Yvette Bouteux')">Yvette Bouteux</button><a class="phone-inline" href="tel:+33610110041">📞 +33 6 10 11 00 41</a></div></div><div class="slot-row"><div class="slot-time">16h00 - 18h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Camille Aptel')">Camille Aptel</button><a class="phone-inline" href="tel:+33651036603">📞 +33 6 51 03 66 03</a><button class="person-btn" onclick="openPerson('Yvette Bouteux')">Yvette Bouteux</button><a class="phone-inline" href="tel:+33610110041">📞 +33 6 10 11 00 41</a></div></div></div></section><section class="poste-section" id="navettes"><h2>Navettes</h2><div class="day-block"><h3>Samedi 22 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Alain Plumet')">Alain Plumet</button><a class="phone-inline" href="tel:+33645581953">📞 +33 6 45 58 19 53</a><button class="person-btn" onclick="openPerson('Bastien Chapel')">Bastien Chapel</button><a class="phone-inline" href="tel:+33646864172">📞 +33 6 46 86 41 72</a></div></div><div class="slot-row"><div class="slot-time">12h00 - 14h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Jean-Luc Devaux')">Jean-Luc Devaux</button><a class="phone-inline" href="tel:+33607615560">📞 +33 6 07 61 55 60</a><button class="person-btn" onclick="openPerson('Bastien Chapel')">Bastien Chapel</button><a class="phone-inline" href="tel:+33646864172">📞 +33 6 46 86 41 72</a></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Thomas Struchen')">Thomas Struchen</button><a class="phone-inline" href="tel:+33675043420">📞 +33 6 75 04 34 20</a><button class="person-btn" onclick="openPerson('Anthony Lambert')">Anthony Lambert</button><a class="phone-inline" href="tel:+33675047948">📞 +33 6 75 04 79 48</a></div></div><div class="slot-row"><div class="slot-time">16h00 - 18h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Camille Aptel')">Camille Aptel</button><a class="phone-inline" href="tel:+33651036603">📞 +33 6 51 03 66 03</a><button class="person-btn" onclick="openPerson('Jean-Michel Clerget')">Jean-Michel Clerget</button><a class="phone-inline" href="tel:+33666118836">📞 +33 6 66 11 88 36</a></div></div><div class="slot-row"><div class="slot-time">18h00 - 20h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Margaux Guimard')">Margaux Guimard</button><a class="phone-inline" href="tel:+33781784981">📞 +33 7 81 78 49 81</a><button class="person-btn" onclick="openPerson('Thomas Struchen')">Thomas Struchen</button><a class="phone-inline" href="tel:+33675043420">📞 +33 6 75 04 34 20</a></div></div></div><div class="day-block"><h3>Dimanche 23 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Alain Plumet')">Alain Plumet</button><a class="phone-inline" href="tel:+33645581953">📞 +33 6 45 58 19 53</a><button class="person-btn" onclick="openPerson('Jean-Luc Devaux')">Jean-Luc Devaux</button><a class="phone-inline" href="tel:+33607615560">📞 +33 6 07 61 55 60</a></div></div><div class="slot-row"><div class="slot-time">12h00 - 14h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Camille Aptel')">Camille Aptel</button><a class="phone-inline" href="tel:+33651036603">📞 +33 6 51 03 66 03</a><button class="person-btn" onclick="openPerson('Claude Varlet')">Claude Varlet</button><a class="phone-inline" href="tel:+33786004540">📞 +33 7 86 00 45 40</a></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Thomas Struchen')">Thomas Struchen</button><a class="phone-inline" href="tel:+33675043420">📞 +33 6 75 04 34 20</a><button class="person-btn" onclick="openPerson('Jean-Michel Clerget')">Jean-Michel Clerget</button><a class="phone-inline" href="tel:+33666118836">📞 +33 6 66 11 88 36</a></div></div><div class="slot-row"><div class="slot-time">16h00 - 18h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Laëtitia Pringault')">Laëtitia Pringault</button><a class="phone-inline" href="tel:+33678104251">📞 +33 6 78 10 42 51</a></div></div></div></section><section class="poste-section" id="garde-les-pieds-sur-terre"><h2>Garde les pieds sur terre</h2><div class="day-block"><h3>Samedi 22 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Mathieu Chavel')">Mathieu Chavel</button><a class="phone-inline" href="tel:+33633324002">📞 +33 6 33 32 40 02</a></div></div><div class="slot-row"><div class="slot-time">12h00 - 14h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Mathieu Chavel')">Mathieu Chavel</button><a class="phone-inline" href="tel:+33633324002">📞 +33 6 33 32 40 02</a></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Laëtitia Pringault')">Laëtitia Pringault</button><a class="phone-inline" href="tel:+33678104251">📞 +33 6 78 10 42 51</a></div></div><div class="slot-row"><div class="slot-time">16h00 - 18h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Emeline Keiflin')">Emeline Keiflin</button><a class="phone-inline" href="tel:+33622904941">📞 +33 6 22 90 49 41</a></div></div><div class="slot-row"><div class="slot-time">18h00 - 20h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Léa Simon')">Léa Simon</button><a class="phone-inline" href="tel:+33649230357">📞 +33 6 49 23 03 57</a></div></div></div><div class="day-block"><h3>Dimanche 23 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Antoine Haddad')">Antoine Haddad</button><a class="phone-inline" href="tel:+33679884837">📞 +33 6 79 88 48 37</a></div></div><div class="slot-row"><div class="slot-time">12h00 - 14h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Frédéric Vacoret')">Frédéric Vacoret</button><a class="phone-inline" href="tel:+33607645808">📞 +33 6 07 64 58 08</a></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Anielle Ramaye')">Anielle Ramaye</button><a class="phone-inline" href="tel:+33698734884">📞 +33 6 98 73 48 84</a></div></div></div></section><section class="poste-section" id="vise-la-cible-ou-bien"><h2>Vise la cible ou bien</h2><div class="day-block"><h3>Samedi 22 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Jean-Michel Clerget')">Jean-Michel Clerget</button><a class="phone-inline" href="tel:+33666118836">📞 +33 6 66 11 88 36</a></div></div><div class="slot-row"><div class="slot-time">12h00 - 14h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Antoine Racine')">Antoine Racine</button><a class="phone-inline" href="tel:+33647954178">📞 +33 6 47 95 41 78</a></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Léa Simon')">Léa Simon</button><a class="phone-inline" href="tel:+33649230357">📞 +33 6 49 23 03 57</a></div></div><div class="slot-row"><div class="slot-time">16h00 - 18h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Thomas Struchen')">Thomas Struchen</button><a class="phone-inline" href="tel:+33675043420">📞 +33 6 75 04 34 20</a></div></div><div class="slot-row"><div class="slot-time">18h00 - 20h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Marylène Goetz')">Marylène Goetz</button><a class="phone-inline" href="tel:+33667014948">📞 +33 6 67 01 49 48</a></div></div></div><div class="day-block"><h3>Dimanche 23 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Baptiste Gouraud')">Baptiste Gouraud</button><a class="phone-inline" href="tel:30443253">📞 30443253</a></div></div><div class="slot-row"><div class="slot-time">12h00 - 14h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Thomas Struchen')">Thomas Struchen</button><a class="phone-inline" href="tel:+33675043420">📞 +33 6 75 04 34 20</a></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Antoine Haddad')">Antoine Haddad</button><a class="phone-inline" href="tel:+33679884837">📞 +33 6 79 88 48 37</a></div></div></div></section><section class="poste-section" id="animation-realite-virtuelle"><h2>Animation réalité virtuelle</h2><div class="day-block"><h3>Samedi 22 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Antoine Racine')">Antoine Racine</button><a class="phone-inline" href="tel:+33647954178">📞 +33 6 47 95 41 78</a><button class="person-btn" onclick="openPerson('Margaux Guimard')">Margaux Guimard</button><a class="phone-inline" href="tel:+33781784981">📞 +33 7 81 78 49 81</a></div></div><div class="slot-row"><div class="slot-time">12h00 - 14h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Sandrq Dreyfus')">Sandrq Dreyfus</button><a class="phone-inline" href="tel:+33687547138">📞 +33 6 87 54 71 38</a><button class="person-btn" onclick="openPerson('Anthony Lambert')">Anthony Lambert</button><a class="phone-inline" href="tel:+33675047948">📞 +33 6 75 04 79 48</a></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Guy Voegtlin')">Guy Voegtlin</button><a class="phone-inline" href="tel:+33624322600">📞 +33 6 24 32 26 00</a><button class="person-btn" onclick="openPerson('Marylène Goetz')">Marylène Goetz</button><a class="phone-inline" href="tel:+33667014948">📞 +33 6 67 01 49 48</a></div></div><div class="slot-row"><div class="slot-time">16h00 - 18h00</div><div class="slot-people"><span class="badge badge-libre">Libre</span><span class="badge badge-places">2 places</span></div></div><div class="slot-row"><div class="slot-time">18h00 - 20h00</div><div class="slot-people"><span class="badge badge-libre">Libre</span><span class="badge badge-places">2 places</span></div></div></div><div class="day-block"><h3>Dimanche 23 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Jean-Michel Clerget')">Jean-Michel Clerget</button><a class="phone-inline" href="tel:+33666118836">📞 +33 6 66 11 88 36</a><span class="badge badge-places">1 place</span></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Margaux Berchoud')">Margaux Berchoud</button><a class="phone-inline" href="tel:+33621171426">📞 +33 6 21 17 14 26</a><span class="badge badge-places">1 place</span></div></div><div class="slot-row"><div class="slot-time">16h00 - 18h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Margaux Berchoud')">Margaux Berchoud</button><a class="phone-inline" href="tel:+33621171426">📞 +33 6 21 17 14 26</a><span class="badge badge-places">1 place</span></div></div></div></section><section class="poste-section" id="atelier-boomerang"><h2>Atelier Boomerang</h2><div class="day-block"><h3>Samedi 22 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><span class="badge badge-libre">Libre</span><span class="badge badge-places">1 place</span></div></div><div class="slot-row"><div class="slot-time">12h00 - 14h00</div><div class="slot-people"><span class="badge badge-libre">Libre</span><span class="badge badge-places">1 place</span></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><span class="badge badge-libre">Libre</span><span class="badge badge-places">1 place</span></div></div><div class="slot-row"><div class="slot-time">16h00 - 18h00</div><div class="slot-people"><span class="badge badge-libre">Libre</span><span class="badge badge-places">1 place</span></div></div><div class="slot-row"><div class="slot-time">18h00 - 20h00</div><div class="slot-people"><span class="badge badge-libre">Libre</span><span class="badge badge-places">1 place</span></div></div></div><div class="day-block"><h3>Dimanche 23 août</h3><div class="slot-row"><div class="slot-time">10h00 - 12h00</div><div class="slot-people"><span class="badge badge-libre">Libre</span><span class="badge badge-places">1 place</span></div></div><div class="slot-row"><div class="slot-time">12h00 - 14h00</div><div class="slot-people"><span class="badge badge-libre">Libre</span><span class="badge badge-places">1 place</span></div></div><div class="slot-row"><div class="slot-time">14h00 - 16h00</div><div class="slot-people"><span class="badge badge-libre">Libre</span><span class="badge badge-places">1 place</span></div></div><div class="slot-row"><div class="slot-time">16h00 - 18h00</div><div class="slot-people"><span class="badge badge-libre">Libre</span><span class="badge badge-places">1 place</span></div></div></div></section><section class="poste-section" id="gestion-inscription-biplaces"><h2>Gestion inscription biplaces</h2><div class="day-block"><h3>Samedi 22 août</h3><div class="slot-row"><div class="slot-time">10h00 - 14h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Lucie Poder')">Lucie Poder</button><a class="phone-inline" href="tel:+33699897493">📞 +33 6 99 89 74 93</a></div></div><div class="slot-row"><div class="slot-time">14h00 - 18h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Lucie Poder')">Lucie Poder</button><a class="phone-inline" href="tel:+33699897493">📞 +33 6 99 89 74 93</a></div></div></div><div class="day-block"><h3>Dimanche 23 août</h3><div class="slot-row"><div class="slot-time">10h00 - 14h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Lucie Poder')">Lucie Poder</button><a class="phone-inline" href="tel:+33699897493">📞 +33 6 99 89 74 93</a></div></div><div class="slot-row"><div class="slot-time">14h00 - 18h00</div><div class="slot-people"><button class="person-btn" onclick="openPerson('Lucie Poder')">Lucie Poder</button><a class="phone-inline" href="tel:+33699897493">📞 +33 6 99 89 74 93</a></div></div></div></section></main>
+<footer>L'établi ludique — Besançon Vol Libre</footer>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script>
+const DATA = {"Pot d'accueil": {"Samedi 22 août": [{"time": "09h00 - 10h00", "people": ["Hélène Mano", "Claudine Vouillot"], "capacity": null}], "Dimanche 23 août": [{"time": "09h00 - 10h00", "people": ["Hélène Mano", "Claudine Vouillot"], "capacity": null}]}, "Installation des épreuves": {"Vendredi 21 août": [{"time": "À définir", "people": ["Clément Eynac", "Baptiste Gouraud"], "capacity": null}], "Samedi 22 août": [{"time": "08h00 - 10h00", "people": ["Alain Plumet", "Fabrice Perrin"], "capacity": null}], "Dimanche 23 août": [{"time": "08h00 - 10h00", "people": ["Alain Plumet", "Jean-Michel Clerget"], "capacity": null}]}, "Buvette (Port Douvot)": {"Samedi 22 août": [{"time": "10h00 - 12h00", "people": ["Hélène Mano", "Claudine Vouillot"], "capacity": null}, {"time": "12h00 - 14h00", "people": ["Camille Aptel", "Guy Voegtlin"], "capacity": null}, {"time": "14h00 - 16h00", "people": ["Fabrice Perrin", "Fabienne Poyard"], "capacity": null}, {"time": "16h00 - 18h00", "people": ["Fabienne Poyard", "Fabrice Perrin"], "capacity": null}, {"time": "18h00 - 20h00", "people": ["Laëtitia Pringault", "Antoine Racine"], "capacity": null}, {"time": "20h00 - 22h00", "people": ["Laëtitia Pringault", "Marylène Goetz"], "capacity": null}], "Dimanche 23 août": [{"time": "10h00 - 12h00", "people": ["Hélène Mano", "Claudine Vouillot"], "capacity": null}, {"time": "12h00 - 14h00", "people": ["Emmanuel Chauvin"], "capacity": null}, {"time": "14h00 - 16h00", "people": ["Eryk Heytens", "Yvette Bouteux"], "capacity": null}, {"time": "16h00 - 18h00", "people": ["Camille Aptel", "Yvette Bouteux"], "capacity": null}]}, "Navettes": {"Samedi 22 août": [{"time": "10h00 - 12h00", "people": ["Alain Plumet", "Bastien Chapel"], "capacity": null}, {"time": "12h00 - 14h00", "people": ["Jean-Luc Devaux", "Bastien Chapel"], "capacity": null}, {"time": "14h00 - 16h00", "people": ["Thomas Struchen", "Anthony Lambert"], "capacity": null}, {"time": "16h00 - 18h00", "people": ["Camille Aptel", "Jean-Michel Clerget"], "capacity": null}, {"time": "18h00 - 20h00", "people": ["Margaux Guimard", "Thomas Struchen"], "capacity": null}], "Dimanche 23 août": [{"time": "10h00 - 12h00", "people": ["Alain Plumet", "Jean-Luc Devaux"], "capacity": null}, {"time": "12h00 - 14h00", "people": ["Camille Aptel", "Claude Varlet"], "capacity": null}, {"time": "14h00 - 16h00", "people": ["Thomas Struchen", "Jean-Michel Clerget"], "capacity": null}, {"time": "16h00 - 18h00", "people": ["Laëtitia Pringault"], "capacity": null}]}, "Garde les pieds sur terre": {"Samedi 22 août": [{"time": "10h00 - 12h00", "people": ["Mathieu Chavel"], "capacity": null}, {"time": "12h00 - 14h00", "people": ["Mathieu Chavel"], "capacity": null}, {"time": "14h00 - 16h00", "people": ["Laëtitia Pringault"], "capacity": null}, {"time": "16h00 - 18h00", "people": ["Emeline Keiflin"], "capacity": null}, {"time": "18h00 - 20h00", "people": ["Léa Simon"], "capacity": null}], "Dimanche 23 août": [{"time": "10h00 - 12h00", "people": ["Antoine Haddad"], "capacity": null}, {"time": "12h00 - 14h00", "people": ["Frédéric Vacoret"], "capacity": null}, {"time": "14h00 - 16h00", "people": ["Anielle Ramaye"], "capacity": null}]}, "Vise la cible ou bien": {"Samedi 22 août": [{"time": "10h00 - 12h00", "people": ["Jean-Michel Clerget"], "capacity": null}, {"time": "12h00 - 14h00", "people": ["Antoine Racine"], "capacity": null}, {"time": "14h00 - 16h00", "people": ["Léa Simon"], "capacity": null}, {"time": "16h00 - 18h00", "people": ["Thomas Struchen"], "capacity": null}, {"time": "18h00 - 20h00", "people": ["Marylène Goetz"], "capacity": null}], "Dimanche 23 août": [{"time": "10h00 - 12h00", "people": ["Baptiste Gouraud"], "capacity": null}, {"time": "12h00 - 14h00", "people": ["Thomas Struchen"], "capacity": null}, {"time": "14h00 - 16h00", "people": ["Antoine Haddad"], "capacity": null}]}, "Animation réalité virtuelle": {"Samedi 22 août": [{"time": "10h00 - 12h00", "people": ["Antoine Racine", "Margaux Guimard"], "capacity": 2}, {"time": "12h00 - 14h00", "people": ["Sandrq Dreyfus", "Anthony Lambert"], "capacity": 2}, {"time": "14h00 - 16h00", "people": ["Guy Voegtlin", "Marylène Goetz"], "capacity": 2}, {"time": "16h00 - 18h00", "people": [], "capacity": 2}, {"time": "18h00 - 20h00", "people": [], "capacity": 2}], "Dimanche 23 août": [{"time": "10h00 - 12h00", "people": ["Jean-Michel Clerget"], "capacity": 2}, {"time": "14h00 - 16h00", "people": ["Margaux Berchoud"], "capacity": 2}, {"time": "16h00 - 18h00", "people": ["Margaux Berchoud"], "capacity": 2}]}, "Atelier Boomerang": {"Samedi 22 août": [{"time": "10h00 - 12h00", "people": [], "capacity": 1}, {"time": "12h00 - 14h00", "people": [], "capacity": 1}, {"time": "14h00 - 16h00", "people": [], "capacity": 1}, {"time": "16h00 - 18h00", "people": [], "capacity": 1}, {"time": "18h00 - 20h00", "people": [], "capacity": 1}], "Dimanche 23 août": [{"time": "10h00 - 12h00", "people": [], "capacity": 1}, {"time": "12h00 - 14h00", "people": [], "capacity": 1}, {"time": "14h00 - 16h00", "people": [], "capacity": 1}, {"time": "16h00 - 18h00", "people": [], "capacity": 1}]}, "Gestion inscription biplaces": {"Samedi 22 août": [{"time": "10h00 - 14h00", "people": ["Lucie Poder"], "capacity": null}, {"time": "14h00 - 18h00", "people": ["Lucie Poder"], "capacity": null}], "Dimanche 23 août": [{"time": "10h00 - 14h00", "people": ["Lucie Poder"], "capacity": null}, {"time": "14h00 - 18h00", "people": ["Lucie Poder"], "capacity": null}]}};
+const DAY_ORDER = ["Vendredi 21 août", "Samedi 22 août", "Dimanche 23 août"];
+const PERSON_INDEX = {"Hélène Mano": [{"poste": "Pot d'accueil", "day": "Samedi 22 août", "time": "09h00 - 10h00"}, {"poste": "Pot d'accueil", "day": "Dimanche 23 août", "time": "09h00 - 10h00"}, {"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "10h00 - 12h00"}, {"poste": "Buvette (Port Douvot)", "day": "Dimanche 23 août", "time": "10h00 - 12h00"}], "Claudine Vouillot": [{"poste": "Pot d'accueil", "day": "Samedi 22 août", "time": "09h00 - 10h00"}, {"poste": "Pot d'accueil", "day": "Dimanche 23 août", "time": "09h00 - 10h00"}, {"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "10h00 - 12h00"}, {"poste": "Buvette (Port Douvot)", "day": "Dimanche 23 août", "time": "10h00 - 12h00"}], "Clément Eynac": [{"poste": "Installation des épreuves", "day": "Vendredi 21 août", "time": "À définir"}], "Baptiste Gouraud": [{"poste": "Installation des épreuves", "day": "Vendredi 21 août", "time": "À définir"}, {"poste": "Vise la cible ou bien", "day": "Dimanche 23 août", "time": "10h00 - 12h00"}], "Alain Plumet": [{"poste": "Installation des épreuves", "day": "Samedi 22 août", "time": "08h00 - 10h00"}, {"poste": "Installation des épreuves", "day": "Dimanche 23 août", "time": "08h00 - 10h00"}, {"poste": "Navettes", "day": "Samedi 22 août", "time": "10h00 - 12h00"}, {"poste": "Navettes", "day": "Dimanche 23 août", "time": "10h00 - 12h00"}], "Fabrice Perrin": [{"poste": "Installation des épreuves", "day": "Samedi 22 août", "time": "08h00 - 10h00"}, {"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "14h00 - 16h00"}, {"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "16h00 - 18h00"}], "Jean-Michel Clerget": [{"poste": "Installation des épreuves", "day": "Dimanche 23 août", "time": "08h00 - 10h00"}, {"poste": "Navettes", "day": "Samedi 22 août", "time": "16h00 - 18h00"}, {"poste": "Navettes", "day": "Dimanche 23 août", "time": "14h00 - 16h00"}, {"poste": "Vise la cible ou bien", "day": "Samedi 22 août", "time": "10h00 - 12h00"}, {"poste": "Animation réalité virtuelle", "day": "Dimanche 23 août", "time": "10h00 - 12h00"}], "Camille Aptel": [{"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "12h00 - 14h00"}, {"poste": "Buvette (Port Douvot)", "day": "Dimanche 23 août", "time": "16h00 - 18h00"}, {"poste": "Navettes", "day": "Samedi 22 août", "time": "16h00 - 18h00"}, {"poste": "Navettes", "day": "Dimanche 23 août", "time": "12h00 - 14h00"}], "Guy Voegtlin": [{"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "12h00 - 14h00"}, {"poste": "Animation réalité virtuelle", "day": "Samedi 22 août", "time": "14h00 - 16h00"}], "Fabienne Poyard": [{"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "14h00 - 16h00"}, {"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "16h00 - 18h00"}], "Laëtitia Pringault": [{"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "18h00 - 20h00"}, {"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "20h00 - 22h00"}, {"poste": "Navettes", "day": "Dimanche 23 août", "time": "16h00 - 18h00"}, {"poste": "Garde les pieds sur terre", "day": "Samedi 22 août", "time": "14h00 - 16h00"}], "Antoine Racine": [{"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "18h00 - 20h00"}, {"poste": "Vise la cible ou bien", "day": "Samedi 22 août", "time": "12h00 - 14h00"}, {"poste": "Animation réalité virtuelle", "day": "Samedi 22 août", "time": "10h00 - 12h00"}], "Marylène Goetz": [{"poste": "Buvette (Port Douvot)", "day": "Samedi 22 août", "time": "20h00 - 22h00"}, {"poste": "Vise la cible ou bien", "day": "Samedi 22 août", "time": "18h00 - 20h00"}, {"poste": "Animation réalité virtuelle", "day": "Samedi 22 août", "time": "14h00 - 16h00"}], "Emmanuel Chauvin": [{"poste": "Buvette (Port Douvot)", "day": "Dimanche 23 août", "time": "12h00 - 14h00"}], "Eryk Heytens": [{"poste": "Buvette (Port Douvot)", "day": "Dimanche 23 août", "time": "14h00 - 16h00"}], "Yvette Bouteux": [{"poste": "Buvette (Port Douvot)", "day": "Dimanche 23 août", "time": "14h00 - 16h00"}, {"poste": "Buvette (Port Douvot)", "day": "Dimanche 23 août", "time": "16h00 - 18h00"}], "Bastien Chapel": [{"poste": "Navettes", "day": "Samedi 22 août", "time": "10h00 - 12h00"}, {"poste": "Navettes", "day": "Samedi 22 août", "time": "12h00 - 14h00"}], "Jean-Luc Devaux": [{"poste": "Navettes", "day": "Samedi 22 août", "time": "12h00 - 14h00"}, {"poste": "Navettes", "day": "Dimanche 23 août", "time": "10h00 - 12h00"}], "Thomas Struchen": [{"poste": "Navettes", "day": "Samedi 22 août", "time": "14h00 - 16h00"}, {"poste": "Navettes", "day": "Samedi 22 août", "time": "18h00 - 20h00"}, {"poste": "Navettes", "day": "Dimanche 23 août", "time": "14h00 - 16h00"}, {"poste": "Vise la cible ou bien", "day": "Samedi 22 août", "time": "16h00 - 18h00"}, {"poste": "Vise la cible ou bien", "day": "Dimanche 23 août", "time": "12h00 - 14h00"}], "Anthony Lambert": [{"poste": "Navettes", "day": "Samedi 22 août", "time": "14h00 - 16h00"}, {"poste": "Animation réalité virtuelle", "day": "Samedi 22 août", "time": "12h00 - 14h00"}], "Margaux Guimard": [{"poste": "Navettes", "day": "Samedi 22 août", "time": "18h00 - 20h00"}, {"poste": "Animation réalité virtuelle", "day": "Samedi 22 août", "time": "10h00 - 12h00"}], "Claude Varlet": [{"poste": "Navettes", "day": "Dimanche 23 août", "time": "12h00 - 14h00"}], "Mathieu Chavel": [{"poste": "Garde les pieds sur terre", "day": "Samedi 22 août", "time": "10h00 - 12h00"}, {"poste": "Garde les pieds sur terre", "day": "Samedi 22 août", "time": "12h00 - 14h00"}], "Emeline Keiflin": [{"poste": "Garde les pieds sur terre", "day": "Samedi 22 août", "time": "16h00 - 18h00"}], "Léa Simon": [{"poste": "Garde les pieds sur terre", "day": "Samedi 22 août", "time": "18h00 - 20h00"}, {"poste": "Vise la cible ou bien", "day": "Samedi 22 août", "time": "14h00 - 16h00"}], "Antoine Haddad": [{"poste": "Garde les pieds sur terre", "day": "Dimanche 23 août", "time": "10h00 - 12h00"}, {"poste": "Vise la cible ou bien", "day": "Dimanche 23 août", "time": "14h00 - 16h00"}], "Frédéric Vacoret": [{"poste": "Garde les pieds sur terre", "day": "Dimanche 23 août", "time": "12h00 - 14h00"}], "Anielle Ramaye": [{"poste": "Garde les pieds sur terre", "day": "Dimanche 23 août", "time": "14h00 - 16h00"}], "Sandrq Dreyfus": [{"poste": "Animation réalité virtuelle", "day": "Samedi 22 août", "time": "12h00 - 14h00"}], "Margaux Berchoud": [{"poste": "Animation réalité virtuelle", "day": "Dimanche 23 août", "time": "14h00 - 16h00"}, {"poste": "Animation réalité virtuelle", "day": "Dimanche 23 août", "time": "16h00 - 18h00"}], "Lucie Poder": [{"poste": "Gestion inscription biplaces", "day": "Samedi 22 août", "time": "10h00 - 14h00"}, {"poste": "Gestion inscription biplaces", "day": "Samedi 22 août", "time": "14h00 - 18h00"}, {"poste": "Gestion inscription biplaces", "day": "Dimanche 23 août", "time": "10h00 - 14h00"}, {"poste": "Gestion inscription biplaces", "day": "Dimanche 23 août", "time": "14h00 - 18h00"}]};
+const PHONES = {"Hélène Mano": "+33 7 88 76 68 87", "Claudine Vouillot": "+33 6 89 36 76 42", "Clément Eynac": "+33 6 32 95 62 88", "Baptiste Gouraud": "30443253", "Alain Plumet": "+33 6 45 58 19 53", "Fabrice Perrin": "+33 6 86 97 50 00", "Jean-Michel Clerget": "+33 6 66 11 88 36", "Camille Aptel": "+33 6 51 03 66 03", "Guy Voegtlin": "+33 6 24 32 26 00", "Fabienne Poyard": "+33 6 34 32 50 89", "Laëtitia Pringault": "+33 6 78 10 42 51", "Antoine Racine": "+33 6 47 95 41 78", "Marylène Goetz": "+33 6 67 01 49 48", "Emmanuel Chauvin": "+33 6 73 26 54 04", "Eryk Heytens": "+33 6 86 85 91 95", "Yvette Bouteux": "+33 6 10 11 00 41", "Bastien Chapel": "+33 6 46 86 41 72", "Jean-Luc Devaux": "+33 6 07 61 55 60", "Thomas Struchen": "+33 6 75 04 34 20", "Anthony Lambert": "+33 6 75 04 79 48", "Margaux Guimard": "+33 7 81 78 49 81", "Mathieu Chavel": "+33 6 33 32 40 02", "Emeline Keiflin": "+33 6 22 90 49 41", "Léa Simon": "+33 6 49 23 03 57", "Sandrq Dreyfus": "+33 6 87 54 71 38", "Margaux Berchoud": "+33 6 21 17 14 26", "Antoine Haddad": "+33 6 79 88 48 37", "Anielle Ramaye": "+33 6 98 73 48 84", "Frédéric Vacoret": "+33 6 07 64 58 08", "Claude Varlet": "+33 7 86 00 45 40", "Lucie Poder": "+33 6 99 89 74 93"};
+const SHOW_PHONE = true;
+
+function telHref(raw) {
+    const digits = raw.replace(/[^\d+]/g, "");
+    return "tel:" + digits;
+}
+
+function openPerson(name) {
+    const overlay = document.getElementById("overlay");
+    const modal = document.getElementById("modal-content");
+    const slots = PERSON_INDEX[name] || [];
+
+    let html = `<button class="modal-close" onclick="closeModal()" aria-label="Fermer">&times;</button>`;
+    html += `<h2>${name}</h2>`;
+
+    if (SHOW_PHONE && PHONES[name]) {
+        html += `<a class="modal-phone" href="${telHref(PHONES[name])}">📞 ${PHONES[name]}</a>`;
+    }
+
+    let currentDay = null;
+    DAY_ORDER.forEach(day => {
+        const daySlots = slots.filter(s => s.day === day);
+        if (daySlots.length === 0) return;
+        html += `<div class="modal-day">${day}</div>`;
+        daySlots.forEach(s => {
+            html += `<div class="modal-slot"><span class="t">${s.time}</span><br><span class="p">${s.poste}</span></div>`;
+        });
+    });
+
+    if (slots.length === 0) {
+        html += `<p>Aucun créneau trouvé.</p>`;
+    }
+
+    modal.innerHTML = html;
+    overlay.classList.add("open");
+}
+
+function closeModal() {
+    document.getElementById("overlay").classList.remove("open");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const overlay = document.getElementById("overlay");
+    overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closeModal();
+    });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModal();
+    });
+});
+</script>
+</body>
+</html>

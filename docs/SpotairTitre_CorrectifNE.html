@@ -2,151 +2,241 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
+
   <title>SpotAiR + Pioupiou + Logos</title>
 
   <!-- Police -->
-  <link href="https://fonts.googleapis.com/css2?family=Tan+Headline:wght@400;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Tan+Headline:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
 
   <style>
+
+    /* =========================================================
+       BASE
+       ========================================================= */
+
     * {
       box-sizing: border-box;
     }
 
+    html,
     body {
       margin: 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-      background: white;
+      width: 100%;
+      height: 100%;
     }
 
-    /* ==========================================
+    body {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+
+      width: 100vw;
+      height: 100vh;
+
+      font-family: Arial, sans-serif;
+
+      background: white;
+
+      overflow: hidden;
+    }
+
+
+    /* =========================================================
        STATIONS
-       ========================================== */
+       ========================================================= */
 
     .station {
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+
       align-items: center;
+
+      width: 100%;
+      height: 100%;
+
       background: white;
-      padding: 4px 4px 0 4px;
+
+      padding: 4px;
+
       overflow: hidden;
     }
 
+
     .station h1 {
-      margin: 4px 0;
-      font-size: 1.4em;
-      line-height: 1.15;
-      text-align: center;
-      font-family: 'Tan Headline', sans-serif;
-      font-weight: 700;
-      color: #1a1a1a;
+      flex: 0 0 auto;
+
       width: 100%;
+
+      margin: 4px 0;
+
+      text-align: center;
+
+      font-family: 'Tan Headline', Arial, sans-serif;
+
+      font-size: clamp(18px, 1.5vw, 28px);
+
+      line-height: 1.15;
+
+      font-weight: 700;
+
+      color: #1a1a1a;
+
       white-space: nowrap;
-      flex-shrink: 0;
     }
+
 
     iframe {
       width: 100%;
+      height: 100%;
+
       flex: 1 1 auto;
+
       min-height: 0;
+
       border: none;
     }
 
 
-    /* ==========================================
-       PANNEAU VENT PLANOISE NE
-       ========================================== */
+    /* =========================================================
+       PANNEAU PLANOISE NE
+       ========================================================= */
 
     .wind-panel {
+
       width: 100%;
+      height: 100%;
+
       flex: 1 1 auto;
+
       min-height: 0;
 
       display: flex;
+
       flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      overflow: hidden;
+    }
+
+
+    /* =========================================================
+       CERCLE
+       ========================================================= */
+
+    .wind-display {
+
+      /*
+       * Le cercle prend une taille responsive.
+       *
+       * min() permet de ne jamais dépasser :
+       * - la largeur disponible
+       * - la hauteur disponible
+       *
+       * aspect-ratio garantit un vrai cercle.
+       */
+
+      width: min(
+        28vw,
+        28vh,
+        280px
+      );
+
+      aspect-ratio: 1 / 1;
+
+      flex: 0 1 auto;
+
+      position: relative;
+
+      border-radius: 50%;
+
+      background: #f4f4f4;
+
+      border: clamp(5px, 0.6vw, 8px) solid #444;
+
+      display: flex;
+
       align-items: center;
       justify-content: center;
 
       overflow: hidden;
-      position: relative;
     }
 
 
-    /* ------------------------------------------
-       Indicateur principal
-       ------------------------------------------ */
-
-    .wind-display {
-      position: relative;
-
-      width: min(32vw, 32vh);
-      height: min(32vw, 32vh);
-
-      min-width: 180px;
-      min-height: 180px;
-
-      max-width: 330px;
-      max-height: 330px;
-
-      border-radius: 50%;
-
-      background: #f5f5f5;
-      border: 8px solid #444;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-
-    /* Cercle intérieur */
+    /*
+     * Cercle vert intérieur
+     */
 
     .wind-display::before {
+
       content: "";
+
       position: absolute;
 
-      width: 84%;
-      height: 84%;
+      width: 86%;
+      height: 86%;
+
+      aspect-ratio: 1 / 1;
 
       border-radius: 50%;
+
+      border: clamp(4px, 0.5vw, 7px) solid #39b51c;
 
       background: white;
 
-      border: 7px solid #39b51c;
-
-      box-sizing: border-box;
+      z-index: 1;
     }
 
 
-    /* ------------------------------------------
-       Flèche
-       ------------------------------------------ */
+    /* =========================================================
+       FLECHE
+       ========================================================= */
 
     .wind-arrow {
+
       position: absolute;
 
-      width: 12px;
-      height: 42%;
+      /*
+       * Taille relative au cercle
+       */
+
+      width: 9%;
+      height: 40%;
 
       left: 50%;
       top: 8%;
 
       transform-origin: 50% 100%;
 
-      transform: translateX(-50%) rotate(0deg);
+      /*
+       * La rotation est modifiée par JavaScript.
+       */
 
-      z-index: 5;
+      transform:
+        translateX(-50%)
+        rotate(0deg);
 
-      transition: transform 0.8s ease;
+      transition:
+        transform 0.8s ease;
+
+      z-index: 3;
+
+      pointer-events: none;
     }
 
 
+    /*
+     * Pointe de la flèche
+     */
+
     .wind-arrow::before {
+
       content: "";
 
       position: absolute;
@@ -159,24 +249,33 @@
       width: 0;
       height: 0;
 
-      border-left: 24px solid transparent;
-      border-right: 24px solid transparent;
-      border-bottom: 48px solid #444;
+      border-left: clamp(12px, 1.8vw, 24px) solid transparent;
+
+      border-right: clamp(12px, 1.8vw, 24px) solid transparent;
+
+      border-bottom: clamp(24px, 3.5vw, 48px) solid #444;
     }
 
 
+    /*
+     * Corps de la flèche
+     */
+
     .wind-arrow::after {
+
       content: "";
 
       position: absolute;
 
       left: 50%;
-      top: 38px;
+
+      top: clamp(20px, 2.7vw, 38px);
 
       transform: translateX(-50%);
 
-      width: 10px;
-      height: calc(100% - 38px);
+      width: clamp(6px, 0.7vw, 10px);
+
+      height: calc(100% - clamp(20px, 2.7vw, 38px));
 
       background: #444;
 
@@ -184,133 +283,244 @@
     }
 
 
-    /* ------------------------------------------
-       Vitesse au centre
-       ------------------------------------------ */
+    /* =========================================================
+       CONTENU CENTRAL DU CERCLE
+       ========================================================= */
 
     .wind-speed {
+
       position: relative;
+
       z-index: 10;
 
+      width: 70%;
+
+      height: 70%;
+
       display: flex;
+
       flex-direction: column;
+
       align-items: center;
 
-      font-weight: 700;
+      justify-content: center;
+
+      text-align: center;
 
       line-height: 1;
     }
 
+
+    /*
+     * Valeur de vitesse
+     */
+
     .wind-speed-value {
-      font-size: clamp(60px, 7vw, 105px);
+
+      font-size: clamp(
+        48px,
+        6vw,
+        92px
+      );
+
+      line-height: 0.95;
+
+      font-weight: 700;
+
       color: #39b51c;
+
+      white-space: nowrap;
     }
+
+
+    /*
+     * km/h
+     *
+     * Reste volontairement dans le cercle.
+     */
 
     .wind-speed-unit {
-      margin-top: 8px;
 
-      font-size: clamp(16px, 1.6vw, 24px);
+      margin-top: clamp(
+        3px,
+        0.5vw,
+        8px
+      );
 
-      color: #555;
-      font-weight: 600;
+      font-size: clamp(
+        14px,
+        1.4vw,
+        22px
+      );
+
+      line-height: 1;
+
+      font-weight: 700;
+
+      color: #455a64;
+
+      white-space: nowrap;
     }
 
 
-    /* ------------------------------------------
-       Min / Moy / Max
-       ------------------------------------------ */
+    /* =========================================================
+       MIN / MOY / MAX
+       ========================================================= */
 
     .wind-values {
-      margin-top: 25px;
+
+      margin-top: clamp(
+        8px,
+        1.5vh,
+        20px
+      );
 
       display: flex;
+
       align-items: baseline;
+
       justify-content: center;
 
       gap: 4px;
 
-      font-size: clamp(30px, 3.5vw, 52px);
+      font-size: clamp(
+        28px,
+        3vw,
+        50px
+      );
+
+      line-height: 1;
 
       font-weight: 700;
+
+      white-space: nowrap;
     }
+
 
     .wind-min {
       color: #455a64;
     }
 
-    .wind-separator {
-      color: #777;
-    }
 
     .wind-avg {
       color: #39a51c;
     }
+
 
     .wind-max {
       color: #455a64;
     }
 
 
-    /* ------------------------------------------
-       Informations
-       ------------------------------------------ */
-
-    .wind-info {
-      margin-top: 8px;
-
-      display: flex;
-      align-items: center;
-      gap: 12px;
-
-      font-size: 13px;
-
+    .wind-separator {
       color: #777;
     }
 
-    .wind-status {
+
+    /* =========================================================
+       DIRECTION
+       ========================================================= */
+
+    .wind-direction {
+
+      margin-top: clamp(
+        5px,
+        0.6vh,
+        10px
+      );
+
+      font-size: clamp(
+        12px,
+        1.1vw,
+        17px
+      );
+
+      line-height: 1.2;
+
+      font-weight: 600;
+
+      color: #444;
+
+      text-align: center;
+    }
+
+
+    /* =========================================================
+       STATUT
+       ========================================================= */
+
+    .wind-info {
+
+      margin-top: clamp(
+        4px,
+        0.6vh,
+        8px
+      );
+
       display: flex;
+
       align-items: center;
+
+      justify-content: center;
+
+      gap: 10px;
+
+      font-size: clamp(
+        11px,
+        0.9vw,
+        14px
+      );
+
+      color: #777;
+
+      white-space: nowrap;
+    }
+
+
+    .wind-status {
+
+      display: flex;
+
+      align-items: center;
+
       gap: 5px;
     }
 
+
     .status-dot {
+
       width: 9px;
       height: 9px;
+
+      flex: 0 0 9px;
 
       border-radius: 50%;
 
       background: #39b51c;
     }
 
+
     .status-offline {
       background: #d32f2f;
     }
 
 
-    /* ------------------------------------------
-       Direction
-       ------------------------------------------ */
-
-    .wind-direction {
-      margin-top: 5px;
-
-      font-size: 15px;
-
-      font-weight: 600;
-
-      color: #444;
-    }
-
-
-    /* ==========================================
+    /* =========================================================
        LOGOS
-       ========================================== */
+       ========================================================= */
 
     .logos {
+
       display: flex;
+
       flex-direction: column;
+
       justify-content: center;
+
       align-items: center;
+
+      width: 100%;
+      height: 100%;
 
       background: white;
 
@@ -319,8 +529,11 @@
       overflow: hidden;
     }
 
+
     .logos img {
+
       width: 100%;
+
       max-width: 80%;
 
       flex: 1 1 0;
@@ -331,6 +544,36 @@
 
       margin: 6px 0;
     }
+
+
+    /* =========================================================
+       PETITS ECRANS
+       ========================================================= */
+
+    @media (max-width: 700px) {
+
+      .wind-display {
+
+        width: min(
+          30vw,
+          30vh,
+          220px
+        );
+      }
+
+      .wind-values {
+        font-size: clamp(
+          22px,
+          4vw,
+          36px
+        );
+      }
+
+      .wind-info {
+        font-size: 10px;
+      }
+    }
+
   </style>
 </head>
 
@@ -338,9 +581,9 @@
 <body>
 
 
-  <!-- ==========================================
+  <!-- =========================================================
        CASE 1 : BESANÇON PLANOISE NE
-       ========================================== -->
+       ========================================================= -->
 
   <div class="station">
 
@@ -348,15 +591,24 @@
 
     <div class="wind-panel">
 
+
+      <!-- ===============================
+           INDICATEUR VENT
+           =============================== -->
+
       <div class="wind-display">
 
+
         <!-- Flèche -->
+
         <div
           id="windArrow"
           class="wind-arrow">
         </div>
 
+
         <!-- Vitesse -->
+
         <div class="wind-speed">
 
           <div
@@ -374,7 +626,9 @@
       </div>
 
 
-      <!-- Min / Moy / Max -->
+      <!-- ===============================
+           MIN / MOY / MAX
+           =============================== -->
 
       <div class="wind-values">
 
@@ -407,16 +661,22 @@
       </div>
 
 
-      <!-- Direction -->
+      <!-- ===============================
+           DIRECTION
+           =============================== -->
 
       <div
         id="windDirection"
         class="wind-direction">
+
         Direction : --
+
       </div>
 
 
-      <!-- Statut -->
+      <!-- ===============================
+           STATUT
+           =============================== -->
 
       <div class="wind-info">
 
@@ -427,8 +687,7 @@
             class="status-dot">
           </span>
 
-          <span
-            id="windStatus">
+          <span id="windStatus">
             Connexion...
           </span>
 
@@ -446,9 +705,9 @@
 
 
 
-  <!-- ==========================================
+  <!-- =========================================================
        CASE 2 : BESANÇON PLANOISE SO
-       ========================================== -->
+       ========================================================= -->
 
   <div class="station">
 
@@ -462,9 +721,9 @@
 
 
 
-  <!-- ==========================================
+  <!-- =========================================================
        CASE 3 : BESANÇON ARGUEL N
-       ========================================== -->
+       ========================================================= -->
 
   <div class="station">
 
@@ -478,9 +737,9 @@
 
 
 
-  <!-- ==========================================
+  <!-- =========================================================
        CASE 4 : LOGOS
-       ========================================== -->
+       ========================================================= -->
 
   <div class="logos">
 
@@ -496,19 +755,26 @@
 
 
 
-  <!-- ==========================================
+  <!-- =========================================================
        JAVASCRIPT
-       ========================================== -->
+       ========================================================= -->
 
   <script>
 
-    const API_URL = "https://api.pioupiou.fr/v1/live/2212";
+    /*
+     * API Pioupiou
+     */
+
+    const API_URL =
+      "https://api.pioupiou.fr/v1/live/2212";
+
 
     /*
-     * Actualisation automatique
-     * 60 secondes
+     * Actualisation toutes les 60 secondes
      */
-    const REFRESH_INTERVAL = 60000;
+
+    const REFRESH_INTERVAL =
+      60000;
 
 
     /*
@@ -528,22 +794,27 @@
         "NO"
       ];
 
-      const index = Math.round(degrees / 45) % 8;
+      const index =
+        Math.round(degrees / 45) % 8;
 
       return directions[index];
-
     }
 
 
     /*
-     * Formatage de la date
+     * Formatage de l'heure
      */
 
     function formatDate(dateString) {
 
-      const date = new Date(dateString);
+      const date =
+        new Date(dateString);
 
-      if (isNaN(date.getTime())) {
+      if (
+        isNaN(
+          date.getTime()
+        )
+      ) {
         return "--";
       }
 
@@ -554,77 +825,115 @@
           minute: "2-digit"
         }
       );
-
     }
 
 
     /*
-     * Chargement des données
+     * Récupération des données
      */
 
     async function updateWind() {
 
-      const status = document.getElementById("windStatus");
-      const statusDot = document.getElementById("statusDot");
+      const status =
+        document.getElementById(
+          "windStatus"
+        );
+
+      const statusDot =
+        document.getElementById(
+          "statusDot"
+        );
+
 
       try {
 
         /*
-         * Ajout d'un paramètre pour éviter
-         * un éventuel cache du navigateur
+         * On évite le cache navigateur
          */
 
-        const response = await fetch(
-          API_URL + "?_=" + Date.now(),
-          {
-            cache: "no-store"
-          }
-        );
+        const response =
+          await fetch(
+            API_URL +
+            "?_=" +
+            Date.now(),
+            {
+              cache: "no-store"
+            }
+          );
 
 
         if (!response.ok) {
+
           throw new Error(
-            "Erreur HTTP " + response.status
+            "Erreur HTTP " +
+            response.status
           );
+
         }
 
 
-        const json = await response.json();
+        const json =
+          await response.json();
 
-        const data = json.data;
-        const measurements = data.measurements;
-        const windStatus = data.status;
+
+        const data =
+          json.data;
+
+
+        const measurements =
+          data.measurements;
+
+
+        const windStatus =
+          data.status;
 
 
         /*
-         * Récupération des valeurs
+         * Valeurs brutes
          */
 
         const heading =
-          Number(measurements.wind_heading);
+          Number(
+            measurements.wind_heading
+          );
+
 
         const avg =
-          Number(measurements.wind_speed_avg);
+          Number(
+            measurements.wind_speed_avg
+          );
+
 
         const min =
-          Number(measurements.wind_speed_min);
+          Number(
+            measurements.wind_speed_min
+          );
+
 
         const max =
-          Number(measurements.wind_speed_max);
+          Number(
+            measurements.wind_speed_max
+          );
 
 
         /*
-         * Vitesse principale
+         * ===============================
+         * VITESSE PRINCIPALE
+         * ===============================
          */
 
         document.getElementById(
           "windSpeed"
         ).textContent =
-          avg.toFixed(1).replace(".", ",");
+          avg
+            .toFixed(1)
+            .replace(".", ",");
 
 
         /*
-         * Min / Moy / Max
+         * ===============================
+         * MIN / MOY / MAX
+         * ===============================
          */
 
         document.getElementById(
@@ -632,10 +941,12 @@
         ).textContent =
           min.toFixed(0);
 
+
         document.getElementById(
           "windAvg"
         ).textContent =
           avg.toFixed(0);
+
 
         document.getElementById(
           "windMax"
@@ -644,27 +955,40 @@
 
 
         /*
-         * Rotation de la flèche
+         * ===============================
+         * ORIENTATION
          *
-         * wind_heading = direction d'où vient le vent.
+         * IMPORTANT :
          *
-         * La flèche pointe donc vers cette direction.
+         * On ajoute 180° à la direction
+         * fournie par Pioupiou.
+         * ===============================
          */
+
+        const correctedHeading =
+          (heading + 180) % 360;
+
 
         document.getElementById(
           "windArrow"
         ).style.transform =
           "translateX(-50%) rotate(" +
-          heading +
+          correctedHeading +
           "deg)";
 
 
         /*
-         * Direction
+         * ===============================
+         * DIRECTION AFFICHÉE
+         *
+         * On conserve la direction réelle
+         * du vent fournie par la balise.
+         * ===============================
          */
 
         const direction =
           getDirection(heading);
+
 
         document.getElementById(
           "windDirection"
@@ -677,7 +1001,9 @@
 
 
         /*
-         * Statut
+         * ===============================
+         * STATUT
+         * ===============================
          */
 
         const online =
@@ -707,7 +1033,9 @@
 
 
         /*
-         * Heure de la dernière mesure
+         * ===============================
+         * DERNIÈRE MESURE
+         * ===============================
          */
 
         document.getElementById(
@@ -720,6 +1048,7 @@
 
       }
 
+
       catch (error) {
 
         console.error(
@@ -731,9 +1060,11 @@
         status.textContent =
           "Données indisponibles";
 
+
         statusDot.classList.add(
           "status-offline"
         );
+
 
         document.getElementById(
           "windUpdated"

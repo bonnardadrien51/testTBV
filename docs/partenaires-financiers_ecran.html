@@ -2,90 +2,549 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nos partenaires financiers — Écran</title>
+
   <style>
-    html, body {
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
       margin: 0;
+      width: 100%;
       height: 100%;
       overflow: hidden;
       background: white;
       font-family: Arial, sans-serif;
     }
+
     body {
       display: flex;
       flex-direction: column;
     }
+
     h1 {
       flex: 0 0 auto;
       margin: 0;
-      padding: 24px 0 16px 0;
+      padding: 24px 20px 16px;
       text-align: center;
       color: #1a1a1a;
-      font-size: 2.4rem;
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
     }
+
     .grid {
       flex: 1 1 auto;
+
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      grid-auto-rows: 1fr;
-      gap: 24px;
-      padding: 10px 50px 50px 50px;
-      align-items: center;
-      justify-items: center;
-      overflow: hidden;
+
+      grid-template-columns: repeat(var(--columns, 4), 1fr);
+      grid-template-rows: repeat(var(--rows, 3), 1fr);
+
+      gap: clamp(15px, 2vw, 35px);
+
+      padding: 10px 50px 40px;
+
+      width: 100%;
+      min-height: 0;
+
+      opacity: 1;
     }
-    .grid img {
-      max-width: 100%;
-      max-height: 100%;
+
+    .logo-container {
+      min-width: 0;
+      min-height: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-container img {
+      display: block;
+
+      max-width: 90%;
+      max-height: 90%;
+
+      width: auto;
+      height: auto;
+
       object-fit: contain;
     }
+
     .empty {
       color: #888;
       font-size: 1.3em;
       text-align: center;
+
       grid-column: 1 / -1;
+      grid-row: 1 / -1;
+
+      align-self: center;
+      justify-self: center;
+    }
+
+    .page-indicator {
+      position: fixed;
+      bottom: 12px;
+      right: 20px;
+
+      font-size: 0.9rem;
+      color: #999;
+
+      opacity: 0.7;
+    }
+
+    .grid.fade-out {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .grid.fade-in {
+      opacity: 1;
+      transition: opacity 0.4s ease;
     }
   </style>
 </head>
+
 <body>
+
   <h1>Nos partenaires financiers</h1>
+
   <div class="grid" id="logos">
     <p class="empty">Chargement des logos…</p>
   </div>
 
+  <div class="page-indicator" id="pageIndicator"></div>
+
   <script>
-    // Dossier contenant les logos et le manifest.json généré par la GitHub Action
+
+    /*
+      ============================================================
+      CONFIGURATION
+      ============================================================
+    */
+
+    // Dossier contenant les logos
     const FOLDER = "partenaires-financiers";
-    // Recharge la page automatiquement une fois par jour (récupère les nouveaux logos)
+
+    // Changement de page toutes les 6 secondes
+    const PAGE_DURATION = 6000;
+
+    // Recharge complète de la page toutes les 24 heures
     const REFRESH_MS = 24 * 60 * 60 * 1000;
 
-    async function loadLogos() {
-      const container = document.getElementById("logos");
-      try {
-        const res = await fetch(`${FOLDER}/manifest.json?t=${Date.now()}`);
-        if (!res.ok) throw new Error("manifest.json introuvable");
-        const files = await res.json();
 
-        if (!files || files.length === 0) {
-          container.innerHTML = `<p class="empty">Aucun logo trouvé dans le dossier "${FOLDER}".</p>`;
+    /*
+      ============================================================
+      VARIABLES
+      ============================================================
+    */
+
+    let allLogos = [];
+
+    let currentPage = 0;
+
+    let totalPages = 1;
+
+    let pageTimer = null;
+
+
+    /*
+      ============================================================
+      CALCUL DE LA GRILLE
+      ============================================================
+    */
+
+    function getDisplayConfiguration() {
+
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      let columns;
+      let rows;
+
+
+      /*
+        Écran très large
+      */
+      if (width >= 1800) {
+
+        columns = 5;
+        rows = 3;
+
+      }
+
+      /*
+        Écran standard
+      */
+      else if (width >= 1200) {
+
+        columns = 4;
+        rows = 3;
+
+      }
+
+      /*
+        Petit écran
+      */
+      else {
+
+        columns = 3;
+        rows = 3;
+
+      }
+
+
+      /*
+        Adaptation à la hauteur.
+      */
+      if (height < 700) {
+
+        rows = 2;
+
+      }
+
+      else if (height > 1200) {
+
+        rows += 1;
+
+      }
+
+
+      return {
+        columns,
+        rows,
+        perPage: columns * rows
+      };
+    }
+
+
+    /*
+      ============================================================
+      AFFICHAGE D'UNE PAGE
+      ============================================================
+    */
+
+    function displayPage(pageNumber) {
+
+      const container =
+        document.getElementById("logos");
+
+      const indicator =
+        document.getElementById("pageIndicator");
+
+      const config =
+        getDisplayConfiguration();
+
+
+      /*
+        Calcul du nombre total de pages.
+      */
+      totalPages = Math.ceil(
+        allLogos.length / config.perPage
+      );
+
+
+      if (totalPages < 1) {
+        totalPages = 1;
+      }
+
+
+      /*
+        Sécurité si la fenêtre est redimensionnée.
+      */
+      if (pageNumber >= totalPages) {
+        pageNumber = 0;
+      }
+
+
+      currentPage = pageNumber;
+
+
+      /*
+        Logos de la page actuelle.
+      */
+      const start =
+        currentPage * config.perPage;
+
+      const end =
+        start + config.perPage;
+
+      const pageLogos =
+        allLogos.slice(start, end);
+
+
+      /*
+        Configuration de la grille.
+      */
+      container.style.setProperty(
+        "--columns",
+        config.columns
+      );
+
+      container.style.setProperty(
+        "--rows",
+        config.rows
+      );
+
+
+      /*
+        Animation de sortie.
+      */
+      container.classList.remove("fade-in");
+
+      container.classList.add("fade-out");
+
+
+      setTimeout(() => {
+
+        container.innerHTML = "";
+
+
+        /*
+          Création des logos.
+        */
+        pageLogos.forEach((name) => {
+
+          const wrapper =
+            document.createElement("div");
+
+          wrapper.className =
+            "logo-container";
+
+
+          const img =
+            document.createElement("img");
+
+
+          img.src =
+            `${FOLDER}/${encodeURIComponent(name)}`;
+
+
+          img.alt =
+            name.replace(/\.[^.]+$/, "");
+
+
+          /*
+            Si le logo n'existe plus,
+            on supprime sa case.
+          */
+          img.onerror = function () {
+            wrapper.remove();
+          };
+
+
+          wrapper.appendChild(img);
+
+          container.appendChild(wrapper);
+
+        });
+
+
+        /*
+          Affichage du numéro de page
+          uniquement s'il y en a plusieurs.
+        */
+        if (totalPages > 1) {
+
+          indicator.textContent =
+            `${currentPage + 1} / ${totalPages}`;
+
+        } else {
+
+          indicator.textContent = "";
+
+        }
+
+
+        /*
+          Animation d'entrée.
+        */
+        requestAnimationFrame(() => {
+
+          container.classList.remove("fade-out");
+
+          container.classList.add("fade-in");
+
+        });
+
+      }, 400);
+    }
+
+
+    /*
+      ============================================================
+      PAGE SUIVANTE
+      ============================================================
+    */
+
+    function nextPage() {
+
+      if (totalPages <= 1) {
+        return;
+      }
+
+
+      const next =
+        (currentPage + 1) % totalPages;
+
+
+      displayPage(next);
+    }
+
+
+    /*
+      ============================================================
+      CHARGEMENT DU MANIFEST
+      ============================================================
+    */
+
+    async function loadLogos() {
+
+      const container =
+        document.getElementById("logos");
+
+
+      try {
+
+        /*
+          Timestamp pour éviter le cache.
+        */
+        const res =
+          await fetch(
+            `${FOLDER}/manifest.json?t=${Date.now()}`
+          );
+
+
+        if (!res.ok) {
+
+          throw new Error(
+            "manifest.json introuvable"
+          );
+
+        }
+
+
+        const files =
+          await res.json();
+
+
+        /*
+          Aucun logo.
+        */
+        if (
+          !Array.isArray(files) ||
+          files.length === 0
+        ) {
+
+          container.innerHTML = `
+            <p class="empty">
+              Aucun logo trouvé dans le dossier "${FOLDER}".
+            </p>
+          `;
+
           return;
         }
 
-        container.innerHTML = "";
-        files.forEach((name) => {
-          const el = document.createElement("img");
-          el.src = `${FOLDER}/${encodeURIComponent(name)}`;
-          el.alt = name.replace(/\.[^.]+$/, "");
-          container.appendChild(el);
-        });
+
+        /*
+          On conserve TOUS les logos.
+        */
+        allLogos = files;
+
+
+        /*
+          Première page.
+        */
+        displayPage(0);
+
+
+        /*
+          Défilement automatique
+          toutes les 6 secondes.
+        */
+        if (pageTimer) {
+
+          clearInterval(pageTimer);
+
+        }
+
+
+        pageTimer =
+          setInterval(
+            nextPage,
+            PAGE_DURATION
+          );
+
+
       } catch (err) {
-        container.innerHTML = `<p class="empty">Erreur de chargement des logos.</p>`;
+
         console.error(err);
+
+
+        container.innerHTML = `
+          <p class="empty">
+            Erreur de chargement des logos.
+          </p>
+        `;
+
       }
     }
 
+
+    /*
+      ============================================================
+      ADAPTATION À LA TAILLE DE L'ÉCRAN
+      ============================================================
+    */
+
+    let resizeTimer = null;
+
+
+    window.addEventListener(
+      "resize",
+      () => {
+
+        clearTimeout(resizeTimer);
+
+
+        resizeTimer =
+          setTimeout(() => {
+
+            if (allLogos.length > 0) {
+
+              displayPage(currentPage);
+
+            }
+
+          }, 250);
+
+      }
+    );
+
+
+    /*
+      ============================================================
+      INITIALISATION
+      ============================================================
+    */
+
     loadLogos();
-    setInterval(() => window.location.reload(), REFRESH_MS);
+
+
+    /*
+      Recharge automatiquement la page
+      toutes les 24 heures.
+    */
+    setTimeout(() => {
+
+      window.location.reload();
+
+    }, REFRESH_MS);
+
   </script>
+
 </body>
 </html>

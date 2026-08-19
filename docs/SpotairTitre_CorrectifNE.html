@@ -5,7 +5,6 @@
 
   <title>SpotAiR + Pioupiou + Logos</title>
 
-  <!-- Police -->
   <link
     href="https://fonts.googleapis.com/css2?family=Tan+Headline:wght@400;700&display=swap"
     rel="stylesheet"
@@ -106,7 +105,6 @@
        ========================================================= */
 
     .wind-panel {
-
       width: 100%;
       height: 100%;
 
@@ -133,13 +131,8 @@
     .wind-display {
 
       /*
-       * Le cercle prend une taille responsive.
-       *
-       * min() permet de ne jamais dépasser :
-       * - la largeur disponible
-       * - la hauteur disponible
-       *
-       * aspect-ratio garantit un vrai cercle.
+       * Une seule dimension est définie.
+       * aspect-ratio garantit un cercle parfait.
        */
 
       width: min(
@@ -163,6 +156,7 @@
       display: flex;
 
       align-items: center;
+
       justify-content: center;
 
       overflow: hidden;
@@ -195,7 +189,7 @@
 
 
     /* =========================================================
-       FLECHE
+       FLECHE DE DIRECTION
        ========================================================= */
 
     .wind-arrow {
@@ -203,20 +197,24 @@
       position: absolute;
 
       /*
-       * Taille relative au cercle
+       * FLECHE PLUS LONGUE
+       *
+       * Elle traverse pratiquement tout le cercle.
        */
 
-      width: 9%;
-      height: 40%;
+      width: clamp(7px, 0.8vw, 12px);
+
+      height: 76%;
 
       left: 50%;
-      top: 8%;
-
-      transform-origin: 50% 100%;
+      top: 6%;
 
       /*
-       * La rotation est modifiée par JavaScript.
+       * Le point de rotation est à la base
+       * de la flèche.
        */
+
+      transform-origin: 50% 100%;
 
       transform:
         translateX(-50%)
@@ -225,7 +223,7 @@
       transition:
         transform 0.8s ease;
 
-      z-index: 3;
+      z-index: 4;
 
       pointer-events: none;
     }
@@ -249,16 +247,24 @@
       width: 0;
       height: 0;
 
-      border-left: clamp(12px, 1.8vw, 24px) solid transparent;
+      border-left:
+        clamp(15px, 2vw, 28px)
+        solid transparent;
 
-      border-right: clamp(12px, 1.8vw, 24px) solid transparent;
+      border-right:
+        clamp(15px, 2vw, 28px)
+        solid transparent;
 
-      border-bottom: clamp(24px, 3.5vw, 48px) solid #444;
+      border-bottom:
+        clamp(30px, 4vw, 54px)
+        solid #444;
     }
 
 
     /*
      * Corps de la flèche
+     *
+     * Beaucoup plus long qu'avant.
      */
 
     .wind-arrow::after {
@@ -269,22 +275,32 @@
 
       left: 50%;
 
-      top: clamp(20px, 2.7vw, 38px);
+      /*
+       * Le corps commence juste sous la pointe.
+       */
+
+      top:
+        clamp(24px, 3.5vw, 48px);
 
       transform: translateX(-50%);
 
-      width: clamp(6px, 0.7vw, 10px);
+      width:
+        clamp(6px, 0.65vw, 10px);
 
-      height: calc(100% - clamp(20px, 2.7vw, 38px));
+      height:
+        calc(
+          100% -
+          clamp(24px, 3.5vw, 48px)
+        );
 
       background: #444;
 
-      border-radius: 5px;
+      border-radius: 6px;
     }
 
 
     /* =========================================================
-       CONTENU CENTRAL DU CERCLE
+       TEXTE DANS LE CERCLE
        ========================================================= */
 
     .wind-speed {
@@ -293,9 +309,8 @@
 
       z-index: 10;
 
-      width: 70%;
-
-      height: 70%;
+      width: 72%;
+      height: 72%;
 
       display: flex;
 
@@ -308,11 +323,16 @@
       text-align: center;
 
       line-height: 1;
+
+      /*
+       * Fond transparent pour laisser apparaître
+       * le cercle vert.
+       */
     }
 
 
     /*
-     * Valeur de vitesse
+     * Vitesse
      */
 
     .wind-speed-value {
@@ -330,13 +350,19 @@
       color: #39b51c;
 
       white-space: nowrap;
+
+      /*
+       * Le texte reste au-dessus de la flèche.
+       */
+
+      position: relative;
+
+      z-index: 11;
     }
 
 
     /*
-     * km/h
-     *
-     * Reste volontairement dans le cercle.
+     * Unité
      */
 
     .wind-speed-unit {
@@ -360,6 +386,10 @@
       color: #455a64;
 
       white-space: nowrap;
+
+      position: relative;
+
+      z-index: 11;
     }
 
 
@@ -547,7 +577,7 @@
 
 
     /* =========================================================
-       PETITS ECRANS
+       RESPONSIVE
        ========================================================= */
 
     @media (max-width: 700px) {
@@ -562,6 +592,7 @@
       }
 
       .wind-values {
+
         font-size: clamp(
           22px,
           4vw,
@@ -570,8 +601,10 @@
       }
 
       .wind-info {
+
         font-size: 10px;
       }
+
     }
 
   </style>
@@ -591,13 +624,7 @@
 
     <div class="wind-panel">
 
-
-      <!-- ===============================
-           INDICATEUR VENT
-           =============================== -->
-
       <div class="wind-display">
-
 
         <!-- Flèche -->
 
@@ -626,9 +653,9 @@
       </div>
 
 
-      <!-- ===============================
+      <!-- =====================================================
            MIN / MOY / MAX
-           =============================== -->
+           ===================================================== -->
 
       <div class="wind-values">
 
@@ -661,9 +688,9 @@
       </div>
 
 
-      <!-- ===============================
+      <!-- =====================================================
            DIRECTION
-           =============================== -->
+           ===================================================== -->
 
       <div
         id="windDirection"
@@ -674,9 +701,9 @@
       </div>
 
 
-      <!-- ===============================
+      <!-- =====================================================
            STATUT
-           =============================== -->
+           ===================================================== -->
 
       <div class="wind-info">
 
@@ -762,7 +789,7 @@
   <script>
 
     /*
-     * API Pioupiou
+     * API Pioupiou - balise 2212
      */
 
     const API_URL =
@@ -829,7 +856,7 @@
 
 
     /*
-     * Récupération des données
+     * Mise à jour des données
      */
 
     async function updateWind() {
@@ -848,7 +875,7 @@
       try {
 
         /*
-         * On évite le cache navigateur
+         * Récupération des données
          */
 
         const response =
@@ -917,9 +944,9 @@
 
 
         /*
-         * ===============================
-         * VITESSE PRINCIPALE
-         * ===============================
+         * =====================================================
+         * VITESSE
+         * =====================================================
          */
 
         document.getElementById(
@@ -931,9 +958,9 @@
 
 
         /*
-         * ===============================
+         * =====================================================
          * MIN / MOY / MAX
-         * ===============================
+         * =====================================================
          */
 
         document.getElementById(
@@ -955,14 +982,13 @@
 
 
         /*
-         * ===============================
-         * ORIENTATION
+         * =====================================================
+         * ORIENTATION DE LA FLECHE
          *
-         * IMPORTANT :
+         * Correction demandée :
          *
-         * On ajoute 180° à la direction
-         * fournie par Pioupiou.
-         * ===============================
+         * direction Pioupiou + 180°
+         * =====================================================
          */
 
         const correctedHeading =
@@ -978,12 +1004,9 @@
 
 
         /*
-         * ===============================
-         * DIRECTION AFFICHÉE
-         *
-         * On conserve la direction réelle
-         * du vent fournie par la balise.
-         * ===============================
+         * =====================================================
+         * DIRECTION
+         * =====================================================
          */
 
         const direction =
@@ -1001,9 +1024,9 @@
 
 
         /*
-         * ===============================
+         * =====================================================
          * STATUT
-         * ===============================
+         * =====================================================
          */
 
         const online =
@@ -1033,9 +1056,9 @@
 
 
         /*
-         * ===============================
-         * DERNIÈRE MESURE
-         * ===============================
+         * =====================================================
+         * HEURE DE MESURE
+         * =====================================================
          */
 
         document.getElementById(

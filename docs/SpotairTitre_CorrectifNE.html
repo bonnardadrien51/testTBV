@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>SpotAiR + Pioupiou + Logos</title>
+
+  <!-- Police -->
+  <link href="https://fonts.googleapis.com/css2?family=Tan+Headline:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      background: white;
+    }
+
+    /* ==========================================
+       STATIONS
+       ========================================== */
+
+    .station {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      background: white;
+      padding: 4px 4px 0 4px;
+      overflow: hidden;
+    }
+
+    .station h1 {
+      margin: 4px 0;
+      font-size: 1.4em;
+      line-height: 1.15;
+      text-align: center;
+      font-family: 'Tan Headline', sans-serif;
+      font-weight: 700;
+      color: #1a1a1a;
+      width: 100%;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    iframe {
+      width: 100%;
+      flex: 1 1 auto;
+      min-height: 0;
+      border: none;
+    }
+
+
+    /* ==========================================
+       PANNEAU VENT PLANOISE NE
+       ========================================== */
+
+    .wind-panel {
+      width: 100%;
+      flex: 1 1 auto;
+      min-height: 0;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      overflow: hidden;
+      position: relative;
+    }
+
+
+    /* ------------------------------------------
+       Indicateur principal
+       ------------------------------------------ */
+
+    .wind-display {
+      position: relative;
+
+      width: min(32vw, 32vh);
+      height: min(32vw, 32vh);
+
+      min-width: 180px;
+      min-height: 180px;
+
+      max-width: 330px;
+      max-height: 330px;
+
+      border-radius: 50%;
+
+      background: #f5f5f5;
+      border: 8px solid #444;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    /* Cercle intérieur */
+
+    .wind-display::before {
+      content: "";
+      position: absolute;
+
+      width: 84%;
+      height: 84%;
+
+      border-radius: 50%;
+
+      background: white;
+
+      border: 7px solid #39b51c;
+
+      box-sizing: border-box;
+    }
+
+
+    /* ------------------------------------------
+       Flèche
+       ------------------------------------------ */
+
+    .wind-arrow {
+      position: absolute;
+
+      width: 12px;
+      height: 42%;
+
+      left: 50%;
+      top: 8%;
+
+      transform-origin: 50% 100%;
+
+      transform: translateX(-50%) rotate(0deg);
+
+      z-index: 5;
+
+      transition: transform 0.8s ease;
+    }
+
+
+    .wind-arrow::before {
+      content: "";
+
+      position: absolute;
+
+      left: 50%;
+      top: 0;
+
+      transform: translateX(-50%);
+
+      width: 0;
+      height: 0;
+
+      border-left: 24px solid transparent;
+      border-right: 24px solid transparent;
+      border-bottom: 48px solid #444;
+    }
+
+
+    .wind-arrow::after {
+      content: "";
+
+      position: absolute;
+
+      left: 50%;
+      top: 38px;
+
+      transform: translateX(-50%);
+
+      width: 10px;
+      height: calc(100% - 38px);
+
+      background: #444;
+
+      border-radius: 5px;
+    }
+
+
+    /* ------------------------------------------
+       Vitesse au centre
+       ------------------------------------------ */
+
+    .wind-speed {
+      position: relative;
+      z-index: 10;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      font-weight: 700;
+
+      line-height: 1;
+    }
+
+    .wind-speed-value {
+      font-size: clamp(60px, 7vw, 105px);
+      color: #39b51c;
+    }
+
+    .wind-speed-unit {
+      margin-top: 8px;
+
+      font-size: clamp(16px, 1.6vw, 24px);
+
+      color: #555;
+      font-weight: 600;
+    }
+
+
+    /* ------------------------------------------
+       Min / Moy / Max
+       ------------------------------------------ */
+
+    .wind-values {
+      margin-top: 25px;
+
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+
+      gap: 4px;
+
+      font-size: clamp(30px, 3.5vw, 52px);
+
+      font-weight: 700;
+    }
+
+    .wind-min {
+      color: #455a64;
+    }
+
+    .wind-separator {
+      color: #777;
+    }
+
+    .wind-avg {
+      color: #39a51c;
+    }
+
+    .wind-max {
+      color: #455a64;
+    }
+
+
+    /* ------------------------------------------
+       Informations
+       ------------------------------------------ */
+
+    .wind-info {
+      margin-top: 8px;
+
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      font-size: 13px;
+
+      color: #777;
+    }
+
+    .wind-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+
+      border-radius: 50%;
+
+      background: #39b51c;
+    }
+
+    .status-offline {
+      background: #d32f2f;
+    }
+
+
+    /* ------------------------------------------
+       Direction
+       ------------------------------------------ */
+
+    .wind-direction {
+      margin-top: 5px;
+
+      font-size: 15px;
+
+      font-weight: 600;
+
+      color: #444;
+    }
+
+
+    /* ==========================================
+       LOGOS
+       ========================================== */
+
+    .logos {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      background: white;
+
+      padding: 10px;
+
+      overflow: hidden;
+    }
+
+    .logos img {
+      width: 100%;
+      max-width: 80%;
+
+      flex: 1 1 0;
+
+      min-height: 0;
+
+      object-fit: contain;
+
+      margin: 6px 0;
+    }
+  </style>
+</head>
+
+
+<body>
+
+
+  <!-- ==========================================
+       CASE 1 : BESANÇON PLANOISE NE
+       ========================================== -->
+
+  <div class="station">
+
+    <h1>Besançon Planoise NE</h1>
+
+    <div class="wind-panel">
+
+      <div class="wind-display">
+
+        <!-- Flèche -->
+        <div
+          id="windArrow"
+          class="wind-arrow">
+        </div>
+
+        <!-- Vitesse -->
+        <div class="wind-speed">
+
+          <div
+            id="windSpeed"
+            class="wind-speed-value">
+            --
+          </div>
+
+          <div class="wind-speed-unit">
+            km/h
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Min / Moy / Max -->
+
+      <div class="wind-values">
+
+        <span
+          id="windMin"
+          class="wind-min">
+          --
+        </span>
+
+        <span class="wind-separator">
+          /
+        </span>
+
+        <span
+          id="windAvg"
+          class="wind-avg">
+          --
+        </span>
+
+        <span class="wind-separator">
+          /
+        </span>
+
+        <span
+          id="windMax"
+          class="wind-max">
+          --
+        </span>
+
+      </div>
+
+
+      <!-- Direction -->
+
+      <div
+        id="windDirection"
+        class="wind-direction">
+        Direction : --
+      </div>
+
+
+      <!-- Statut -->
+
+      <div class="wind-info">
+
+        <div class="wind-status">
+
+          <span
+            id="statusDot"
+            class="status-dot">
+          </span>
+
+          <span
+            id="windStatus">
+            Connexion...
+          </span>
+
+        </div>
+
+        <span id="windUpdated">
+          --
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ==========================================
+       CASE 2 : BESANÇON PLANOISE SO
+       ========================================== -->
+
+  <div class="station">
+
+    <h1>Besançon Planoise SO</h1>
+
+    <iframe
+      src="https://www.spotair.mobi/widget/wind/ffvl/2195?unit=kmh&name=false">
+    </iframe>
+
+  </div>
+
+
+
+  <!-- ==========================================
+       CASE 3 : BESANÇON ARGUEL N
+       ========================================== -->
+
+  <div class="station">
+
+    <h1>Besançon Arguel N</h1>
+
+    <iframe
+      src="https://www.spotair.mobi/widget/wind/ffvl/5043?unit=kmh&name=false">
+    </iframe>
+
+  </div>
+
+
+
+  <!-- ==========================================
+       CASE 4 : LOGOS
+       ========================================== -->
+
+  <div class="logos">
+
+    <img
+      src="https://besancon-vol-libre.fr/wp-content/uploads/2023/01/logoBVL-2-e1673386260565.png"
+      alt="Logo BVL">
+
+    <img
+      src="https://www.letabliludique.fr/wp-content/uploads/2025/04/Group-1.svg"
+      alt="Logo L'Établi Ludique">
+
+  </div>
+
+
+
+  <!-- ==========================================
+       JAVASCRIPT
+       ========================================== -->
+
+  <script>
+
+    const API_URL = "https://api.pioupiou.fr/v1/live/2212";
+
+    /*
+     * Actualisation automatique
+     * 60 secondes
+     */
+    const REFRESH_INTERVAL = 60000;
+
+
+    /*
+     * Conversion degrés -> direction
+     */
+
+    function getDirection(degrees) {
+
+      const directions = [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SO",
+        "O",
+        "NO"
+      ];
+
+      const index = Math.round(degrees / 45) % 8;
+
+      return directions[index];
+
+    }
+
+
+    /*
+     * Formatage de la date
+     */
+
+    function formatDate(dateString) {
+
+      const date = new Date(dateString);
+
+      if (isNaN(date.getTime())) {
+        return "--";
+      }
+
+      return date.toLocaleTimeString(
+        "fr-FR",
+        {
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      );
+
+    }
+
+
+    /*
+     * Chargement des données
+     */
+
+    async function updateWind() {
+
+      const status = document.getElementById("windStatus");
+      const statusDot = document.getElementById("statusDot");
+
+      try {
+
+        /*
+         * Ajout d'un paramètre pour éviter
+         * un éventuel cache du navigateur
+         */
+
+        const response = await fetch(
+          API_URL + "?_=" + Date.now(),
+          {
+            cache: "no-store"
+          }
+        );
+
+
+        if (!response.ok) {
+          throw new Error(
+            "Erreur HTTP " + response.status
+          );
+        }
+
+
+        const json = await response.json();
+
+        const data = json.data;
+        const measurements = data.measurements;
+        const windStatus = data.status;
+
+
+        /*
+         * Récupération des valeurs
+         */
+
+        const heading =
+          Number(measurements.wind_heading);
+
+        const avg =
+          Number(measurements.wind_speed_avg);
+
+        const min =
+          Number(measurements.wind_speed_min);
+
+        const max =
+          Number(measurements.wind_speed_max);
+
+
+        /*
+         * Vitesse principale
+         */
+
+        document.getElementById(
+          "windSpeed"
+        ).textContent =
+          avg.toFixed(1).replace(".", ",");
+
+
+        /*
+         * Min / Moy / Max
+         */
+
+        document.getElementById(
+          "windMin"
+        ).textContent =
+          min.toFixed(0);
+
+        document.getElementById(
+          "windAvg"
+        ).textContent =
+          avg.toFixed(0);
+
+        document.getElementById(
+          "windMax"
+        ).textContent =
+          max.toFixed(0);
+
+
+        /*
+         * Rotation de la flèche
+         *
+         * wind_heading = direction d'où vient le vent.
+         *
+         * La flèche pointe donc vers cette direction.
+         */
+
+        document.getElementById(
+          "windArrow"
+        ).style.transform =
+          "translateX(-50%) rotate(" +
+          heading +
+          "deg)";
+
+
+        /*
+         * Direction
+         */
+
+        const direction =
+          getDirection(heading);
+
+        document.getElementById(
+          "windDirection"
+        ).textContent =
+          "Direction : " +
+          direction +
+          " (" +
+          Math.round(heading) +
+          "°)";
+
+
+        /*
+         * Statut
+         */
+
+        const online =
+          windStatus &&
+          windStatus.state === "on";
+
+
+        if (online) {
+
+          status.textContent =
+            "En ligne";
+
+          statusDot.classList.remove(
+            "status-offline"
+          );
+
+        } else {
+
+          status.textContent =
+            "Hors ligne";
+
+          statusDot.classList.add(
+            "status-offline"
+          );
+
+        }
+
+
+        /*
+         * Heure de la dernière mesure
+         */
+
+        document.getElementById(
+          "windUpdated"
+        ).textContent =
+          "Mesure : " +
+          formatDate(
+            measurements.date
+          );
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Erreur récupération vent :",
+          error
+        );
+
+
+        status.textContent =
+          "Données indisponibles";
+
+        statusDot.classList.add(
+          "status-offline"
+        );
+
+        document.getElementById(
+          "windUpdated"
+        ).textContent =
+          "Erreur de connexion";
+
+      }
+
+    }
+
+
+    /*
+     * Première récupération
+     */
+
+    updateWind();
+
+
+    /*
+     * Actualisation automatique
+     */
+
+    setInterval(
+      updateWind,
+      REFRESH_INTERVAL
+    );
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title }} – Tout Besançon Vole</title>
+  <link rel="stylesheet" href="{{ '/assets/css/documentation.css' | relative_url }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="{{ '/documentation/' | relative_url }}">Tout Besançon Vole</a>
+      <span class="brand-subtitle">Documentation</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav>
+        <a href="{{ '/documentation/' | relative_url }}">Accueil</a>
+        <a href="{{ '/concours-photo/' | relative_url }}">Concours photo</a>
+        <a href="{{ '/concours-photo/calendrier/' | relative_url }}">Calendrier</a>
+        <a href="{{ '/concours-photo/organisation/' | relative_url }}">Organisation</a>
+        <a href="{{ '/concours-photo/pollunit/' | relative_url }}">Vote bénévoles / PollUnit</a>
+        <a href="{{ '/concours-photo/textes-publication/' | relative_url }}">Textes de publication</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      {{ content }}
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    Documentation Tout Besançon Vole
+  </footer>
+</body>
+</html>

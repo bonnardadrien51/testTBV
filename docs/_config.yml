@@ -1,0 +1,9 @@
+title: "Documentation Tout Besançon Vole"
+description: "Documentation interne pour l'organisation de Tout Besançon Vole"
+baseurl: "/testTBV"
+url: "https://bonnardadrien51.github.io"
+markdown: kramdown
+theme: null
+plugins: []
+exclude:
+  - "*.html"

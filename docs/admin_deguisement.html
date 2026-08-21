@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Bonus Déguisement (test)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1f2933 0%, #2d3b45 100%);
+    min-height: 100vh;
+    padding: 40px 16px;
+    color: #1f2933;
+  }
+  .wrapper { max-width: 900px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 24px; color: #f5f7fa; }
+  .header h1 { margin: 0 0 6px 0; font-weight: 700; font-size: 1.8rem; }
+  .header p { margin: 0; font-size: 0.85rem; opacity: 0.75; }
+  .warning {
+    background: #fff8e1;
+    border: 1px solid #f0d78c;
+    color: #6b5400;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 20px 22px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+    margin-bottom: 20px;
+  }
+  .card h2 {
+    margin: 0 0 12px 0;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #10151a;
+  }
+  .token-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  input[type="password"], input[type="text"], input[type="number"] {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-family: inherit;
+    font-size: 0.85rem;
+  }
+  input[type="password"], input[type="text"] { flex: 1 1 260px; }
+  button {
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    cursor: pointer;
+    background: #10151a;
+    color: #fff;
+    transition: opacity 0.15s;
+  }
+  button:hover { opacity: 0.85; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.secondary { background: #f1f1f1; color: #1f2933; }
+  button.danger { background: #d64545; }
+  .status { margin-top: 10px; font-size: 0.82rem; font-weight: 600; }
+  .status.ok { color: #1e9e5a; }
+  .status.err { color: #d64545; }
+  .status.info { color: #6b7280; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td {
+    text-align: left;
+    padding: 10px 8px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #eef1f4;
+  }
+  th { text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; color: #6b7280; }
+  .changed { background: #fff8e1; }
+  .actions-bar { display: flex; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+  .add-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .add-row input[type="text"] { flex: 1 1 220px; }
+  .add-row input[type="number"] { width: 110px; }
+  .score-input { width: 90px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <h1>🎭 Admin — Bonus Déguisement</h1>
+    <p>Ajout / modification manuelle, propagée uniquement sur la page test "Déguisement (test admin)"</p>
+  </div>
+
+  <div class="warning">
+    ⚠️ Cette page modifie uniquement <code>classement_epreuve_deguisement_test.html</code>.
+    La page officielle <code>classement_epreuve_deguisement.html</code> et le Score Final du
+    classement général restent basés uniquement sur les données scrapées d'iOrienteering.
+    Le changement n'apparaît qu'après le prochain passage automatique du script (~15 min).
+  </div>
+
+  <div class="card">
+    <h2>Accès GitHub</h2>
+    <div class="token-row">
+      <input type="password" id="token" placeholder="Token GitHub (fine-grained, Contents: Read and write)">
+      <button id="saveTokenBtn">Mémoriser sur cet appareil</button>
+      <button class="secondary" id="clearTokenBtn">Oublier</button>
+    </div>
+    <div class="status info" id="tokenStatus">Le token n'est jamais envoyé ailleurs qu'à l'API GitHub. Il reste stocké uniquement dans ce navigateur.</div>
+  </div>
+
+  <div class="card">
+    <h2>Ajouter un pilote</h2>
+    <div class="add-row">
+      <input type="text" id="newName" placeholder="Nom complet du pilote">
+      <input type="number" id="newScore" placeholder="Score">
+      <button id="addBtn">Ajouter</button>
+    </div>
+
+    <h2>Pilotes (scrapés + surcharges/ajouts)</h2>
+    <div id="tableWrap">Chargement…</div>
+    <div class="actions-bar">
+      <button id="saveBtn">Enregistrer les modifications</button>
+      <span class="status" id="saveStatus"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCRAPED_URL = "deguisement_liste_test.json";
+const OVERRIDES_URL = "deguisement_overrides.json";
+const REPO = "bonnardadrien51/testTBV";
+const OVERRIDES_PATH = "docs/deguisement_overrides.json";
+
+let scraped = [];
+let overrides = {};
+let pendingOverrides = {};
+
+function getToken() {
+  return localStorage.getItem("tbv_admin_token") || "";
+}
+document.getElementById("token").value = getToken();
+
+document.getElementById("saveTokenBtn").addEventListener("click", () => {
+  const t = document.getElementById("token").value.trim();
+  localStorage.setItem("tbv_admin_token", t);
+  document.getElementById("tokenStatus").textContent = "Token mémorisé sur cet appareil.";
+  document.getElementById("tokenStatus").className = "status ok";
+});
+document.getElementById("clearTokenBtn").addEventListener("click", () => {
+  localStorage.removeItem("tbv_admin_token");
+  document.getElementById("token").value = "";
+  document.getElementById("tokenStatus").textContent = "Token oublié.";
+  document.getElementById("tokenStatus").className = "status info";
+});
+
+async function load() {
+  try {
+    const [scrapedRes, overridesRes] = await Promise.all([
+      fetch(SCRAPED_URL + "?t=" + Date.now()),
+      fetch(OVERRIDES_URL + "?t=" + Date.now()),
+    ]);
+    scraped = scrapedRes.ok ? await scrapedRes.json() : [];
+    overrides = overridesRes.ok ? await overridesRes.json() : {};
+  } catch (e) {
+    document.getElementById("tableWrap").innerHTML = "<p style='color:#d64545;'>Erreur de chargement des données.</p>";
+    console.error(e);
+    return;
+  }
+  pendingOverrides = Object.assign({}, overrides);
+  renderTable();
+}
+
+function allNames() {
+  const names = new Set(scraped.map(p => p.Participant));
+  Object.keys(pendingOverrides).forEach(n => names.add(n));
+  return Array.from(names).sort((a, b) => a.localeCompare(b));
+}
+
+function scrapedScore(name) {
+  const p = scraped.find(p => p.Participant === name);
+  return p ? p.Score : null;
+}
+
+function renderTable() {
+  const wrap = document.getElementById("tableWrap");
+  const names = allNames();
+  if (names.length === 0) {
+    wrap.innerHTML = "<p>Aucun pilote (deguisement_liste_test.json pas encore généré, ou aucune surcharge).</p>";
+    return;
+  }
+
+  let html = "<table><thead><tr><th>Participant</th><th>Score iOrienteering</th><th>Score forcé (test)</th><th></th></tr></thead><tbody>";
+  names.forEach(name => {
+    const orig = scrapedScore(name);
+    const current = pendingOverrides[name];
+    const changed = (overrides[name] !== undefined ? overrides[name] : "") !== (current !== undefined ? current : "");
+    html += `<tr class="${changed ? 'changed' : ''}">
+      <td>${name}</td>
+      <td>${orig === null ? "<em>absent</em>" : orig}</td>
+      <td><input type="number" class="score-input" value="${current !== undefined ? current : ''}" onchange="setOverride('${name.replace(/'/g, "\\'")}', this.value)"></td>
+      <td>${current !== undefined ? `<button class="secondary" onclick="clearOverride('${name.replace(/'/g, "\\'")}')">Retirer</button>` : ''}</td>
+    </tr>`;
+  });
+  html += "</tbody></table>";
+  wrap.innerHTML = html;
+}
+
+function setOverride(name, value) {
+  if (value === "") {
+    delete pendingOverrides[name];
+  } else {
+    pendingOverrides[name] = parseInt(value, 10);
+  }
+  renderTable();
+}
+
+function clearOverride(name) {
+  delete pendingOverrides[name];
+  renderTable();
+}
+
+document.getElementById("addBtn").addEventListener("click", () => {
+  const nameEl = document.getElementById("newName");
+  const scoreEl = document.getElementById("newScore");
+  const name = nameEl.value.trim();
+  const score = parseInt(scoreEl.value, 10);
+  if (!name || isNaN(score)) {
+    alert("Merci de renseigner un nom et un score valides.");
+    return;
+  }
+  pendingOverrides[name] = score;
+  nameEl.value = "";
+  scoreEl.value = "";
+  renderTable();
+});
+
+async function saveOverrides() {
+  const token = getToken();
+  const statusEl = document.getElementById("saveStatus");
+  if (!token) {
+    statusEl.textContent = "Renseigne d'abord un token GitHub ci-dessus.";
+    statusEl.className = "status err";
+    return;
+  }
+
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.disabled = true;
+  statusEl.textContent = "Enregistrement…";
+  statusEl.className = "status info";
+
+  try {
+    const clean = {};
+    Object.keys(pendingOverrides).forEach(k => {
+      if (pendingOverrides[k] !== undefined && pendingOverrides[k] !== null && !isNaN(pendingOverrides[k])) {
+        clean[k] = pendingOverrides[k];
+      }
+    });
+
+    const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${OVERRIDES_PATH}`, {
+      headers: { "Authorization": "token " + token, "Accept": "application/vnd.github+json" }
+    });
+    if (!getRes.ok) throw new Error("Impossible de lire le fichier distant (" + getRes.status + ")");
+    const getData = await getRes.json();
+    const sha = getData.sha;
+
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(clean, null, 2))));
+
+    const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${OVERRIDES_PATH}`, {
+      method: "PUT",
+      headers: { "Authorization": "token " + token, "Accept": "application/vnd.github+json" },
+      body: JSON.stringify({
+        message: "Mise à jour des surcharges/ajouts déguisement (page admin)",
+        content: content,
+        sha: sha,
+      })
+    });
+
+    if (!putRes.ok) {
+      const errBody = await putRes.json().catch(() => ({}));
+      throw new Error(errBody.message || ("Erreur HTTP " + putRes.status));
+    }
+
+    overrides = clean;
+    statusEl.textContent = "Enregistré ! Visible sur la page test après le prochain passage automatique (~15 min).";
+    statusEl.className = "status ok";
+    renderTable();
+  } catch (e) {
+    statusEl.textContent = "Erreur : " + e.message;
+    statusEl.className = "status err";
+    console.error(e);
+  } finally {
+    saveBtn.disabled = false;
+  }
+}
+
+document.getElementById("saveBtn").addEventListener("click", saveOverrides);
+
+load();
+</script>
+</body>
+</html>

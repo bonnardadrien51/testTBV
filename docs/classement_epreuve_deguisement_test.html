@@ -1,7 +1,7 @@
 
     <html>
     <head>
-        <title>Classement Général</title>
+        <title>Classement — Déguisement (test admin)</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
                 color: #1f2933;
             }
             .wrapper {
-                max-width: 820px;
+                max-width: 860px;
                 margin: 0 auto;
             }
             .header {
@@ -30,7 +30,7 @@
             .header h1 {
                 margin: 0 0 6px 0;
                 font-weight: 700;
-                font-size: 2rem;
+                font-size: 1.8rem;
                 letter-spacing: 0.5px;
             }
             .header p {
@@ -43,6 +43,9 @@
                 border-radius: 18px;
                 overflow: hidden;
                 box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+            }
+            .table-scroll {
+                overflow-x: auto;
             }
             table {
                 width: 100%;
@@ -90,9 +93,9 @@
                 font-weight: 700;
                 font-size: 1rem;
             }
-            .nb-epreuves {
-                color: #6b7280;
-                font-size: 0.85rem;
+            .autres {
+                color: #9aa5b1;
+                font-size: 0.8rem;
             }
             .footer {
                 text-align: center;
@@ -118,42 +121,13 @@
             .footer-logos img.logo-etabli {
                 height: 100px;
             }
-            .table-scroll {
-                overflow-x: auto;
-            }
             @media (max-width: 650px) {
-                body {
-                    padding: 24px 10px;
-                }
-                .header h1 {
-                    font-size: 1.5rem;
-                }
-                .header p {
-                    font-size: 0.75rem;
-                }
-                .card {
-                    border-radius: 12px;
-                }
-                thead th, tbody td {
-                    padding: 10px 10px;
-                    font-size: 0.78rem;
-                    white-space: nowrap;
-                }
-                .badge {
-                    font-size: 0.65rem;
-                    padding: 2px 8px;
-                }
-                .footer-logos {
-                    flex-direction: column;
-                    gap: 10px;
-                    padding: 12px 18px;
-                }
-                .footer-logos img.logo-etabli {
-                    height: 70px;
-                }
-                .footer-logos img {
-                    height: 42px;
-                }
+                body { padding: 24px 10px; }
+                .header h1 { font-size: 1.4rem; }
+                thead th, tbody td { padding: 10px 10px; font-size: 0.78rem; white-space: nowrap; }
+                .footer-logos { flex-direction: column; gap: 10px; padding: 12px 18px; }
+                .footer-logos img.logo-etabli { height: 70px; }
+                .footer-logos img { height: 42px; }
             }
         </style>
         <script>
@@ -165,7 +139,7 @@
     <body>
         <div class="wrapper">
             <div class="header">
-                <h1>Classement Général</h1>
+                <h1>Classement — Déguisement (test admin)</h1>
                 <p>Généré le 21/08/2026 11:50:29 (heure de Paris)</p>
             </div>
             <div class="card">
@@ -174,11 +148,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Nom Prénom</th>
+                            <th>Participant</th>
                             <th>Club</th>
                             <th>Sexe</th>
-                            <th>Score Final</th>
-                            <th>Épreuves</th>
+                            <th>Score</th>
+                            <th>Autres tentatives</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -1437,6 +1437,54 @@ def export_pilots_liste_json(df, path):
         json.dump(pilotes, f, ensure_ascii=False, indent=2)
 
 
+DEGUISEMENT_OVERRIDES_PATH = "docs/deguisement_overrides.json"
+DEGUISEMENT_LISTE_TEST_PATH = "docs/deguisement_liste_test.json"
+
+
+def load_deguisement_overrides(path):
+    """Charge les ajouts/surcharges manuels de score déguisement définis
+    depuis la page admin (participant -> score entier)."""
+    if os.path.exists(path):
+        try:
+            with open(path, encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+
+def apply_deguisement_overrides(rows, overrides, all_scores):
+    """Fusionne les lignes scrapées avec les surcharges/ajouts manuels.
+    Une surcharge peut modifier le score d'un participant déjà présent, ou
+    ajouter un participant absent du scraping iOrienteering."""
+    if not overrides:
+        return rows
+    rows = [dict(r) for r in rows]
+    existing = {r['Participant']: r for r in rows}
+    for participant, score in overrides.items():
+        if participant in existing:
+            existing[participant]['Score'] = score
+        else:
+            data = all_scores.get(participant, {})
+            rows.append({
+                'Participant': participant,
+                'Sexe': normalize_sexe(data.get('gender', '')),
+                'Club': data.get('clubname', ''),
+                'Score': score,
+                'Autres': '',
+            })
+    rows.sort(key=lambda r: r['Score'], reverse=True)
+    return rows
+
+
+def export_deguisement_liste_json(rows, path):
+    """Exporte la liste actuelle (scrapée) des scores déguisement pour que
+    la page admin puisse s'y référer sans re-scraper iOrienteering."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(rows, f, ensure_ascii=False, indent=2)
+
+
 def calcul_valeur(score_dict):
     """Convertit un score {score, penalite} en valeur numérique"""
     score = score_dict["score"]
@@ -1590,6 +1638,16 @@ def main():
             })
         rows.sort(key=lambda r: r['Score'], reverse=True)
         generate_event_html(rows, f"classement_epreuve_{slugify(event_name)}.html", f"Classement — {event_name}")
+
+        if course is BONUS_COURSE:
+            # Page de test (doublon) pour le bonus déguisement : ajoute les
+            # surcharges/ajouts manuels définis depuis la page admin.
+            # N'affecte QUE cette page test, pas classement_epreuve_deguisement.html
+            # ni le classement général/Score Final officiels.
+            export_deguisement_liste_json(rows, DEGUISEMENT_LISTE_TEST_PATH)
+            deguisement_overrides = load_deguisement_overrides(DEGUISEMENT_OVERRIDES_PATH)
+            rows_test = apply_deguisement_overrides(rows, deguisement_overrides, all_scores)
+            generate_event_html(rows_test, "classement_epreuve_deguisement_test.html", "Classement — Déguisement (test admin)")
 
     # Page de test : liste des pilotes (nom, club, sexe)
     pilotes = extract_participants_from_url(PILOTS_TEST_COURSE['url'])

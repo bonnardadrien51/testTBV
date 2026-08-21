@@ -1396,6 +1396,47 @@ def generate_evolution_html(df, filename, title, evolution):
         file.write(html_string)
 
 
+GENDER_OVERRIDES_PATH = "docs/gender_overrides.json"
+PILOTS_LISTE_TEST_PATH = "docs/pilotes_liste_test.json"
+
+
+def load_gender_overrides(path):
+    """Charge les surcharges de sexe définies manuellement depuis la page
+    admin (participant -> 'Homme' | 'Femme' | 'Non défini')."""
+    if os.path.exists(path):
+        try:
+            with open(path, encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+
+def apply_gender_overrides(df, overrides):
+    """Renvoie une copie du DataFrame avec le sexe surchargé là où une
+    surcharge manuelle existe pour ce participant."""
+    if not overrides:
+        return df
+    df = df.copy()
+    df['Sexe'] = df.apply(
+        lambda row: overrides.get(row['Participant'], row['Sexe']), axis=1
+    )
+    return df
+
+
+def export_pilots_liste_json(df, path):
+    """Exporte la liste des pilotes (participant, club, sexe calculé) pour
+    que la page admin puisse proposer une surcharge sans avoir à re-scraper
+    iOrienteering elle-même."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    pilotes = [
+        {"Participant": row['Participant'], "Club": row['Club'], "Sexe": row['Sexe']}
+        for _, row in df.iterrows()
+    ]
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(pilotes, f, ensure_ascii=False, indent=2)
+
+
 def calcul_valeur(score_dict):
     """Convertit un score {score, penalite} en valeur numérique"""
     score = score_dict["score"]
@@ -1512,6 +1553,16 @@ def main():
     generate_html(df[df['Sexe'].apply(is_femme)], "classement_femmes.html", "Classement Femmes")
     generate_simple_html(df, "classement_simple.html", "Classement Général")
     generate_pilots_grid_html(df, "pilotes_grille.html", "Classement — Pilotes")
+
+    # Export pour la page admin (liste des pilotes + sexe calculé actuel)
+    export_pilots_liste_json(df, PILOTS_LISTE_TEST_PATH)
+
+    # Page de test (doublon de la grille pilotes) avec les surcharges de sexe
+    # définies manuellement depuis la page admin. N'affecte QUE cette page
+    # test, pas le classement général ni la grille pilotes officielle.
+    gender_overrides = load_gender_overrides(GENDER_OVERRIDES_PATH)
+    df_overridden = apply_gender_overrides(df, gender_overrides)
+    generate_pilots_grid_html(df_overridden, "pilotes_grille_test.html", "Classement — Pilotes (test sexe)")
 
     # Page de test : évolution du classement (dernier changement significatif connu)
     evolution_state = load_evolution_state(EVOLUTION_STATE_PATH)

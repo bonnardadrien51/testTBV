@@ -5,6 +5,11 @@
     "Sexe": "Homme"
   },
   {
+    "Participant": "Marjorie Guillemin",
+    "Club": "Grand vol",
+    "Sexe": "Femme"
+  },
+  {
     "Participant": "Julie Dusein",
     "Club": "Le Thermique Francilien",
     "Sexe": "Femme"
@@ -55,11 +60,6 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "orianne pommey",
-    "Club": "",
-    "Sexe": "Femme"
-  },
-  {
     "Participant": "mathieu SAMIN",
     "Club": "BESANCON VOL LIBRE",
     "Sexe": "Homme"
@@ -70,6 +70,16 @@
     "Sexe": "Homme"
   },
   {
+    "Participant": "orianne pommey",
+    "Club": "",
+    "Sexe": "Femme"
+  },
+  {
+    "Participant": "cyril tallaron",
+    "Club": "GDL",
+    "Sexe": "Non défini"
+  },
+  {
     "Participant": "luc Desbordes",
     "Club": "",
     "Sexe": "Non défini"
@@ -78,11 +88,6 @@
     "Participant": "Céline CABRIN",
     "Club": "Délice d’Eole",
     "Sexe": "Femme"
-  },
-  {
-    "Participant": "cyril tallaron",
-    "Club": "GDL",
-    "Sexe": "Non défini"
   },
   {
     "Participant": "Pierre Brochard",
@@ -103,11 +108,6 @@
     "Participant": "eric perinelle",
     "Club": "les piafs mjc villebon sur yvette",
     "Sexe": "Non défini"
-  },
-  {
-    "Participant": "Marjorie Guillemin",
-    "Club": "Grand vol",
-    "Sexe": "Femme"
   },
   {
     "Participant": "Manu Mesnier",

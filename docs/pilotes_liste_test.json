@@ -10,9 +10,19 @@
     "Sexe": "Femme"
   },
   {
+    "Participant": "orianne pommey",
+    "Club": "",
+    "Sexe": "Femme"
+  },
+  {
     "Participant": "Julie Dusein",
     "Club": "Le Thermique Francilien",
     "Sexe": "Femme"
+  },
+  {
+    "Participant": "cyril tallaron",
+    "Club": "GDL",
+    "Sexe": "Non défini"
   },
   {
     "Participant": "Alexandre Garcia",
@@ -45,6 +55,11 @@
     "Sexe": "Homme"
   },
   {
+    "Participant": "Régis Parra",
+    "Club": "Les ailes de la cendree",
+    "Sexe": "Homme"
+  },
+  {
     "Participant": "Florent Blanckart",
     "Club": "poupet vol libre",
     "Sexe": "Non défini"
@@ -55,13 +70,13 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "Charles BIRCHLER",
-    "Club": "Piafs Mjc Villebon",
-    "Sexe": "Homme"
+    "Participant": "Céline CABRIN",
+    "Club": "Délice d’Eole",
+    "Sexe": "Femme"
   },
   {
-    "Participant": "mathieu SAMIN",
-    "Club": "BESANCON VOL LIBRE",
+    "Participant": "Charles BIRCHLER",
+    "Club": "Piafs Mjc Villebon",
     "Sexe": "Homme"
   },
   {
@@ -70,24 +85,14 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "orianne pommey",
-    "Club": "",
-    "Sexe": "Femme"
-  },
-  {
-    "Participant": "cyril tallaron",
-    "Club": "GDL",
-    "Sexe": "Non défini"
+    "Participant": "mathieu SAMIN",
+    "Club": "BESANCON VOL LIBRE",
+    "Sexe": "Homme"
   },
   {
     "Participant": "luc Desbordes",
     "Club": "",
     "Sexe": "Non défini"
-  },
-  {
-    "Participant": "Céline CABRIN",
-    "Club": "Délice d’Eole",
-    "Sexe": "Femme"
   },
   {
     "Participant": "Pierre Brochard",

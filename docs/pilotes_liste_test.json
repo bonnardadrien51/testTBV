@@ -10,6 +10,11 @@
     "Sexe": "Non défini"
   },
   {
+    "Participant": "cyril tallaron",
+    "Club": "GDL",
+    "Sexe": "Non défini"
+  },
+  {
     "Participant": "Guillaume Blanc",
     "Club": "les rousses Pole air",
     "Sexe": "Homme"
@@ -28,11 +33,6 @@
     "Participant": "Céline CABRIN",
     "Club": "Délice d’Eole",
     "Sexe": "Femme"
-  },
-  {
-    "Participant": "cyril tallaron",
-    "Club": "GDL",
-    "Sexe": "Non défini"
   },
   {
     "Participant": "Charles BIRCHLER",
@@ -75,6 +75,11 @@
     "Sexe": "Homme"
   },
   {
+    "Participant": "Vincent Arnoul",
+    "Club": "migrateurs",
+    "Sexe": "Homme"
+  },
+  {
     "Participant": "Aloïs Marguet",
     "Club": "Besançon vol libre",
     "Sexe": "Homme"
@@ -87,11 +92,6 @@
   {
     "Participant": "Pumbaaah Flo Sak",
     "Club": "Besançon Vol Libre",
-    "Sexe": "Homme"
-  },
-  {
-    "Participant": "Vincent Arnoul",
-    "Club": "migrateurs",
     "Sexe": "Homme"
   },
   {

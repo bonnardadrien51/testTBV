@@ -1,10 +1,5 @@
 [
   {
-    "Participant": "Julie Dusein",
-    "Club": "Le Thermique Francilien",
-    "Sexe": "Femme"
-  },
-  {
     "Participant": "luc Desbordes",
     "Club": "",
     "Sexe": "Non défini"
@@ -42,6 +37,11 @@
   {
     "Participant": "orianne pommey",
     "Club": "",
+    "Sexe": "Femme"
+  },
+  {
+    "Participant": "Julie Dusein",
+    "Club": "Le Thermique Francilien",
     "Sexe": "Femme"
   },
   {

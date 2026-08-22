@@ -1,17 +1,17 @@
 {
-  "luc Desbordes": {
+  "Guillaume Blanc": {
     "baseline_position": 1,
     "arrow": "up",
+    "magnitude": 2
+  },
+  "luc Desbordes": {
+    "baseline_position": 2,
+    "arrow": "down",
     "magnitude": 1
   },
   "cyril tallaron": {
-    "baseline_position": 2,
-    "arrow": "up",
-    "magnitude": 1
-  },
-  "Guillaume Blanc": {
     "baseline_position": 3,
-    "arrow": "up",
+    "arrow": "down",
     "magnitude": 1
   },
   "Julien Bourelle": {
@@ -34,70 +34,70 @@
     "arrow": "up",
     "magnitude": 1
   },
-  "orianne pommey": {
+  "Julie Dusein": {
     "baseline_position": 8,
     "arrow": "up",
     "magnitude": 1
   },
-  "Julie Dusein": {
-    "baseline_position": 9,
-    "arrow": "down",
-    "magnitude": 8
-  },
   "Alexandre Garcia": {
-    "baseline_position": 10,
-    "arrow": "down",
-    "magnitude": 3
+    "baseline_position": 9,
+    "arrow": "up",
+    "magnitude": 1
   },
   "eric perinelle": {
-    "baseline_position": 11,
-    "arrow": "down",
-    "magnitude": 3
+    "baseline_position": 10,
+    "arrow": "up",
+    "magnitude": 1
   },
   "Marjorie Guillemin": {
-    "baseline_position": 12,
-    "arrow": "down",
-    "magnitude": 3
+    "baseline_position": 11,
+    "arrow": "up",
+    "magnitude": 1
   },
   "Anonymous": {
-    "baseline_position": 13,
-    "arrow": "down",
-    "magnitude": 2
+    "baseline_position": 12,
+    "arrow": "up",
+    "magnitude": 1
   },
   "Morand Nicolas": {
-    "baseline_position": 14,
-    "arrow": "down",
-    "magnitude": 1
-  },
-  "Régis Parra": {
-    "baseline_position": 15,
+    "baseline_position": 13,
     "arrow": "up",
-    "magnitude": 3
+    "magnitude": 1
   },
   "Vincent Arnoul": {
-    "baseline_position": 16,
+    "baseline_position": 14,
     "arrow": "up",
-    "magnitude": 3
+    "magnitude": 2
   },
   "Aloïs Marguet": {
-    "baseline_position": 17,
-    "arrow": "down",
-    "magnitude": 1
+    "baseline_position": 15,
+    "arrow": "up",
+    "magnitude": 2
   },
   "Baptiste Bertrand": {
-    "baseline_position": 18,
+    "baseline_position": 16,
+    "arrow": "up",
+    "magnitude": 2
+  },
+  "orianne pommey": {
+    "baseline_position": 17,
     "arrow": "down",
-    "magnitude": 1
+    "magnitude": 9
   },
   "Pumbaaah Flo Sak": {
-    "baseline_position": 19,
-    "arrow": "down",
+    "baseline_position": 18,
+    "arrow": "up",
     "magnitude": 1
   },
   "Florent Blanckart": {
+    "baseline_position": 19,
+    "arrow": "up",
+    "magnitude": 1
+  },
+  "Régis Parra": {
     "baseline_position": 20,
     "arrow": "down",
-    "magnitude": 1
+    "magnitude": 5
   },
   "Etienne chaboz": {
     "baseline_position": 21,

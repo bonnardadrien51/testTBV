@@ -4,22 +4,22 @@
     "arrow": "up",
     "magnitude": 1
   },
-  "Guillaume Blanc": {
+  "luc Desbordes": {
     "baseline_position": 2,
+    "arrow": "up",
+    "magnitude": 1
+  },
+  "Guillaume Blanc": {
+    "baseline_position": 3,
     "arrow": "down",
     "magnitude": 1
   },
-  "luc Desbordes": {
-    "baseline_position": 3,
-    "arrow": "up",
-    "magnitude": 16
-  },
-  "Baptiste F": {
+  "Julien Bourelle": {
     "baseline_position": 4,
     "arrow": "up",
-    "magnitude": 2
+    "magnitude": 1
   },
-  "Julien Bourelle": {
+  "Baptiste F": {
     "baseline_position": 5,
     "arrow": "down",
     "magnitude": 1

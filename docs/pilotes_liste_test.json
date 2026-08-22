@@ -5,13 +5,23 @@
     "Sexe": "Femme"
   },
   {
+    "Participant": "Alexandre Garcia",
+    "Club": "GDL",
+    "Sexe": "Homme"
+  },
+  {
     "Participant": "Aloïs Marguet",
     "Club": "Besançon vol libre",
     "Sexe": "Homme"
   },
   {
-    "Participant": "Alexandre Garcia",
+    "Participant": "Julien Bourelle",
     "Club": "GDL",
+    "Sexe": "Non défini"
+  },
+  {
+    "Participant": "Guillaume Blanc",
+    "Club": "les rousses Pole air",
     "Sexe": "Homme"
   },
   {
@@ -23,16 +33,6 @@
     "Participant": "Pumbaaah Flo Sak",
     "Club": "Besançon Vol Libre",
     "Sexe": "Homme"
-  },
-  {
-    "Participant": "Guillaume Blanc",
-    "Club": "les rousses Pole air",
-    "Sexe": "Homme"
-  },
-  {
-    "Participant": "Julien Bourelle",
-    "Club": "GDL",
-    "Sexe": "Non défini"
   },
   {
     "Participant": "Florent Blanckart",
@@ -80,6 +80,11 @@
     "Sexe": "Homme"
   },
   {
+    "Participant": "OLIVIER ADRION",
+    "Club": "Mont Blanc Vol Libre",
+    "Sexe": "Homme"
+  },
+  {
     "Participant": "Morand Nicolas",
     "Club": "Les Piafs",
     "Sexe": "Homme"
@@ -87,11 +92,6 @@
   {
     "Participant": "Charles BIRCHLER",
     "Club": "Piafs Mjc Villebon",
-    "Sexe": "Homme"
-  },
-  {
-    "Participant": "OLIVIER ADRION",
-    "Club": "Mont Blanc Vol Libre",
     "Sexe": "Homme"
   },
   {
@@ -108,5 +108,10 @@
     "Participant": "Marjorie Guillemin",
     "Club": "Grand vol",
     "Sexe": "Femme"
+  },
+  {
+    "Participant": "Manu Mesnier",
+    "Club": "Les Ailes de la Cendrée",
+    "Sexe": "Homme"
   }
 ]

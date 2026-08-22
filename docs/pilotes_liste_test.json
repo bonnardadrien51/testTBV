@@ -50,6 +50,16 @@
     "Sexe": "Homme"
   },
   {
+    "Participant": "Charles BIRCHLER",
+    "Club": "Piafs Mjc Villebon",
+    "Sexe": "Homme"
+  },
+  {
+    "Participant": "orianne pommey",
+    "Club": "",
+    "Sexe": "Femme"
+  },
+  {
     "Participant": "mathieu SAMIN",
     "Club": "BESANCON VOL LIBRE",
     "Sexe": "Homme"
@@ -60,24 +70,19 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "orianne pommey",
-    "Club": "",
-    "Sexe": "Femme"
-  },
-  {
     "Participant": "luc Desbordes",
     "Club": "",
-    "Sexe": "Non défini"
-  },
-  {
-    "Participant": "cyril tallaron",
-    "Club": "GDL",
     "Sexe": "Non défini"
   },
   {
     "Participant": "Céline CABRIN",
     "Club": "Délice d’Eole",
     "Sexe": "Femme"
+  },
+  {
+    "Participant": "cyril tallaron",
+    "Club": "GDL",
+    "Sexe": "Non défini"
   },
   {
     "Participant": "Pierre Brochard",
@@ -87,11 +92,6 @@
   {
     "Participant": "OLIVIER ADRION",
     "Club": "Mont Blanc Vol Libre",
-    "Sexe": "Homme"
-  },
-  {
-    "Participant": "Charles BIRCHLER",
-    "Club": "Piafs Mjc Villebon",
     "Sexe": "Homme"
   },
   {

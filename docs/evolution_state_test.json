@@ -69,42 +69,42 @@
     "arrow": "down",
     "magnitude": 1
   },
-  "Aloïs Marguet": {
+  "Régis Parra": {
     "baseline_position": 15,
-    "arrow": "down",
-    "magnitude": 1
+    "arrow": "up",
+    "magnitude": 3
   },
-  "Baptiste Bertrand": {
+  "Aloïs Marguet": {
     "baseline_position": 16,
     "arrow": "down",
     "magnitude": 1
   },
-  "Pumbaaah Flo Sak": {
+  "Baptiste Bertrand": {
     "baseline_position": 17,
     "arrow": "down",
     "magnitude": 1
   },
-  "Régis Parra": {
+  "Pumbaaah Flo Sak": {
     "baseline_position": 18,
     "arrow": "down",
     "magnitude": 1
   },
-  "Florent Blanckart": {
+  "Vincent Arnoul": {
     "baseline_position": 19,
+    "arrow": "up",
+    "magnitude": 3
+  },
+  "Florent Blanckart": {
+    "baseline_position": 20,
     "arrow": "down",
     "magnitude": 1
   },
   "Etienne chaboz": {
-    "baseline_position": 20,
-    "arrow": "up",
-    "magnitude": 4
-  },
-  "mathieu SAMIN": {
     "baseline_position": 21,
     "arrow": "down",
     "magnitude": 1
   },
-  "Vincent Arnoul": {
+  "mathieu SAMIN": {
     "baseline_position": 22,
     "arrow": "down",
     "magnitude": 1
@@ -124,14 +124,14 @@
     "arrow": "down",
     "magnitude": 2
   },
-  "Manu Mesnier": {
+  "Virginie LAURENT": {
     "baseline_position": 26,
-    "arrow": "down",
+    "arrow": "up",
     "magnitude": 1
   },
-  "Virginie LAURENT": {
+  "Manu Mesnier": {
     "baseline_position": 27,
-    "arrow": "same",
-    "magnitude": 0
+    "arrow": "down",
+    "magnitude": 1
   }
 }

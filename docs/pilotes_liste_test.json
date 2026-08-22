@@ -70,6 +70,11 @@
     "Sexe": "Homme"
   },
   {
+    "Participant": "Régis Parra",
+    "Club": "Les ailes de la cendree",
+    "Sexe": "Homme"
+  },
+  {
     "Participant": "Aloïs Marguet",
     "Club": "Besançon vol libre",
     "Sexe": "Homme"
@@ -85,8 +90,8 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "Régis Parra",
-    "Club": "Les ailes de la cendree",
+    "Participant": "Vincent Arnoul",
+    "Club": "migrateurs",
     "Sexe": "Homme"
   },
   {
@@ -105,11 +110,6 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "Vincent Arnoul",
-    "Club": "migrateurs",
-    "Sexe": "Homme"
-  },
-  {
     "Participant": "kieffer romain",
     "Club": "",
     "Sexe": "Non défini"
@@ -125,13 +125,13 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "Manu Mesnier",
-    "Club": "Les Ailes de la Cendrée",
-    "Sexe": "Homme"
-  },
-  {
     "Participant": "Virginie LAURENT",
     "Club": "Les Counailles/ La Bressaude Vol Libre",
     "Sexe": "Femme"
+  },
+  {
+    "Participant": "Manu Mesnier",
+    "Club": "Les Ailes de la Cendrée",
+    "Sexe": "Homme"
   }
 ]

@@ -1,7 +1,17 @@
 [
   {
+    "Participant": "Julie Dusein",
+    "Club": "Le Thermique Francilien",
+    "Sexe": "Femme"
+  },
+  {
     "Participant": "Aloïs Marguet",
     "Club": "Besançon vol libre",
+    "Sexe": "Homme"
+  },
+  {
+    "Participant": "Alexandre Garcia",
+    "Club": "GDL",
     "Sexe": "Homme"
   },
   {
@@ -15,9 +25,14 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "Julie Dusein",
-    "Club": "Le Thermique Francilien",
-    "Sexe": "Femme"
+    "Participant": "Guillaume Blanc",
+    "Club": "les rousses Pole air",
+    "Sexe": "Homme"
+  },
+  {
+    "Participant": "Julien Bourelle",
+    "Club": "GDL",
+    "Sexe": "Non défini"
   },
   {
     "Participant": "Florent Blanckart",
@@ -28,16 +43,6 @@
     "Participant": "Baptiste F",
     "Club": "Besançon Vol Libre",
     "Sexe": "Homme"
-  },
-  {
-    "Participant": "Guillaume Blanc",
-    "Club": "les rousses Pole air",
-    "Sexe": "Homme"
-  },
-  {
-    "Participant": "Julien Bourelle",
-    "Club": "GDL",
-    "Sexe": "Non défini"
   },
   {
     "Participant": "mathieu SAMIN",
@@ -68,11 +73,6 @@
     "Participant": "Céline CABRIN",
     "Club": "Délice d’Eole",
     "Sexe": "Femme"
-  },
-  {
-    "Participant": "Alexandre Garcia",
-    "Club": "GDL",
-    "Sexe": "Homme"
   },
   {
     "Participant": "Pierre Brochard",

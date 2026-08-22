@@ -1,13 +1,13 @@
 {
-  "Baptiste Bertrand": {
-    "baseline_position": 1,
-    "arrow": "same",
-    "magnitude": 0
-  },
   "Aloïs Marguet": {
+    "baseline_position": 1,
+    "arrow": "up",
+    "magnitude": 1
+  },
+  "Baptiste Bertrand": {
     "baseline_position": 2,
-    "arrow": "same",
-    "magnitude": 0
+    "arrow": "down",
+    "magnitude": 1
   },
   "Baptiste F": {
     "baseline_position": 3,
@@ -29,25 +29,25 @@
     "arrow": "same",
     "magnitude": 0
   },
-  "orianne pommey": {
-    "baseline_position": 7,
-    "arrow": "down",
-    "magnitude": 2
-  },
   "Vincent Arnoul": {
-    "baseline_position": 8,
-    "arrow": "down",
-    "magnitude": 2
+    "baseline_position": 7,
+    "arrow": "up",
+    "magnitude": 1
   },
-  "luc Desbordes": {
-    "baseline_position": 9,
+  "orianne pommey": {
+    "baseline_position": 8,
     "arrow": "down",
     "magnitude": 1
   },
   "cyril tallaron": {
+    "baseline_position": 9,
+    "arrow": "up",
+    "magnitude": 1
+  },
+  "luc Desbordes": {
     "baseline_position": 10,
-    "arrow": "same",
-    "magnitude": 0
+    "arrow": "down",
+    "magnitude": 1
   },
   "Céline CABRIN": {
     "baseline_position": 11,
@@ -74,20 +74,20 @@
     "arrow": "down",
     "magnitude": 5
   },
-  "Morand Nicolas": {
+  "OLIVIER ADRION": {
     "baseline_position": 16,
-    "arrow": "same",
-    "magnitude": 0
+    "arrow": "up",
+    "magnitude": 2
+  },
+  "Morand Nicolas": {
+    "baseline_position": 17,
+    "arrow": "down",
+    "magnitude": 1
   },
   "Charles BIRCHLER": {
-    "baseline_position": 17,
-    "arrow": "same",
-    "magnitude": 0
-  },
-  "OLIVIER ADRION": {
     "baseline_position": 18,
-    "arrow": "same",
-    "magnitude": 0
+    "arrow": "down",
+    "magnitude": 1
   },
   "Etienne chaboz": {
     "baseline_position": 19,
@@ -101,6 +101,11 @@
   },
   "Marjorie Guillemin": {
     "baseline_position": 21,
+    "arrow": "same",
+    "magnitude": 0
+  },
+  "Florent Blanckart": {
+    "baseline_position": 22,
     "arrow": "same",
     "magnitude": 0
   }

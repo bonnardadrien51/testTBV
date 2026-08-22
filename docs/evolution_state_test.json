@@ -1,55 +1,55 @@
 {
-  "Julie Dusein": {
+  "Baptiste F": {
     "baseline_position": 1,
     "arrow": "up",
-    "magnitude": 3
+    "magnitude": 8
   },
-  "Alexandre Garcia": {
+  "Julie Dusein": {
     "baseline_position": 2,
-    "arrow": "up",
+    "arrow": "down",
     "magnitude": 1
   },
-  "Aloïs Marguet": {
+  "Alexandre Garcia": {
     "baseline_position": 3,
     "arrow": "down",
     "magnitude": 1
   },
-  "Julien Bourelle": {
+  "Aloïs Marguet": {
     "baseline_position": 4,
-    "arrow": "up",
-    "magnitude": 3
+    "arrow": "down",
+    "magnitude": 1
+  },
+  "Julien Bourelle": {
+    "baseline_position": 5,
+    "arrow": "down",
+    "magnitude": 1
   },
   "Guillaume Blanc": {
-    "baseline_position": 5,
-    "arrow": "up",
+    "baseline_position": 6,
+    "arrow": "down",
     "magnitude": 1
   },
   "Baptiste Bertrand": {
-    "baseline_position": 6,
-    "arrow": "down",
-    "magnitude": 2
-  },
-  "Pumbaaah Flo Sak": {
     "baseline_position": 7,
-    "arrow": "down",
-    "magnitude": 2
-  },
-  "Florent Blanckart": {
-    "baseline_position": 8,
-    "arrow": "down",
-    "magnitude": 3
-  },
-  "Baptiste F": {
-    "baseline_position": 9,
-    "arrow": "down",
-    "magnitude": 3
-  },
-  "mathieu SAMIN": {
-    "baseline_position": 10,
     "arrow": "down",
     "magnitude": 1
   },
-  "orianne pommey": {
+  "Pumbaaah Flo Sak": {
+    "baseline_position": 8,
+    "arrow": "down",
+    "magnitude": 1
+  },
+  "Florent Blanckart": {
+    "baseline_position": 9,
+    "arrow": "down",
+    "magnitude": 1
+  },
+  "Morand Nicolas": {
+    "baseline_position": 10,
+    "arrow": "up",
+    "magnitude": 8
+  },
+  "mathieu SAMIN": {
     "baseline_position": 11,
     "arrow": "down",
     "magnitude": 1
@@ -59,32 +59,32 @@
     "arrow": "down",
     "magnitude": 1
   },
-  "luc Desbordes": {
+  "orianne pommey": {
     "baseline_position": 13,
     "arrow": "down",
-    "magnitude": 1
+    "magnitude": 2
   },
-  "cyril tallaron": {
+  "luc Desbordes": {
     "baseline_position": 14,
     "arrow": "down",
     "magnitude": 1
   },
-  "Céline CABRIN": {
+  "cyril tallaron": {
     "baseline_position": 15,
     "arrow": "down",
     "magnitude": 1
   },
-  "Pierre Brochard": {
+  "Céline CABRIN": {
     "baseline_position": 16,
     "arrow": "down",
     "magnitude": 1
   },
-  "OLIVIER ADRION": {
+  "Pierre Brochard": {
     "baseline_position": 17,
-    "arrow": "up",
-    "magnitude": 2
+    "arrow": "down",
+    "magnitude": 1
   },
-  "Morand Nicolas": {
+  "OLIVIER ADRION": {
     "baseline_position": 18,
     "arrow": "down",
     "magnitude": 1

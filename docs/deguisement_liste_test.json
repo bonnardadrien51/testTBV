@@ -14,16 +14,16 @@
     "Autres": ""
   },
   {
-    "Participant": "Céline CABRIN",
+    "Participant": "Julie Dusein",
     "Sexe": "Femme",
-    "Club": "Délice d’Eole",
+    "Club": "Le Thermique Francilien",
     "Score": 90,
     "Autres": ""
   },
   {
-    "Participant": "Julie Dusein",
+    "Participant": "Céline CABRIN",
     "Sexe": "Femme",
-    "Club": "Le Thermique Francilien",
+    "Club": "Délice d’Eole",
     "Score": 90,
     "Autres": ""
   },
@@ -38,6 +38,13 @@
     "Participant": "orianne pommey",
     "Sexe": "Femme",
     "Club": "",
+    "Score": 90,
+    "Autres": ""
+  },
+  {
+    "Participant": "Pumbaaah Flo Sak",
+    "Sexe": "Homme",
+    "Club": "Besançon Vol Libre",
     "Score": 90,
     "Autres": ""
   }

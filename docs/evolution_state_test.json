@@ -24,47 +24,47 @@
     "arrow": "down",
     "magnitude": 3
   },
-  "Alexandre Garcia": {
+  "Etienne chaboz": {
     "baseline_position": 6,
-    "arrow": "up",
-    "magnitude": 3
-  },
-  "Julien Bourelle": {
-    "baseline_position": 7,
-    "arrow": "down",
-    "magnitude": 3
-  },
-  "Baptiste Bertrand": {
-    "baseline_position": 8,
     "arrow": "up",
     "magnitude": 8
   },
-  "eric perinelle": {
+  "Alexandre Garcia": {
+    "baseline_position": 7,
+    "arrow": "down",
+    "magnitude": 1
+  },
+  "Julien Bourelle": {
+    "baseline_position": 8,
+    "arrow": "down",
+    "magnitude": 1
+  },
+  "Baptiste Bertrand": {
     "baseline_position": 9,
     "arrow": "down",
     "magnitude": 1
   },
-  "Pumbaaah Flo Sak": {
+  "eric perinelle": {
     "baseline_position": 10,
-    "arrow": "up",
-    "magnitude": 5
+    "arrow": "down",
+    "magnitude": 1
   },
-  "Morand Nicolas": {
+  "Pumbaaah Flo Sak": {
     "baseline_position": 11,
     "arrow": "down",
-    "magnitude": 2
+    "magnitude": 1
   },
-  "Céline CABRIN": {
+  "Morand Nicolas": {
     "baseline_position": 12,
     "arrow": "down",
-    "magnitude": 2
+    "magnitude": 1
   },
-  "Aloïs Marguet": {
+  "Céline CABRIN": {
     "baseline_position": 13,
     "arrow": "down",
     "magnitude": 1
   },
-  "Etienne chaboz": {
+  "Aloïs Marguet": {
     "baseline_position": 14,
     "arrow": "down",
     "magnitude": 1
@@ -84,52 +84,52 @@
     "arrow": "down",
     "magnitude": 15
   },
-  "orianne pommey": {
+  "mathieu SAMIN": {
     "baseline_position": 18,
+    "arrow": "up",
+    "magnitude": 7
+  },
+  "orianne pommey": {
+    "baseline_position": 19,
     "arrow": "down",
     "magnitude": 1
   },
   "Pierre Brochard": {
-    "baseline_position": 19,
-    "arrow": "up",
-    "magnitude": 6
-  },
-  "Florent Blanckart": {
     "baseline_position": 20,
     "arrow": "down",
-    "magnitude": 2
+    "magnitude": 1
   },
-  "Régis Parra": {
+  "Florent Blanckart": {
     "baseline_position": 21,
     "arrow": "down",
-    "magnitude": 2
+    "magnitude": 1
   },
-  "OLIVIER ADRION": {
+  "Régis Parra": {
     "baseline_position": 22,
     "arrow": "down",
-    "magnitude": 2
+    "magnitude": 1
   },
-  "Anonymous": {
+  "OLIVIER ADRION": {
     "baseline_position": 23,
     "arrow": "down",
-    "magnitude": 2
+    "magnitude": 1
   },
-  "Virginie LAURENT": {
+  "Anonymous": {
     "baseline_position": 24,
     "arrow": "down",
     "magnitude": 1
   },
-  "mathieu SAMIN": {
+  "Manu Mesnier": {
     "baseline_position": 25,
-    "arrow": "down",
-    "magnitude": 1
+    "arrow": "up",
+    "magnitude": 2
   },
-  "Marjorie Guillemin": {
+  "Virginie LAURENT": {
     "baseline_position": 26,
     "arrow": "down",
-    "magnitude": 15
+    "magnitude": 2
   },
-  "Manu Mesnier": {
+  "Marjorie Guillemin": {
     "baseline_position": 27,
     "arrow": "down",
     "magnitude": 1

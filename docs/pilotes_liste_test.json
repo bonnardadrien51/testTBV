@@ -25,6 +25,11 @@
     "Sexe": "Non défini"
   },
   {
+    "Participant": "Etienne chaboz",
+    "Club": "bvl",
+    "Sexe": "Homme"
+  },
+  {
     "Participant": "Alexandre Garcia",
     "Club": "GDL",
     "Sexe": "Homme"
@@ -65,11 +70,6 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "Etienne chaboz",
-    "Club": "bvl",
-    "Sexe": "Homme"
-  },
-  {
     "Participant": "kieffer romain",
     "Club": "",
     "Sexe": "Non défini"
@@ -82,6 +82,11 @@
   {
     "Participant": "Baptiste F",
     "Club": "Besançon Vol Libre",
+    "Sexe": "Homme"
+  },
+  {
+    "Participant": "mathieu SAMIN",
+    "Club": "BESANCON VOL LIBRE",
     "Sexe": "Homme"
   },
   {
@@ -115,23 +120,18 @@
     "Sexe": "Non défini"
   },
   {
+    "Participant": "Manu Mesnier",
+    "Club": "Les Ailes de la Cendrée",
+    "Sexe": "Homme"
+  },
+  {
     "Participant": "Virginie LAURENT",
     "Club": "Les Counailles/ La Bressaude Vol Libre",
     "Sexe": "Femme"
   },
   {
-    "Participant": "mathieu SAMIN",
-    "Club": "BESANCON VOL LIBRE",
-    "Sexe": "Homme"
-  },
-  {
     "Participant": "Marjorie Guillemin",
     "Club": "Grand vol",
     "Sexe": "Femme"
-  },
-  {
-    "Participant": "Manu Mesnier",
-    "Club": "Les Ailes de la Cendrée",
-    "Sexe": "Homme"
   }
 ]

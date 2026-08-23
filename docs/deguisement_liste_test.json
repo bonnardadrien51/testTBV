@@ -7,9 +7,23 @@
     "Autres": "90"
   },
   {
+    "Participant": "Julie Dusein",
+    "Sexe": "Femme",
+    "Club": "Le Thermique Francilien",
+    "Score": 100,
+    "Autres": "90"
+  },
+  {
     "Participant": "Guillaume Blanc",
     "Sexe": "Homme",
     "Club": "les rousses Pole air",
+    "Score": 90,
+    "Autres": ""
+  },
+  {
+    "Participant": "Julien Bourelle",
+    "Sexe": "Non défini",
+    "Club": "GDL",
     "Score": 90,
     "Autres": ""
   },
@@ -24,13 +38,6 @@
     "Participant": "orianne pommey",
     "Sexe": "Femme",
     "Club": "",
-    "Score": 90,
-    "Autres": ""
-  },
-  {
-    "Participant": "Julie Dusein",
-    "Sexe": "Femme",
-    "Club": "Le Thermique Francilien",
     "Score": 90,
     "Autres": ""
   },

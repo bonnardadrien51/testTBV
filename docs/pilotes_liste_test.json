@@ -1,8 +1,18 @@
 [
   {
+    "Participant": "Julien Bourelle",
+    "Club": "GDL",
+    "Sexe": "Non défini"
+  },
+  {
     "Participant": "cyril tallaron",
     "Club": "GDL",
     "Sexe": "Non défini"
+  },
+  {
+    "Participant": "Guillaume Blanc",
+    "Club": "les rousses Pole air",
+    "Sexe": "Homme"
   },
   {
     "Participant": "orianne pommey",
@@ -15,11 +25,6 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "Guillaume Blanc",
-    "Club": "les rousses Pole air",
-    "Sexe": "Homme"
-  },
-  {
     "Participant": "Julie Dusein",
     "Club": "Le Thermique Francilien",
     "Sexe": "Femme"
@@ -27,6 +32,11 @@
   {
     "Participant": "Vincent Arnoul",
     "Club": "migrateurs",
+    "Sexe": "Homme"
+  },
+  {
+    "Participant": "mathieu SAMIN",
+    "Club": "BESANCON VOL LIBRE",
     "Sexe": "Homme"
   },
   {
@@ -45,14 +55,14 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "Julien Bourelle",
-    "Club": "GDL",
-    "Sexe": "Non défini"
-  },
-  {
     "Participant": "Baptiste Bertrand",
     "Club": "",
     "Sexe": "Non défini"
+  },
+  {
+    "Participant": "Morand Nicolas",
+    "Club": "Les Piafs",
+    "Sexe": "Homme"
   },
   {
     "Participant": "eric perinelle",
@@ -60,9 +70,9 @@
     "Sexe": "Non défini"
   },
   {
-    "Participant": "Morand Nicolas",
-    "Club": "Les Piafs",
-    "Sexe": "Homme"
+    "Participant": "kieffer romain",
+    "Club": "",
+    "Sexe": "Non défini"
   },
   {
     "Participant": "Céline CABRIN",
@@ -75,11 +85,6 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "kieffer romain",
-    "Club": "",
-    "Sexe": "Non défini"
-  },
-  {
     "Participant": "Charles BIRCHLER",
     "Club": "Piafs Mjc Villebon",
     "Sexe": "Homme"
@@ -87,11 +92,6 @@
   {
     "Participant": "Baptiste F",
     "Club": "Besançon Vol Libre",
-    "Sexe": "Homme"
-  },
-  {
-    "Participant": "mathieu SAMIN",
-    "Club": "BESANCON VOL LIBRE",
     "Sexe": "Homme"
   },
   {

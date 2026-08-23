@@ -1,60 +1,60 @@
 {
-  "cyril tallaron": {
+  "Julien Bourelle": {
     "baseline_position": 1,
     "arrow": "up",
-    "magnitude": 2
+    "magnitude": 9
   },
-  "orianne pommey": {
+  "cyril tallaron": {
     "baseline_position": 2,
-    "arrow": "up",
-    "magnitude": 17
-  },
-  "Pumbaaah Flo Sak": {
-    "baseline_position": 3,
     "arrow": "down",
     "magnitude": 1
   },
   "Guillaume Blanc": {
+    "baseline_position": 3,
+    "arrow": "up",
+    "magnitude": 1
+  },
+  "orianne pommey": {
     "baseline_position": 4,
     "arrow": "down",
-    "magnitude": 1
+    "magnitude": 2
   },
-  "Julie Dusein": {
+  "Pumbaaah Flo Sak": {
     "baseline_position": 5,
     "arrow": "down",
-    "magnitude": 1
+    "magnitude": 2
   },
-  "Vincent Arnoul": {
+  "Julie Dusein": {
     "baseline_position": 6,
     "arrow": "down",
     "magnitude": 1
   },
-  "luc Desbordes": {
+  "Vincent Arnoul": {
     "baseline_position": 7,
     "arrow": "down",
     "magnitude": 1
   },
-  "Etienne chaboz": {
+  "mathieu SAMIN": {
     "baseline_position": 8,
-    "arrow": "down",
-    "magnitude": 1
+    "arrow": "up",
+    "magnitude": 11
   },
-  "Alexandre Garcia": {
+  "luc Desbordes": {
     "baseline_position": 9,
     "arrow": "down",
-    "magnitude": 1
+    "magnitude": 2
   },
-  "Julien Bourelle": {
+  "Etienne chaboz": {
     "baseline_position": 10,
     "arrow": "down",
-    "magnitude": 1
+    "magnitude": 2
   },
-  "Baptiste Bertrand": {
+  "Alexandre Garcia": {
     "baseline_position": 11,
     "arrow": "down",
-    "magnitude": 1
+    "magnitude": 2
   },
-  "eric perinelle": {
+  "Baptiste Bertrand": {
     "baseline_position": 12,
     "arrow": "down",
     "magnitude": 1
@@ -64,32 +64,32 @@
     "arrow": "down",
     "magnitude": 1
   },
-  "Céline CABRIN": {
+  "eric perinelle": {
     "baseline_position": 14,
     "arrow": "down",
-    "magnitude": 1
-  },
-  "Aloïs Marguet": {
-    "baseline_position": 15,
-    "arrow": "down",
-    "magnitude": 1
+    "magnitude": 2
   },
   "kieffer romain": {
+    "baseline_position": 15,
+    "arrow": "up",
+    "magnitude": 1
+  },
+  "Céline CABRIN": {
     "baseline_position": 16,
     "arrow": "down",
-    "magnitude": 1
+    "magnitude": 2
   },
-  "Charles BIRCHLER": {
+  "Aloïs Marguet": {
     "baseline_position": 17,
     "arrow": "down",
-    "magnitude": 1
+    "magnitude": 2
   },
-  "Baptiste F": {
+  "Charles BIRCHLER": {
     "baseline_position": 18,
     "arrow": "down",
     "magnitude": 1
   },
-  "mathieu SAMIN": {
+  "Baptiste F": {
     "baseline_position": 19,
     "arrow": "down",
     "magnitude": 1

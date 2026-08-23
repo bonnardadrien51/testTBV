@@ -129,13 +129,18 @@
     "arrow": "down",
     "magnitude": 2
   },
-  "gabriel spiesser": {
+  "Adrien BONNARD": {
     "baseline_position": 27,
     "arrow": "same",
     "magnitude": 0
   },
-  "Marjorie Guillemin": {
+  "gabriel spiesser": {
     "baseline_position": 28,
+    "arrow": "down",
+    "magnitude": 1
+  },
+  "Marjorie Guillemin": {
+    "baseline_position": 29,
     "arrow": "down",
     "magnitude": 1
   }

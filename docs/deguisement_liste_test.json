@@ -21,6 +21,13 @@
     "Autres": ""
   },
   {
+    "Participant": "orianne pommey",
+    "Sexe": "Femme",
+    "Club": "",
+    "Score": 90,
+    "Autres": ""
+  },
+  {
     "Participant": "Julie Dusein",
     "Sexe": "Femme",
     "Club": "Le Thermique Francilien",
@@ -38,13 +45,6 @@
     "Participant": "Pumbaaah Flo Sak",
     "Sexe": "Homme",
     "Club": "Besançon Vol Libre",
-    "Score": 90,
-    "Autres": ""
-  },
-  {
-    "Participant": "orianne pommey",
-    "Sexe": "Femme",
-    "Club": "",
     "Score": 90,
     "Autres": ""
   }

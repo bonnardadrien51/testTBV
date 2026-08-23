@@ -109,25 +109,25 @@
     "arrow": "down",
     "magnitude": 1
   },
-  "OLIVIER ADRION": {
+  "Virginie LAURENT": {
     "baseline_position": 23,
+    "arrow": "up",
+    "magnitude": 3
+  },
+  "OLIVIER ADRION": {
+    "baseline_position": 24,
     "arrow": "down",
     "magnitude": 1
   },
   "Manu Mesnier": {
-    "baseline_position": 24,
-    "arrow": "up",
-    "magnitude": 1
-  },
-  "Anonymous": {
     "baseline_position": 25,
     "arrow": "down",
     "magnitude": 1
   },
-  "Virginie LAURENT": {
+  "Anonymous": {
     "baseline_position": 26,
     "arrow": "down",
-    "magnitude": 2
+    "magnitude": 1
   },
   "Adrien BONNARD": {
     "baseline_position": 27,

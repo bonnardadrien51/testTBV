@@ -110,6 +110,11 @@
     "Sexe": "Homme"
   },
   {
+    "Participant": "Virginie LAURENT",
+    "Club": "Les Counailles/ La Bressaude Vol Libre",
+    "Sexe": "Femme"
+  },
+  {
     "Participant": "OLIVIER ADRION",
     "Club": "Mont Blanc Vol Libre",
     "Sexe": "Homme"
@@ -123,11 +128,6 @@
     "Participant": "Anonymous",
     "Club": "",
     "Sexe": "Non défini"
-  },
-  {
-    "Participant": "Virginie LAURENT",
-    "Club": "Les Counailles/ La Bressaude Vol Libre",
-    "Sexe": "Femme"
   },
   {
     "Participant": "Adrien BONNARD",

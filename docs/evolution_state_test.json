@@ -94,40 +94,40 @@
     "arrow": "down",
     "magnitude": 1
   },
-  "Pierre Brochard": {
+  "Anonymous": {
     "baseline_position": 20,
-    "arrow": "down",
-    "magnitude": 1
-  },
-  "Florent Blanckart": {
-    "baseline_position": 21,
-    "arrow": "down",
-    "magnitude": 1
-  },
-  "Régis Parra": {
-    "baseline_position": 22,
-    "arrow": "down",
-    "magnitude": 1
+    "arrow": "up",
+    "magnitude": 6
   },
   "Virginie LAURENT": {
+    "baseline_position": 21,
+    "arrow": "up",
+    "magnitude": 2
+  },
+  "Pierre Brochard": {
+    "baseline_position": 22,
+    "arrow": "down",
+    "magnitude": 2
+  },
+  "Manu Mesnier": {
     "baseline_position": 23,
     "arrow": "up",
+    "magnitude": 2
+  },
+  "Florent Blanckart": {
+    "baseline_position": 24,
+    "arrow": "down",
+    "magnitude": 3
+  },
+  "Régis Parra": {
+    "baseline_position": 25,
+    "arrow": "down",
     "magnitude": 3
   },
   "OLIVIER ADRION": {
-    "baseline_position": 24,
-    "arrow": "down",
-    "magnitude": 1
-  },
-  "Manu Mesnier": {
-    "baseline_position": 25,
-    "arrow": "down",
-    "magnitude": 1
-  },
-  "Anonymous": {
     "baseline_position": 26,
     "arrow": "down",
-    "magnitude": 1
+    "magnitude": 2
   },
   "Adrien BONNARD": {
     "baseline_position": 27,

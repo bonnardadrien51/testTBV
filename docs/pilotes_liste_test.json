@@ -2,12 +2,12 @@
   {
     "Participant": "Julien Bourelle",
     "Club": "GDL",
-    "Sexe": "Non défini"
+    "Sexe": "Homme"
   },
   {
     "Participant": "cyril tallaron",
     "Club": "GDL",
-    "Sexe": "Non défini"
+    "Sexe": "Homme"
   },
   {
     "Participant": "Guillaume Blanc",
@@ -95,8 +95,23 @@
     "Sexe": "Homme"
   },
   {
+    "Participant": "Anonymous",
+    "Club": "",
+    "Sexe": "Non défini"
+  },
+  {
+    "Participant": "Virginie LAURENT",
+    "Club": "Les Counailles/ La Bressaude Vol Libre",
+    "Sexe": "Femme"
+  },
+  {
     "Participant": "Pierre Brochard",
     "Club": "Les Piafs Villebon",
+    "Sexe": "Homme"
+  },
+  {
+    "Participant": "Manu Mesnier",
+    "Club": "Les Ailes de la Cendrée",
     "Sexe": "Homme"
   },
   {
@@ -110,24 +125,9 @@
     "Sexe": "Homme"
   },
   {
-    "Participant": "Virginie LAURENT",
-    "Club": "Les Counailles/ La Bressaude Vol Libre",
-    "Sexe": "Femme"
-  },
-  {
     "Participant": "OLIVIER ADRION",
     "Club": "Mont Blanc Vol Libre",
     "Sexe": "Homme"
-  },
-  {
-    "Participant": "Manu Mesnier",
-    "Club": "Les Ailes de la Cendrée",
-    "Sexe": "Homme"
-  },
-  {
-    "Participant": "Anonymous",
-    "Club": "",
-    "Sexe": "Non défini"
   },
   {
     "Participant": "Adrien BONNARD",

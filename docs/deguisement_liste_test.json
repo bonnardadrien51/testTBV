@@ -22,14 +22,14 @@
   },
   {
     "Participant": "Julien Bourelle",
-    "Sexe": "Non défini",
+    "Sexe": "Homme",
     "Club": "GDL",
     "Score": 90,
     "Autres": ""
   },
   {
     "Participant": "cyril tallaron",
-    "Sexe": "Non défini",
+    "Sexe": "Homme",
     "Club": "GDL",
     "Score": 90,
     "Autres": ""
@@ -52,6 +52,13 @@
     "Participant": "Pumbaaah Flo Sak",
     "Sexe": "Homme",
     "Club": "Besançon Vol Libre",
+    "Score": 90,
+    "Autres": ""
+  },
+  {
+    "Participant": "Virginie LAURENT",
+    "Sexe": "Femme",
+    "Club": "Les Counailles/ La Bressaude Vol Libre",
     "Score": 90,
     "Autres": ""
   }

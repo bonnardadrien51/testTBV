@@ -84,40 +84,40 @@
     "arrow": "down",
     "magnitude": 2
   },
-  "Charles BIRCHLER": {
+  "Florent Blanckart": {
     "baseline_position": 18,
-    "arrow": "down",
-    "magnitude": 1
+    "arrow": "up",
+    "magnitude": 6
   },
-  "Baptiste F": {
+  "Charles BIRCHLER": {
     "baseline_position": 19,
     "arrow": "down",
     "magnitude": 1
   },
-  "Anonymous": {
+  "Baptiste F": {
     "baseline_position": 20,
-    "arrow": "up",
-    "magnitude": 6
+    "arrow": "down",
+    "magnitude": 1
+  },
+  "Anonymous": {
+    "baseline_position": 21,
+    "arrow": "down",
+    "magnitude": 1
   },
   "Virginie LAURENT": {
-    "baseline_position": 21,
-    "arrow": "up",
-    "magnitude": 2
-  },
-  "Pierre Brochard": {
     "baseline_position": 22,
     "arrow": "down",
-    "magnitude": 2
+    "magnitude": 1
+  },
+  "Pierre Brochard": {
+    "baseline_position": 23,
+    "arrow": "down",
+    "magnitude": 1
   },
   "Manu Mesnier": {
-    "baseline_position": 23,
-    "arrow": "up",
-    "magnitude": 2
-  },
-  "Florent Blanckart": {
     "baseline_position": 24,
     "arrow": "down",
-    "magnitude": 3
+    "magnitude": 1
   },
   "Régis Parra": {
     "baseline_position": 25,

@@ -85,6 +85,11 @@
     "Sexe": "Homme"
   },
   {
+    "Participant": "Florent Blanckart",
+    "Club": "poupet vol libre",
+    "Sexe": "Non défini"
+  },
+  {
     "Participant": "Charles BIRCHLER",
     "Club": "Piafs Mjc Villebon",
     "Sexe": "Homme"
@@ -113,11 +118,6 @@
     "Participant": "Manu Mesnier",
     "Club": "Les Ailes de la Cendrée",
     "Sexe": "Homme"
-  },
-  {
-    "Participant": "Florent Blanckart",
-    "Club": "poupet vol libre",
-    "Sexe": "Non défini"
   },
   {
     "Participant": "Régis Parra",

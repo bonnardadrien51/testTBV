@@ -5,11 +5,6 @@
     "Sexe": "Non défini"
   },
   {
-    "Participant": "Baptiste F",
-    "Club": "Besançon Vol Libre",
-    "Sexe": "Homme"
-  },
-  {
     "Participant": "Guillaume Blanc",
     "Club": "les rousses Pole air",
     "Sexe": "Homme"
@@ -18,6 +13,11 @@
     "Participant": "Julie Dusein",
     "Club": "Le Thermique Francilien",
     "Sexe": "Femme"
+  },
+  {
+    "Participant": "Vincent Arnoul",
+    "Club": "migrateurs",
+    "Sexe": "Homme"
   },
   {
     "Participant": "luc Desbordes",
@@ -35,9 +35,19 @@
     "Sexe": "Non défini"
   },
   {
+    "Participant": "Baptiste Bertrand",
+    "Club": "",
+    "Sexe": "Non défini"
+  },
+  {
     "Participant": "eric perinelle",
     "Club": "les piafs mjc villebon sur yvette",
     "Sexe": "Non défini"
+  },
+  {
+    "Participant": "Pumbaaah Flo Sak",
+    "Club": "Besançon Vol Libre",
+    "Sexe": "Homme"
   },
   {
     "Participant": "Morand Nicolas",
@@ -48,11 +58,6 @@
     "Participant": "Céline CABRIN",
     "Club": "Délice d’Eole",
     "Sexe": "Femme"
-  },
-  {
-    "Participant": "Vincent Arnoul",
-    "Club": "migrateurs",
-    "Sexe": "Homme"
   },
   {
     "Participant": "Aloïs Marguet",
@@ -70,19 +75,24 @@
     "Sexe": "Non défini"
   },
   {
-    "Participant": "Pumbaaah Flo Sak",
-    "Club": "Besançon Vol Libre",
+    "Participant": "Charles BIRCHLER",
+    "Club": "Piafs Mjc Villebon",
     "Sexe": "Homme"
   },
   {
-    "Participant": "Baptiste Bertrand",
-    "Club": "",
-    "Sexe": "Non défini"
+    "Participant": "Baptiste F",
+    "Club": "Besançon Vol Libre",
+    "Sexe": "Homme"
   },
   {
     "Participant": "orianne pommey",
     "Club": "",
     "Sexe": "Femme"
+  },
+  {
+    "Participant": "Pierre Brochard",
+    "Club": "Les Piafs Villebon",
+    "Sexe": "Homme"
   },
   {
     "Participant": "Florent Blanckart",
@@ -105,11 +115,6 @@
     "Sexe": "Non défini"
   },
   {
-    "Participant": "Charles BIRCHLER",
-    "Club": "Piafs Mjc Villebon",
-    "Sexe": "Homme"
-  },
-  {
     "Participant": "Virginie LAURENT",
     "Club": "Les Counailles/ La Bressaude Vol Libre",
     "Sexe": "Femme"
@@ -117,11 +122,6 @@
   {
     "Participant": "mathieu SAMIN",
     "Club": "BESANCON VOL LIBRE",
-    "Sexe": "Homme"
-  },
-  {
-    "Participant": "Pierre Brochard",
-    "Club": "Les Piafs Villebon",
     "Sexe": "Homme"
   },
   {

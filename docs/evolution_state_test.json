@@ -114,23 +114,28 @@
     "arrow": "down",
     "magnitude": 1
   },
-  "Anonymous": {
+  "Manu Mesnier": {
     "baseline_position": 24,
-    "arrow": "down",
+    "arrow": "up",
     "magnitude": 1
   },
-  "Manu Mesnier": {
+  "Anonymous": {
     "baseline_position": 25,
-    "arrow": "up",
-    "magnitude": 2
+    "arrow": "down",
+    "magnitude": 1
   },
   "Virginie LAURENT": {
     "baseline_position": 26,
     "arrow": "down",
     "magnitude": 2
   },
-  "Marjorie Guillemin": {
+  "gabriel spiesser": {
     "baseline_position": 27,
+    "arrow": "same",
+    "magnitude": 0
+  },
+  "Marjorie Guillemin": {
+    "baseline_position": 28,
     "arrow": "down",
     "magnitude": 1
   }
